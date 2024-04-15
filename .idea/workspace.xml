@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/NifGo.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Diagnostics.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Documentation/.obsidian/app.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Documentation/.obsidian/appearance.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Documentation/.obsidian/core-plugins-migration.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Documentation/.obsidian/core-plugins.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Documentation/.obsidian/graph.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Documentation/.obsidian/workspace.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Documentation/Main.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ELT.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Farmacogenetic_report.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Info_sheet.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Medication_match.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Nifgo_proprietary_changes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Nutrinomics_report.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Utilities.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handling_unknowns.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="2f8qzZ8yxHbeJd2zM2Atw8EEyff" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-d68999036c7f-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.14475.56" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="" />
+      <created>1713193315322</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1713193315322</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+</project>

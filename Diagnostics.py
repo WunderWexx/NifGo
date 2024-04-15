@@ -1,0 +1,1 @@
+# After the program has run, the output needs to be checked for mistakes both human and software. This process should be automated as much as possible.
