@@ -1,5 +1,9 @@
 # The ELT process
 
+# The genes that have their phenotype determined the hard way should have their phenotype appended in the transform
+# phase. Maybe even combine them after pivoting the genotype dataframe.
+# A list needs to be made of all these genes.
+
 # Imports
 import pandas as pd
 import PySimpleGUI as sg
@@ -122,13 +126,15 @@ class Transform:
 
     @staticmethod
     def genotype_txt(dataframe):
-        # Find the index of 'dbSNP_RS_ID' column
+        """
+        - All columns after dbSNP_RS_ID are dropped.
+        - The .CEL_call_code suffix is dropped from column names.
+        :param dataframe:
+        :return:
+        """
         dbSNP_index = dataframe.columns.get_loc('dbSNP_RS_ID')
-
-        # Drop columns after 'dbSNP_RS_ID'
         dataframe = dataframe.iloc[:, :dbSNP_index + 1]
 
-        # Remove '.CEL_call_code' suffix from column names
         dataframe.columns = [col.replace('.CEL_call_code', '') for col in dataframe.columns]
 
         return dataframe

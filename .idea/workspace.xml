@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="Deleted the batch specific files because they are too big for GitHub." />
+    <list default="true" id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="ELT proces opgezet voor de twee grote files.">
+      <change afterPath="$PROJECT_DIR$/utilities.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELT.py" beforeDir="false" afterPath="$PROJECT_DIR$/ELT.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Farmacogenetic_report.py" beforeDir="false" afterPath="$PROJECT_DIR$/Farmacogenetic_report.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nifgo_proprietary_changes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Nifgo_proprietary_changes.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -92,7 +98,15 @@
       <option name="project" value="LOCAL" />
       <updated>1714416341986</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="ELT proces opgezet voor de twee grote files.">
+      <option name="closed" value="true" />
+      <created>1714416752020</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1714416752020</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -123,6 +137,7 @@
     <MESSAGE value="The general structure for the project." />
     <MESSAGE value="The ELT proces for the two main files." />
     <MESSAGE value="Deleted the batch specific files because they are too big for GitHub." />
-    <option name="LAST_COMMIT_MESSAGE" value="Deleted the batch specific files because they are too big for GitHub." />
+    <MESSAGE value="ELT proces opgezet voor de twee grote files." />
+    <option name="LAST_COMMIT_MESSAGE" value="ELT proces opgezet voor de twee grote files." />
   </component>
 </project>
