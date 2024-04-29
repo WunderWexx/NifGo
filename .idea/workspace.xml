@@ -4,32 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/NifGo.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Diagnostics.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Documentation/.obsidian/app.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Documentation/.obsidian/appearance.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Documentation/.obsidian/core-plugins-migration.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Documentation/.obsidian/core-plugins.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Documentation/.obsidian/graph.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Documentation/.obsidian/workspace.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Documentation/Main.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ELT.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Farmacogenetic_report.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Info_sheet.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Medication_match.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Nifgo_proprietary_changes.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Nutrinomics_report.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Utilities.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/handling_unknowns.py" afterDir="false" />
-    </list>
+    <list default="true" id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="Deleted the batch specific files because they are too big for GitHub." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -43,11 +18,19 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="Jarno" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2f8qzZ8yxHbeJd2zM2Atw8EEyff" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -59,16 +42,20 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Python.ELT.executor": "Run",
+    "Python.Main.executor": "Run",
+    "Python.test.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true"
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/Documents/Werk/NifGo"
   }
 }]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-d68999036c7f-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.14475.56" />
+        <option value="bundled-python-sdk-0509580d9d50-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.14494.241" />
       </set>
     </attachedChunks>
   </component>
@@ -81,6 +68,31 @@
       <option name="presentableId" value="Default" />
       <updated>1713193315322</updated>
     </task>
+    <task id="LOCAL-00001" summary="The general structure for the project.">
+      <option name="closed" value="true" />
+      <created>1713195709733</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1713195709733</updated>
+    </task>
+    <task id="LOCAL-00002" summary="The ELT proces for the two main files.">
+      <option name="closed" value="true" />
+      <created>1714129176479</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1714129176479</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Deleted the batch specific files because they are too big for GitHub.">
+      <option name="closed" value="true" />
+      <created>1714416341986</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1714416341986</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -108,5 +120,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="The general structure for the project." />
+    <MESSAGE value="The ELT proces for the two main files." />
+    <MESSAGE value="Deleted the batch specific files because they are too big for GitHub." />
+    <option name="LAST_COMMIT_MESSAGE" value="Deleted the batch specific files because they are too big for GitHub." />
   </component>
 </project>
