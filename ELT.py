@@ -1,19 +1,22 @@
 # The ELT process
 
-# The genes that have their phenotype determined the hard way should have their phenotype appended in the transform
-# phase. Maybe even combine them after pivoting the genotype dataframe.
-# A list needs to be made of all these genes.
-
 # Imports
 import pandas as pd
 import PySimpleGUI as sg
 import math
+import csv
 
 
 class Extract:
     """
     The data is extracted from the source files, and loaded into a pandas DataFrame.
     """
+
+    def __init__(self):
+        """
+        Sets the field_size_liimit to the maximum number the
+        """
+        csv.field_size_limit(1000000000)
 
     @staticmethod
     def extract_user_specified_file(filename):
@@ -100,54 +103,112 @@ class Load:
 
         return dataframe
 
+
 class Transform:
     """
     The data is transformed so that it is readable and compatible with each other.
     """
-
-    @staticmethod
-    def phenotype_rpt(dataframe, genes_with_thermofisher_phenotypes):
+    class phenotype_rpt:
         """
-        The dataframe is in order, cleansed of:
-        - The .CEL suffix in the sample_id column
-        - The gene_function column
-        - All genes whose phenotype is not to be determined from this file
-        :param dataframe:
-        :return:
+        Transforms the phenotype_rpt dataframe.
         """
-        remove_cel_suffix = lambda x: x.replace('.CEL','')
-        dataframe['sample_id'] = dataframe['sample_id'].apply(remove_cel_suffix)
+        def __init__(self, dataframe):
+            self.dataframe = dataframe
 
-        dataframe = dataframe.drop(columns = ['gene_function'])
+        def remove_cel_suffix(self):
+            """
+            Removes the .CEL suffix from the sample_id column of the dataframe.
+            :return: DataFrame with sample_id column modified
+            """
+            dataframe = self.dataframe
+            remove_cel_suffix = lambda x: x.replace('.CEL', '')
+            dataframe['sample_id'] = dataframe['sample_id'].apply(remove_cel_suffix)
+            self.dataframe = dataframe
 
-        boolean_mask = dataframe['gene'].isin(genes_with_thermofisher_phenotypes)
-        dataframe = dataframe[boolean_mask]
-        return dataframe
+        def drop_gene_function(self):
+            """
+            Drops the gene_function column from the dataframe.
+            :return: DataFrame with gene_function column dropped
+            """
+            dataframe = self.dataframe.drop(columns=['gene_function'])
+            self.dataframe = dataframe
 
-    @staticmethod
-    def genotype_txt(dataframe):
+        def filter_thermofisher_genes(self, genes_with_thermofisher_phenotypes):
+            """
+            Filters the dataframe based on genes whose phenotypes are specified.
+            :param genes_with_thermofisher_phenotypes: List of genes with phenotypes to be determined
+            :return: Filtered DataFrame
+            """
+            boolean_mask = self.dataframe['gene'].isin(genes_with_thermofisher_phenotypes)
+            dataframe = self.dataframe[boolean_mask]
+            self.dataframe = dataframe
+
+    class genotype_txt:
         """
-        - All columns after dbSNP_RS_ID are dropped.
-        - The .CEL_call_code suffix is dropped from column names.
-        :param dataframe:
-        :return:
+        Transforms the genotype_txt dataframe
         """
-        dbSNP_index = dataframe.columns.get_loc('dbSNP_RS_ID')
-        dataframe = dataframe.iloc[:, :dbSNP_index + 1]
+        def __init__(self, dataframe, probeset_ids):
+            self.dataframe = dataframe
+            self.probeset_ids = probeset_ids
 
-        dataframe.columns = [col.replace('.CEL_call_code', '') for col in dataframe.columns]
+        def drop_columns_after_dbsnp(self):
+            """
+            Drops all columns after the dbSNP_RS_ID column.
+            :return: DataFrame with columns dropped
+            """
+            dbSNP_index = self.dataframe.columns.get_loc('dbSNP_RS_ID')
+            self.dataframe = self.dataframe.iloc[:, :dbSNP_index + 1]
 
-        return dataframe
+        def drop_cel_call_code_suffix(self):
+            """
+            Removes the .CEL_call_code suffix from column names.
+            :return: DataFrame with column names modified
+            """
+            self.dataframe.columns = [col.replace('.CEL_call_code', '') for col in self.dataframe.columns]
+
+        def unpivot_dataframe(self):
+            """
+            Unpivots the DataFrame to match the structure of phenotypes.rpt.
+            :return: Unpivoted DataFrame
+            """
+            pivot_columns = list(self.dataframe.columns)
+            del pivot_columns[0]
+            del pivot_columns[-1]
+            self.dataframe = pd.melt(self.dataframe, id_vars='probeset_id', value_vars=pivot_columns)
+
+        def reorder_and_rename_columns(self):
+            """
+            Reorders and renames the columns to match the structure of phenotypes.rpt.
+            :return: DataFrame with reordered and renamed columns
+            """
+            self.dataframe = self.dataframe[['variable', 'probeset_id', 'value']]
+            self.dataframe.rename(columns={'variable': 'sample_id', 'value': 'genotype'}, inplace=True)
+
+        def add_gene_names(self):
+            get_gene_name = lambda id: self.probeset_ids.get(id, 'NotPresent')
+            new_column = self.dataframe['probeset_id'].map(get_gene_name)
+            self.dataframe['GeneName'] = new_column
+
 
 class Ingest:
     def phenotype_rpt(self,  ThermoFisher_determined_genes):
         phenotypes_df = Extract().phenotype_rpt()
         phenotypes_df = Load().phenotype_rpt(phenotypes_df)
-        phenotypes_df = Transform().phenotype_rpt(phenotypes_df, ThermoFisher_determined_genes)
-        return phenotypes_df
+        phenotype_transformation = Transform().phenotype_rpt(phenotypes_df)
+        phenotype_transformation.remove_cel_suffix()
+        phenotype_transformation.drop_gene_function()
+        phenotype_transformation.filter_thermofisher_genes(ThermoFisher_determined_genes)
+
+        return phenotype_transformation.dataframe
 
     def genotype_txt(self, probeset_ids):
         genotypes_df = Extract().genotype_txt()
-        genotypes_df = Load().genotype_txt(genotypes_df, probeset_ids)
-        genotypes_df = Transform().genotype_txt(genotypes_df)
-        return genotypes_df
+        genotypes_df = Load().genotype_txt(genotypes_df, probeset_ids.keys())
+        genotypes_transformation = Transform().genotype_txt(genotypes_df, probeset_ids)
+        genotypes_transformation.drop_columns_after_dbsnp()
+        genotypes_transformation.drop_cel_call_code_suffix()
+        genotypes_transformation.unpivot_dataframe()
+        genotypes_transformation.reorder_and_rename_columns()
+        genotypes_transformation.add_gene_names()
+
+        return genotypes_transformation.dataframe

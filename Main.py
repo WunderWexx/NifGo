@@ -12,7 +12,6 @@ pd.options.mode.chained_assignment = None  # default='warn'
 ThermoFisher_determined_genes = [
     'CACNA1S',
     'CFTR',
-    'COMT',
     'CYP1A2',
     'CYP2A6',
     'CYP2B6',
@@ -25,21 +24,15 @@ ThermoFisher_determined_genes = [
     'CYP3A5',
     'CYP4F2',
     'DPYD',
-    'F2',
-    'F5',
     'G6PD',
     'GSTP1',
     'IFNL3',
-    'MTHFR1298',
-    'MTHFR677',
     'MTRNR1',
     'NAT1',
     'NAT2',
     'RYR1',
-    'SLCO1B1',
     'TPMT',
     'UGT1A1',
-    'VKORC1'
 ]
 probeset_id_dict = gene_probe_mapping = {
     "AX-11340068": "MC4R",
@@ -88,6 +81,6 @@ phenotypes_df = ELT.Ingest().phenotype_rpt(ThermoFisher_determined_genes)
 util.store_dataframe(phenotypes_df, 'phenotypes')
 util.printEntire(phenotypes_df)
 
-genotypes_df = ELT.Ingest().genotype_txt(probeset_id_dict.keys())
+genotypes_df = ELT.Ingest().genotype_txt(probeset_id_dict)
 util.store_dataframe(genotypes_df, 'genotypes')
 util.printEntire(genotypes_df)
