@@ -143,6 +143,9 @@ class Transform:
             dataframe = self.dataframe[boolean_mask]
             self.dataframe = dataframe
 
+        def rename_known_call(self):
+            self.dataframe.rename(columns={'known_call':'genotype'}, inplace=True)
+
     class genotype_txt:
         """
         Transforms the genotype_txt dataframe
@@ -187,9 +190,28 @@ class Transform:
         def add_gene_names(self):
             get_gene_name = lambda id: self.probeset_ids.get(id, 'NotPresent')
             new_column = self.dataframe['probeset_id'].map(get_gene_name)
-            self.dataframe['GeneName'] = new_column
+            self.dataframe['gene'] = new_column
 
+        def determine_phenotype(self):
+            """
 
+            :return: A list of phenotypes corresponding to the entered sample.
+            """
+            phenotype_map = {
+                "F2": {"G/G": "PM", "A/A": "NM"},
+                "F5": {"C/C": "PM", "T/T": "NM"},
+                "OPRM1": {"A/A": "NM", "G/G": "PM"},
+                "MTHFR1298": {"T/T": "NM", "G/G": "PM"},
+                "MTHFR677": {"G/G": "NM", "A/A": "PM"},
+                "HLA-B*1502": {"G/G": "negatief", "C/C": "risico"},
+                "ABCB1": {"C/C": "NM", "T/T": "PM"},
+                "COMT": {"A/A": "PM", "A/G": "IM", "G/G": "NM"},
+                "SLCO1B1": {"T/T": "NF", "T/C": "DF", "C/C": "PF"},
+                "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"}
+            }
+
+            map_gene_to_phenotype = lambda gene, genotype: phenotype_map.get(gene, {}).get(genotype, 'ThermoFisher')
+            self.dataframe['phenotype'] = self.dataframe.apply(lambda row: map_gene_to_phenotype(row['gene'], row['genotype']), axis=1)
 class Ingest:
     def phenotype_rpt(self,  ThermoFisher_determined_genes):
         phenotypes_df = Extract().phenotype_rpt()
@@ -198,6 +220,7 @@ class Ingest:
         phenotype_transformation.remove_cel_suffix()
         phenotype_transformation.drop_gene_function()
         phenotype_transformation.filter_thermofisher_genes(ThermoFisher_determined_genes)
+        phenotype_transformation.rename_known_call()
 
         return phenotype_transformation.dataframe
 
@@ -210,5 +233,6 @@ class Ingest:
         genotypes_transformation.unpivot_dataframe()
         genotypes_transformation.reorder_and_rename_columns()
         genotypes_transformation.add_gene_names()
+        genotypes_transformation.determine_phenotype()
 
         return genotypes_transformation.dataframe
