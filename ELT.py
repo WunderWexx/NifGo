@@ -192,47 +192,41 @@ class Transform:
             new_column = self.dataframe['probeset_id'].map(get_gene_name)
             self.dataframe['gene'] = new_column
 
-        def determine_phenotype(self):
-            """
 
-            :return: A list of phenotypes corresponding to the entered sample.
-            """
-            phenotype_map = {
-                "F2": {"G/G": "PM", "A/A": "NM"},
-                "F5": {"C/C": "PM", "T/T": "NM"},
-                "OPRM1": {"A/A": "NM", "G/G": "PM"},
-                "MTHFR1298": {"T/T": "NM", "G/G": "PM"},
-                "MTHFR677": {"G/G": "NM", "A/A": "PM"},
-                "HLA-B*1502": {"G/G": "negatief", "C/C": "risico"},
-                "ABCB1": {"C/C": "NM", "T/T": "PM"},
-                "COMT": {"A/A": "PM", "A/G": "IM", "G/G": "NM"},
-                "SLCO1B1": {"T/T": "NF", "T/C": "DF", "C/C": "PF"},
-                "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"}
-            }
 
-            map_gene_to_phenotype = lambda gene, genotype: phenotype_map.get(gene, {}).get(genotype, 'ThermoFisher')
-            self.dataframe['phenotype'] = self.dataframe.apply(lambda row: map_gene_to_phenotype(row['gene'], row['genotype']), axis=1)
-class Ingest:
-    def phenotype_rpt(self,  ThermoFisher_determined_genes):
-        phenotypes_df = Extract().phenotype_rpt()
-        phenotypes_df = Load().phenotype_rpt(phenotypes_df)
-        phenotype_transformation = Transform().phenotype_rpt(phenotypes_df)
-        phenotype_transformation.remove_cel_suffix()
-        phenotype_transformation.drop_gene_function()
-        phenotype_transformation.filter_thermofisher_genes(ThermoFisher_determined_genes)
-        phenotype_transformation.rename_known_call()
+class DataPreparation:
+    def __init__(self, geno_df, pheno_df):
+        self.geno_df = geno_df
+        self.pheno_df = pheno_df
 
-        return phenotype_transformation.dataframe
+    def determine_phenotype(self):
+        """
+        Makes a column of determined genotypes.
+        :return: A list of phenotypes corresponding to the entered sample.
+        """
+        phenotype_map = {
+            "F2": {"G/G": "PM", "A/A": "NM"},
+            "F5": {"C/C": "PM", "T/T": "NM"},
+            "OPRM1": {"A/A": "NM", "G/G": "PM"},
+            "MTHFR1298": {"T/T": "NM", "G/G": "PM"},
+            "MTHFR677": {"G/G": "NM", "A/A": "PM"},
+            "HLA-B*1502": {"G/G": "negatief", "C/C": "risico"},
+            "ABCB1": {"C/C": "NM", "T/T": "PM"},
+            "COMT": {"A/A": "PM", "A/G": "IM", "G/G": "NM"},
+            "SLCO1B1": {"T/T": "NF", "T/C": "DF", "C/C": "PF"},
+            "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"}
+        }
 
-    def genotype_txt(self, probeset_ids):
-        genotypes_df = Extract().genotype_txt()
-        genotypes_df = Load().genotype_txt(genotypes_df, probeset_ids.keys())
-        genotypes_transformation = Transform().genotype_txt(genotypes_df, probeset_ids)
-        genotypes_transformation.drop_columns_after_dbsnp()
-        genotypes_transformation.drop_cel_call_code_suffix()
-        genotypes_transformation.unpivot_dataframe()
-        genotypes_transformation.reorder_and_rename_columns()
-        genotypes_transformation.add_gene_names()
-        genotypes_transformation.determine_phenotype()
+        map_gene_to_phenotype = lambda gene, genotype: phenotype_map.get(gene, {}).get(genotype, 'ThermoFisher')
+        self.geno_df['phenotype'] = self.geno_df.apply(
+            lambda row: map_gene_to_phenotype(row['gene'], row['genotype']), axis=1)
 
-        return genotypes_transformation.dataframe
+    def select_geno_columns_for_insertion_into_pheno(self):
+        insertion_geno_df = self.geno_df[['sample_id','gene','phenotype','genotype']]
+        return insertion_geno_df
+
+    def merge_geno_and_phenotype_dataframes(self):
+        insertion_geno_df = self.select_geno_columns_for_insertion_into_pheno()
+        complete_dataframe = pd.concat([self.pheno_df, insertion_geno_df])
+        complete_dataframe.sort_values(by=['sample_id','gene'], inplace=True)
+        self.complete_dataframe = complete_dataframe

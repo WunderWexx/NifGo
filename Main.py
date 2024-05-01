@@ -5,6 +5,8 @@ import ELT
 import utilities as util
 import pandas as pd
 
+# Could be rewritten to be clearer.
+
 # settings
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -77,10 +79,38 @@ probeset_id_dict = gene_probe_mapping = {
 }
 
 # body
-phenotypes_df = ELT.Ingest().phenotype_rpt(ThermoFisher_determined_genes)
-util.store_dataframe(phenotypes_df, 'phenotypes')
-util.printEntire(phenotypes_df)
+phenotypes_df = ELT.Extract().phenotype_rpt()
+phenotypes_df = ELT.Load().phenotype_rpt(phenotypes_df)
+phenotype_transformation = ELT.Transform().phenotype_rpt(phenotypes_df)
+print('phenotype import DONE')
+phenotype_transformation.remove_cel_suffix()
+phenotype_transformation.drop_gene_function()
+phenotype_transformation.filter_thermofisher_genes(ThermoFisher_determined_genes)
+phenotype_transformation.rename_known_call()
 
-genotypes_df = ELT.Ingest().genotype_txt(probeset_id_dict)
+phenotypes_df = phenotype_transformation.dataframe
+util.store_dataframe(phenotypes_df, 'phenotypes')
+print('phenotype transformation DONE')
+
+genotypes_df = ELT.Extract().genotype_txt()
+genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.keys())
+print('genotype import DONE')
+genotypes_transformation = ELT.Transform().genotype_txt(genotypes_df, probeset_id_dict)
+genotypes_transformation.drop_columns_after_dbsnp()
+genotypes_transformation.drop_cel_call_code_suffix()
+genotypes_transformation.unpivot_dataframe()
+genotypes_transformation.reorder_and_rename_columns()
+genotypes_transformation.add_gene_names()
+
+genotypes_df = genotypes_transformation.dataframe
 util.store_dataframe(genotypes_df, 'genotypes')
-util.printEntire(genotypes_df)
+print('genotype transformation DONE')
+
+data_preparation = ELT.DataPreparation(genotypes_df, phenotypes_df)
+data_preparation.determine_phenotype()
+data_preparation.merge_geno_and_phenotype_dataframes()
+
+genotypes_df = data_preparation.geno_df
+complete_dataframe = data_preparation.complete_dataframe
+util.store_dataframe(complete_dataframe, 'complete')
+print('complete dataframe creation DONE')
