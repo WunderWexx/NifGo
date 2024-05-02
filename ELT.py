@@ -217,7 +217,7 @@ class DataPreparation:
             "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"}
         }
 
-        map_gene_to_phenotype = lambda gene, genotype: phenotype_map.get(gene, {}).get(genotype, 'ThermoFisher')
+        map_gene_to_phenotype = lambda gene, genotype: phenotype_map.get(gene, {}).get(genotype, 'unknown')
         self.geno_df['phenotype'] = self.geno_df.apply(
             lambda row: map_gene_to_phenotype(row['gene'], row['genotype']), axis=1)
 
@@ -229,4 +229,5 @@ class DataPreparation:
         insertion_geno_df = self.select_geno_columns_for_insertion_into_pheno()
         complete_dataframe = pd.concat([self.pheno_df, insertion_geno_df])
         complete_dataframe.sort_values(by=['sample_id','gene'], inplace=True)
+        complete_dataframe.reset_index(drop=True, inplace=True)
         self.complete_dataframe = complete_dataframe

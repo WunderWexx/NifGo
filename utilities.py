@@ -56,6 +56,16 @@ def is_substring_present_in_substring(data_to_search,string_to_find):
     else:
         return False
 
+def execute_all_methods(instance):
+    methods = [method for method in dir(instance) if
+               callable(getattr(instance, method)) and not method.startswith("__")]
+    methods.sort(key=lambda x: getattr(instance, x).__code__.co_firstlineno)
+
+    for method_name in methods:
+        method = getattr(instance, method_name)
+        method()
+
+
 class DocumentFormatting:
     def __init__(self, customer_id, doc_type):
         self.customer_id = customer_id
@@ -169,3 +179,6 @@ class DocumentFormatting:
             self.change_table_cell(cell, background_color=background_color, font_color=font_color, font_size=font_size,
                               bold=bold,
                               italic=italic)
+
+class DataframeModification:
+    pass

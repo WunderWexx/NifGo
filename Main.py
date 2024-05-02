@@ -4,6 +4,7 @@
 import ELT
 import utilities as util
 import pandas as pd
+import Nifgo_proprietary_changes as changes
 
 # Could be rewritten to be clearer.
 
@@ -92,6 +93,7 @@ phenotypes_df = phenotype_transformation.dataframe
 util.store_dataframe(phenotypes_df, 'phenotypes')
 print('phenotype transformation DONE')
 
+print('genotype import [...]',end='\r')
 genotypes_df = ELT.Extract().genotype_txt()
 genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.keys())
 print('genotype import DONE')
@@ -114,3 +116,21 @@ genotypes_df = data_preparation.geno_df
 complete_dataframe = data_preparation.complete_dataframe
 util.store_dataframe(complete_dataframe, 'complete')
 print('complete dataframe creation DONE')
+
+print('implementing NifGo changes [...]',end='\r')
+general_changes = changes.GeneralChanges(complete_dataframe)
+general_changes.pick_first_result()
+complete_dataframe = general_changes.dataframe
+
+phenotype_changes = changes.PhenotypeChanges(complete_dataframe)
+phenotype_changes.change_EM_phenotypes_to_NM()
+phenotype_changes.CACNA1S()
+phenotype_changes.RYR1()
+phenotype_changes.G6DP()
+# phenotype_changes.CYP1A2() The following function seems to have never been carried out...
+phenotype_changes.CYP2C19()
+phenotype_changes.CYP3A4() # Should be checked with the next dataset.
+
+complete_dataframe = phenotype_changes.dataframe
+util.store_dataframe(complete_dataframe, 'complete')
+print('implementing NifGo changes DONE')
