@@ -199,29 +199,8 @@ class DataPreparation:
         self.geno_df = geno_df
         self.pheno_df = pheno_df
 
-    def determine_phenotype(self):
-        """
-        Makes a column of determined genotypes.
-        :return: A list of phenotypes corresponding to the entered sample.
-        """
-        phenotype_map = {
-            "F2": {"G/G": "PM", "A/A": "NM"},
-            "F5": {"C/C": "PM", "T/T": "NM"},
-            "OPRM1": {"A/A": "NM", "G/G": "PM"},
-            "MTHFR1298": {"T/T": "NM", "G/G": "PM"},
-            "MTHFR677": {"G/G": "NM", "A/A": "PM"},
-            "HLA-B*1502": {"G/G": "negatief", "C/C": "risico"},
-            "ABCB1": {"C/C": "NM", "T/T": "PM"},
-            "COMT": {"A/A": "PM", "A/G": "IM", "G/G": "NM"},
-            "SLCO1B1": {"T/T": "NF", "T/C": "DF", "C/C": "PF"},
-            "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"}
-        }
-
-        map_gene_to_phenotype = lambda gene, genotype: phenotype_map.get(gene, {}).get(genotype, 'unknown')
-        self.geno_df['phenotype'] = self.geno_df.apply(
-            lambda row: map_gene_to_phenotype(row['gene'], row['genotype']), axis=1)
-
     def select_geno_columns_for_insertion_into_pheno(self):
+        self.geno_df['phenotype'] = 'unknown'
         insertion_geno_df = self.geno_df[['sample_id','gene','phenotype','genotype']]
         return insertion_geno_df
 
@@ -231,3 +210,25 @@ class DataPreparation:
         complete_dataframe.sort_values(by=['sample_id','gene'], inplace=True)
         complete_dataframe.reset_index(drop=True, inplace=True)
         self.complete_dataframe = complete_dataframe
+
+    def determine_phenotype(self):
+        """
+        Makes a column of determined genotypes.
+        :return: A list of phenotypes corresponding to the entered sample.
+        """
+        phenotype_map = {
+            "F2": {"G/G": "PM", "A/A": "NM"},
+            "F5": {"C/C": "PM", "T/T": "NM"},
+            "OPRM1": {"A/A": "NM", "G/G": "PM"},
+            "MTHFRA1298C": {"T/T": "NM", "G/G": "PM"},
+            "MTHFRC677T": {"G/G": "NM", "A/A": "PM"},
+            "HLA-B*1502": {"G/G": "negatief", "C/C": "risico"},
+            "ABCB1": {"C/C": "NM", "T/T": "PM"},
+            "COMT": {"A/A": "PM", "A/G": "IM", "G/G": "NM"},
+            "SLCO1B1": {"T/T": "NF", "T/C": "DF", "C/C": "PF"},
+            "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"}
+        }
+
+        map_gene_to_phenotype = lambda gene, genotype: phenotype_map.get(gene, {}).get(genotype, 'unknown')
+        self.complete_dataframe['phenotype'] = self.complete_dataframe.apply(
+            lambda row: map_gene_to_phenotype(row['gene'], row['genotype']), axis=1)

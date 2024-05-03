@@ -109,28 +109,29 @@ util.store_dataframe(genotypes_df, 'genotypes')
 print('genotype transformation DONE')
 
 data_preparation = ELT.DataPreparation(genotypes_df, phenotypes_df)
-data_preparation.determine_phenotype()
 data_preparation.merge_geno_and_phenotype_dataframes()
+data_preparation.determine_phenotype()
 
-genotypes_df = data_preparation.geno_df
 complete_dataframe = data_preparation.complete_dataframe
 util.store_dataframe(complete_dataframe, 'complete')
 print('complete dataframe creation DONE')
 
-print('implementing NifGo changes [...]',end='\r')
+print('implementing NifGo changes [...]')
 general_changes = changes.GeneralChanges(complete_dataframe)
 general_changes.pick_first_result()
 complete_dataframe = general_changes.dataframe
 
-phenotype_changes = changes.PhenotypeChanges(complete_dataframe)
-phenotype_changes.change_EM_phenotypes_to_NM()
-phenotype_changes.CACNA1S()
-phenotype_changes.RYR1()
-phenotype_changes.G6DP()
-# phenotype_changes.CYP1A2() The following function seems to have never been carried out...
-phenotype_changes.CYP2C19()
-phenotype_changes.CYP3A4() # Should be checked with the next dataset.
+gene_name_changes = changes.GeneNameChanges(complete_dataframe)
+util.execute_all_methods(gene_name_changes)
+complete_dataframe = gene_name_changes.dataframe
 
+phenotype_changes = changes.PhenotypeChanges(complete_dataframe)
+util.execute_all_methods(phenotype_changes)
 complete_dataframe = phenotype_changes.dataframe
+
+genotype_changes = changes.GenotypeChanges(complete_dataframe)
+util.execute_all_methods(genotype_changes)
+
+complete_dataframe = genotype_changes.dataframe
 util.store_dataframe(complete_dataframe, 'complete')
 print('implementing NifGo changes DONE')

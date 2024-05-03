@@ -3,6 +3,7 @@
 # You might try using a loop for PhenotypeChanges instead of applying each change. See whats faster.
 
 import numpy as np
+import utilities as util
 
 class GeneralChanges:
     def __init__(self, dataframe):
@@ -15,6 +16,18 @@ class GeneralChanges:
         columns = ['phenotype','genotype']
         for column in columns:
             self.dataframe[column] = self.dataframe[column].apply(lambda x: x.split(',')[0] if isinstance(x, str) else x)
+
+class GeneNameChanges:
+    def __init__(self, dataframe):
+        self.dataframe = dataframe
+
+    def MTHFR677(self):
+        mask = self.dataframe['gene'] == 'MTHFRC677T'
+        self.dataframe.loc[mask, 'gene'] = np.where(True, 'MTHFR677', 'ERROR')
+
+    def MTHFR1298(self):
+        mask = self.dataframe['gene'] == 'MTHFRA1298C'
+        self.dataframe.loc[mask, 'gene'] = np.where(True, 'MTHFR1298', 'ERROR')
 
 
 class PhenotypeChanges:
@@ -81,12 +94,83 @@ class PhenotypeChanges:
                                                          no_change)
 
     def CYP3A4(self):
+        mask = self.dataframe['gene'] == 'CYP3A4'
         condition = [
-            (self.dataframe['genotype'] == "*1/*22") | (self.dataframe['genotype'] == "*3/*22"),
-            (self.dataframe['genotype'] == "*22/*22")
+            (self.dataframe.loc[mask, 'genotype'] == "*1/*22") | (self.dataframe.loc[mask,'genotype'] == "*3/*22"),
+            (self.dataframe.loc[mask,'genotype'] == "*22/*22")
         ]
-        self.dataframe['phenotype'] = np.where(condition[0], 'IM',
-                                               np.where(condition[1],'PM', self.dataframe['phenotype']))
+        no_change = self.dataframe.loc[mask, 'phenotype']
+        self.dataframe.loc[mask, 'phenotype'] = np.where(condition[0], 'IM',
+                                                np.where(condition[1],'PM', no_change))
+
+    def IFNL3(self):
+        mask = self.dataframe['gene'] == 'IFNL3'
+        condition = [
+            (self.dataframe.loc[mask, 'genotype'] == "rs12979860C/rs12979860C"),
+            (self.dataframe.loc[mask, 'genotype'] == "rs12979860T/rs12979860T"),
+        ]
+        self.dataframe.loc[mask, 'phenotype'] = np.where(condition[0], 'NM',
+                                                np.where(condition[1], 'PM', 'IM'))
+
+    def CYP2B6(self):
+        mask = self.dataframe['gene'] == 'CYP2B6'
+        condition = [
+            self.dataframe.loc[mask, 'genotype'].isin(["*1/*5", "*5/*5", "*4/*13"]),
+            self.dataframe.loc[mask, 'genotype'] == '*1/*22'
+            ]
+        no_change = self.dataframe.loc[mask, 'phenotype']
+        self.dataframe.loc[mask, 'phenotype'] = np.where(condition[0],'NM',
+                                                np.where(condition[1], 'RM', no_change))
+
+    def GSTP1(self):
+        mask = self.dataframe['gene'] == 'GSTP1'
+        condition = self.dataframe.loc[mask, 'genotype'].isin(['*A/*C', '*A/*B'])
+        no_change = self.dataframe.loc[mask, 'phenotype']
+        self.dataframe.loc[mask, 'phenotype'] = np.where(condition, 'IM', no_change)
+
+    def CYP2C8(self):
+        mask = self.dataframe['gene'] == 'CYP2C8'
+        condition = [
+            self.dataframe.loc[mask, 'genotype'].isin(['*1A/*4+1C', '*1B/*3', '*1A/*3']),
+            self.dataframe.loc[mask, 'genotype'] == '*3/*3',
+            self.dataframe.loc[mask, 'genotype'] == 'unknown',
+            self.dataframe.loc[mask, 'genotype'].str.count('\*3') == 1
+        ]
+        no_change = self.dataframe.loc[mask, 'phenotype']
+        self.dataframe.loc[mask, 'phenotype'] = np.where(condition[0], 'IM',
+                                                np.where(condition[1], 'PM',
+                                                np.where(condition[2], 'IM',
+                                                np.where(condition[3], 'IM',
+                                                no_change))))
+
+    def CYP2C9(self):
+        mask = self.dataframe['gene'] == 'CYP12C9'
+        no_change = self.dataframe.loc[mask, 'phenotype']
+        self.dataframe.loc[mask, 'phenotype'] = np.where(self.dataframe.loc[mask, 'genotype'] == '*1/*50',
+                                                         'NM', no_change)
+
+    def TPMT(self):
+        mask = self.dataframe['gene'] == 'TPMT'
+        no_change = self.dataframe.loc[mask, 'phenotype']
+        self.dataframe.loc[mask, 'phenotype'] = np.where(self.dataframe.loc[mask, 'genotype'] == '*1/*3',
+                                                         'IM', no_change)
+
+    def CFTR(self):
+        mask = self.dataframe['gene'] == 'CFTR'
+        no_change = self.dataframe.loc[mask, 'phenotype']
+        self.dataframe.loc[mask, 'phenotype'] = np.where(self.dataframe.loc[mask, 'genotype'] == 'F508delCTT/WT',
+                                                         'NF', no_change)
+
+    def CYP3A5(self):
+        CYP3A5_dict = {
+            "PM": "non-expressor",
+            "IM": "heterozygoot",
+            "NM": "homozygoot"
+        }
+        mask = self.dataframe['gene'] == 'CYP3A5'
+        condition = self.dataframe.loc[mask, 'phenotype'].isin(CYP3A5_dict.keys())  # This is also a mask
+        if_true = self.dataframe.loc[mask, 'phenotype'].map(CYP3A5_dict)
+        self.dataframe.loc[mask, 'phenotype'] = np.where(condition, if_true, 'unknown')
 
 class GenotypeChanges:
     def __init__(self, dataframe):
@@ -102,5 +186,116 @@ class GenotypeChanges:
             'IM': 'Val/Met',
             'PM': 'Met/Met'
         }
-        function = lambda row: COMT_dict[row] if row['phenotype'] in COMT_dict else 'unknown'
-        self.dataframe['genotype'] = self.dataframe.apply(function, axis=1)
+        mask = self.dataframe['gene'] == 'COMT'
+        condition = self.dataframe.loc[mask, 'phenotype'].isin(COMT_dict.keys())  # This is also a mask
+        if_true = self.dataframe.loc[mask, 'phenotype'].map(COMT_dict)
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'unknown')
+
+
+    def IFNL3(self):
+        mask = self.dataframe['gene'] == 'IFNL3'
+        condition = [
+            (self.dataframe.loc[mask, 'phenotype'] == "NM"),
+            (self.dataframe.loc[mask, 'phenotype'] == "PM"),
+        ]
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition[0], 'WT/WT',
+                                                         np.where(condition[1], 'MT/MT', 'WT/MT'))
+
+    def VKORC1(self):
+        VKORC1_dict = {
+            'NM': '1639GG',
+            'IM': '1639AG',
+            'PM': '1639AA'
+        }
+        mask = self.dataframe['gene'] == 'VKORC1'
+        condition = self.dataframe.loc[mask, 'phenotype'].isin(VKORC1_dict.keys()) #This is also a mask
+        if_true = self.dataframe.loc[mask,'phenotype'].map(VKORC1_dict)
+        self.dataframe.loc[mask,'genotype'] = np.where(condition, if_true, 'unknown')
+
+    def SLCO1B1(self):
+        SLCO1B1_dict = {
+            "NF": "521TT",
+            "PF": "521CC",
+            "DF": "521TC"
+        }
+        mask = self.dataframe['gene'] == 'SLCO1B1'
+        condition = self.dataframe.loc[mask, 'phenotype'].isin(SLCO1B1_dict.keys())  # This is also a mask
+        if_true = self.dataframe.loc[mask, 'phenotype'].map(SLCO1B1_dict)
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'unknown')
+
+    def CYP2C9(self):
+        mask = self.dataframe['gene'] == 'CYP12C9'
+        no_change = self.dataframe.loc[mask, 'genotype']
+        self.dataframe.loc[mask, 'genotype'] = np.where(self.dataframe.loc[mask, 'phenotype'] == 'NM',
+                                                         '*1/*1', no_change)
+
+    def CFTR(self):
+        mask = self.dataframe['gene'] == 'CFTR'
+        no_change = self.dataframe.loc[mask, 'genotype']
+        self.dataframe.loc[mask, 'genotype'] = np.where(self.dataframe.loc[mask, 'phenotype'] == 'NF',
+                                                         'WT/WT', no_change)
+
+    def UGT1A1(self):
+        def take_first_stars(known_call):
+            x = known_call
+            y = x.split("/")
+            first_part = y[0].split("+")[0]
+            second_part = y[1].split("+")[0]
+            new_known_call = first_part + "/" + second_part
+            return new_known_call
+
+        mask = self.dataframe['gene'] == 'UGT1A1'
+        find_plus = lambda x: util.is_substring_present_in_substring(x, '+')
+        condition = self.dataframe.loc[mask, 'genotype'].map(find_plus)
+        no_change = self.dataframe.loc[mask, 'genotype']
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition,
+                                                         self.dataframe.loc[mask, 'genotype'].apply(take_first_stars),
+                                                         no_change)
+
+    def DPYD(self):
+        def DPYD_get_activity(known_call):
+            allel_list = known_call.split("/")
+            allel1 = allel_list[0]
+            if allel1 == "":  # Meaning that  DPYD is unknown, giving an empty field in known_call
+                return None
+            allel2 = allel_list[1]
+            if (allel1 == allel2) and (allel1 not in ["*13", "c.1236G>A", "c.2846A>T"]):
+                return "AS: 2"
+            if (allel1 or allel2) in ["c.2846A>T", "c.1236G>A", 'c.1129-5923C>G', 'c.1905+1G>A']:
+                return "AS: 1.5"
+            if (allel1 or allel2) == "*13":
+                return "AS: 1"
+            if (allel1 != allel2) and ((allel1 and allel2) in ["*13", "c.1236G>A", "c.2846A>T"]):
+                return "AS: 0.5"
+            if allel1 == allel2 == ("*13" or "*2"):
+                return "AS: 0"
+            raise Exception("No activity level determined")
+
+        mask = self.dataframe['gene'] == 'DPYD'
+        no_change = self.dataframe.loc[mask, 'genotype']
+        self.dataframe.loc[mask, 'genotype'] = np.where(True, self.dataframe.loc[mask, 'genotype'].apply(DPYD_get_activity),
+                                                        no_change)
+
+    def MTHFR677(self):
+        MTHFR677_dict = {
+            "A/A": "T/T",
+            "G/G": "C/C",
+            "A/G": "T/C",
+            "G/A": "T/C"
+        }
+        mask = self.dataframe['gene'] == 'MTHFR677'
+        condition = self.dataframe.loc[mask, 'genotype'].isin(MTHFR677_dict.keys())
+        if_true = self.dataframe.loc[mask, 'genotype'].map(MTHFR677_dict)
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'unknown')
+
+    def MTHFR1298(self):
+        MTHFR1298_dict = {
+            "T/T": "A/A",
+            "G/G": "C/C",
+            "T/G": "A/C",
+            "G/T": "A/C"
+        }
+        mask = self.dataframe['gene'] == 'MTHFR1298'
+        condition = self.dataframe.loc[mask, 'genotype'].isin(MTHFR1298_dict.keys())
+        if_true = self.dataframe.loc[mask, 'genotype'].map(MTHFR1298_dict)
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'unknown')

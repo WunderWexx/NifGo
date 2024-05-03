@@ -4,16 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="Created the complete dataframe, consisting of the genotype and phenotype dataframes.">
+    <list default="true" id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="Implemented about a quarter of the NifGo changes, but I figured out all the vectorization to use for the other changes.">
+      <change afterPath="$PROJECT_DIR$/Documentation/Notes.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Documentation/TO DO.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/.obsidian/workspace.json" beforeDir="false" afterPath="$PROJECT_DIR$/Documentation/.obsidian/workspace.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ELT.py" beforeDir="false" afterPath="$PROJECT_DIR$/ELT.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Nifgo_proprietary_changes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Nifgo_proprietary_changes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Output/Dataframes/complete.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Output/Dataframes/complete.xlsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Output/Dataframes/genotypes.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Output/Dataframes/genotypes.xlsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Output/Dataframes/phenotypes.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Output/Dataframes/phenotypes.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +160,15 @@
       <option name="project" value="LOCAL" />
       <updated>1714576429236</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Implemented about a quarter of the NifGo changes, but I figured out all the vectorization to use for the other changes.">
+      <option name="closed" value="true" />
+      <created>1714663705860</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1714663705860</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -195,6 +204,7 @@
     <MESSAGE value="Het ELT proces heeft nu een betere structuur. De genotype en phenotype dataframes hebben dezelfde structuur nu." />
     <MESSAGE value="Fenotype van de benodigde genen wordt bepaald in het genotype dataframe." />
     <MESSAGE value="Created the complete dataframe, consisting of the genotype and phenotype dataframes." />
-    <option name="LAST_COMMIT_MESSAGE" value="Created the complete dataframe, consisting of the genotype and phenotype dataframes." />
+    <MESSAGE value="Implemented about a quarter of the NifGo changes, but I figured out all the vectorization to use for the other changes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented about a quarter of the NifGo changes, but I figured out all the vectorization to use for the other changes." />
   </component>
 </project>
