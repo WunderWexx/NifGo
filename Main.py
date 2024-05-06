@@ -4,6 +4,9 @@
 import ELT
 import utilities as util
 import pandas as pd
+import Nifgo_proprietary_changes as changes
+
+# Could be rewritten to be clearer.
 
 # settings
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -12,7 +15,6 @@ pd.options.mode.chained_assignment = None  # default='warn'
 ThermoFisher_determined_genes = [
     'CACNA1S',
     'CFTR',
-    'COMT',
     'CYP1A2',
     'CYP2A6',
     'CYP2B6',
@@ -25,21 +27,15 @@ ThermoFisher_determined_genes = [
     'CYP3A5',
     'CYP4F2',
     'DPYD',
-    'F2',
-    'F5',
     'G6PD',
     'GSTP1',
     'IFNL3',
-    'MTHFR1298',
-    'MTHFR677',
     'MTRNR1',
     'NAT1',
     'NAT2',
     'RYR1',
-    'SLCO1B1',
     'TPMT',
     'UGT1A1',
-    'VKORC1'
 ]
 probeset_id_dict = gene_probe_mapping = {
     "AX-11340068": "MC4R",
@@ -84,10 +80,58 @@ probeset_id_dict = gene_probe_mapping = {
 }
 
 # body
-phenotypes_df = ELT.Ingest().phenotype_rpt(ThermoFisher_determined_genes)
-util.store_dataframe(phenotypes_df, 'phenotypes')
-util.printEntire(phenotypes_df)
+phenotypes_df = ELT.Extract().phenotype_rpt()
+phenotypes_df = ELT.Load().phenotype_rpt(phenotypes_df)
+phenotype_transformation = ELT.Transform().phenotype_rpt(phenotypes_df)
+print('phenotype import DONE')
+phenotype_transformation.remove_cel_suffix()
+phenotype_transformation.drop_gene_function()
+phenotype_transformation.filter_thermofisher_genes(ThermoFisher_determined_genes)
+phenotype_transformation.rename_known_call()
 
-genotypes_df = ELT.Ingest().genotype_txt(probeset_id_dict.keys())
+phenotypes_df = phenotype_transformation.dataframe
+util.store_dataframe(phenotypes_df, 'phenotypes')
+print('phenotype transformation DONE')
+
+print('genotype import [...]',end='\r')
+genotypes_df = ELT.Extract().genotype_txt()
+genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.keys())
+print('genotype import DONE')
+genotypes_transformation = ELT.Transform().genotype_txt(genotypes_df, probeset_id_dict)
+genotypes_transformation.drop_columns_after_dbsnp()
+genotypes_transformation.drop_cel_call_code_suffix()
+genotypes_transformation.unpivot_dataframe()
+genotypes_transformation.reorder_and_rename_columns()
+genotypes_transformation.add_gene_names()
+
+genotypes_df = genotypes_transformation.dataframe
 util.store_dataframe(genotypes_df, 'genotypes')
-util.printEntire(genotypes_df)
+print('genotype transformation DONE')
+
+data_preparation = ELT.DataPreparation(genotypes_df, phenotypes_df)
+data_preparation.merge_geno_and_phenotype_dataframes()
+data_preparation.determine_phenotype()
+
+complete_dataframe = data_preparation.complete_dataframe
+util.store_dataframe(complete_dataframe, 'complete')
+print('complete dataframe creation DONE')
+
+print('implementing NifGo changes [...]')
+general_changes = changes.GeneralChanges(complete_dataframe)
+general_changes.pick_first_result()
+complete_dataframe = general_changes.dataframe
+
+gene_name_changes = changes.GeneNameChanges(complete_dataframe)
+util.execute_all_methods(gene_name_changes)
+complete_dataframe = gene_name_changes.dataframe
+
+phenotype_changes = changes.PhenotypeChanges(complete_dataframe)
+util.execute_all_methods(phenotype_changes)
+complete_dataframe = phenotype_changes.dataframe
+
+genotype_changes = changes.GenotypeChanges(complete_dataframe)
+util.execute_all_methods(genotype_changes)
+
+complete_dataframe = genotype_changes.dataframe
+util.store_dataframe(complete_dataframe, 'complete')
+print('implementing NifGo changes DONE')
