@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="Deleted the batch specific files because they are too big for GitHub." />
+    <list default="true" id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="Implemented all the changes. Changed the data preparation order to accommodate these changes.&#10;MTHFR677 and 1298 now have their old names in the ELT process, which is updated in the proprietary changes." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,8 +23,25 @@
         <option value="Jarno" />
       </list>
     </option>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;WunderWexx&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/WunderWexx/NifGo.git&quot;,
+    &quot;accountId&quot;: &quot;e5504e76-7277-4409-b005-40e8c5702233&quot;
+  }
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -39,19 +56,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Python.ELT.executor": "Run",
-    "Python.Main.executor": "Run",
-    "Python.test.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/Documents/Werk/NifGo"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Python.ELT.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;NifGo__changes&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Documents/Werk/NifGo&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -92,7 +109,63 @@
       <option name="project" value="LOCAL" />
       <updated>1714416341986</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="ELT proces opgezet voor de twee grote files.">
+      <option name="closed" value="true" />
+      <created>1714416752020</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1714416752020</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Begonnen met het maken van de farmacogenetische rapporten, maar dat is een spin in het web.">
+      <option name="closed" value="true" />
+      <created>1714422754010</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1714422754010</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Het ELT proces heeft nu een betere structuur. De genotype en phenotype dataframes hebben dezelfde structuur nu.">
+      <option name="closed" value="true" />
+      <created>1714470031793</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1714470031793</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Fenotype van de benodigde genen wordt bepaald in het genotype dataframe.">
+      <option name="closed" value="true" />
+      <created>1714471856433</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1714471856433</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Created the complete dataframe, consisting of the genotype and phenotype dataframes.">
+      <option name="closed" value="true" />
+      <created>1714576429236</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1714576429236</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Implemented about a quarter of the NifGo changes, but I figured out all the vectorization to use for the other changes.">
+      <option name="closed" value="true" />
+      <created>1714663705860</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1714663705860</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Implemented all the changes. Changed the data preparation order to accommodate these changes.&#10;MTHFR677 and 1298 now have their old names in the ELT process, which is updated in the proprietary changes.">
+      <option name="closed" value="true" />
+      <created>1714729316746</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1714729316746</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -123,6 +196,13 @@
     <MESSAGE value="The general structure for the project." />
     <MESSAGE value="The ELT proces for the two main files." />
     <MESSAGE value="Deleted the batch specific files because they are too big for GitHub." />
-    <option name="LAST_COMMIT_MESSAGE" value="Deleted the batch specific files because they are too big for GitHub." />
+    <MESSAGE value="ELT proces opgezet voor de twee grote files." />
+    <MESSAGE value="Begonnen met het maken van de farmacogenetische rapporten, maar dat is een spin in het web." />
+    <MESSAGE value="Het ELT proces heeft nu een betere structuur. De genotype en phenotype dataframes hebben dezelfde structuur nu." />
+    <MESSAGE value="Fenotype van de benodigde genen wordt bepaald in het genotype dataframe." />
+    <MESSAGE value="Created the complete dataframe, consisting of the genotype and phenotype dataframes." />
+    <MESSAGE value="Implemented about a quarter of the NifGo changes, but I figured out all the vectorization to use for the other changes." />
+    <MESSAGE value="Implemented all the changes. Changed the data preparation order to accommodate these changes.&#10;MTHFR677 and 1298 now have their old names in the ELT process, which is updated in the proprietary changes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented all the changes. Changed the data preparation order to accommodate these changes.&#10;MTHFR677 and 1298 now have their old names in the ELT process, which is updated in the proprietary changes." />
   </component>
 </project>
