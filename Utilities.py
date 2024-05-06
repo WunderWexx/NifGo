@@ -64,8 +64,3 @@ def execute_all_methods(instance):
     for method_name in methods:
         method = getattr(instance, method_name)
         method()
-
-
-class DocumentFormatting:
-
-
