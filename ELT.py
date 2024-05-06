@@ -217,13 +217,13 @@ class DataPreparation:
         :return: A list of phenotypes corresponding to the entered sample.
         """
         phenotype_map = {
-            "F2": {"G/G": "PM", "A/A": "NM"},
-            "F5": {"C/C": "PM", "T/T": "NM"},
-            "OPRM1": {"A/A": "NM", "G/G": "PM"},
-            "MTHFRA1298C": {"T/T": "NM", "G/G": "PM"},
-            "MTHFRC677T": {"G/G": "NM", "A/A": "PM"},
-            "HLA-B*1502": {"G/G": "negatief", "C/C": "risico"},
-            "ABCB1": {"C/C": "NM", "T/T": "PM"},
+            "F2": {"G/G": "PM", "A/A": "NM", "G/A": "IM", "A/G": "IM"},
+            "F5": {"C/C": "PM", "T/T": "NM", "C/T": "IM", "T/C": "IM"},
+            "OPRM1": {"A/A": "NM", "G/G": "PM", "A/G": "IM", "G/A": "IM"},
+            "MTHFRA1298C": {"T/T": "NM", "G/G": "PM", "T/G": "IM", "G/T": "IM"},
+            "MTHFRC677T": {"G/G": "NM", "A/A": "PM", "G/A": "IM", "A/G": "IM"},
+            "HLA-B*1502": {"G/G": "negatief", "C/C": "risico", "G/C": "risico", "C/G": "risico"},
+            "ABCB1": {"C/C": "NM", "T/T": "PM", "C/T": "IM", "T/C": "IM"},
             "COMT": {"A/A": "PM", "A/G": "IM", "G/G": "NM"},
             "SLCO1B1": {"T/T": "NF", "T/C": "DF", "C/C": "PF"},
             "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"}
