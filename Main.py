@@ -2,9 +2,9 @@
 
 # imports
 import ELT
-import utilities as util
+import Utilities as util
 import pandas as pd
-import Nifgo_proprietary_changes as changes
+import NifgoProprietaryChanges as changes
 
 # Could be rewritten to be clearer.
 

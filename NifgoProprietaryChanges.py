@@ -3,7 +3,7 @@
 # You might try using a loop for PhenotypeChanges instead of applying each change. See whats faster.
 
 import numpy as np
-import utilities as util
+import Utilities as util
 
 class GeneralChanges:
     def __init__(self, dataframe):
