@@ -117,7 +117,6 @@ complete_dataframe = data_preparation.complete_dataframe
 util.store_dataframe(complete_dataframe, 'complete')
 print('complete dataframe creation DONE')
 
-print('implementing NifGo changes [...]')
 general_changes = changes.GeneralChanges(complete_dataframe)
 util.execute_all_methods(general_changes)
 complete_dataframe = general_changes.dataframe
@@ -142,9 +141,13 @@ unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
 for id in unique_sample_id_list:
     farmaco = FarmacoGeneticReport(sample_id= id,
                                    dataframe= complete_dataframe)
-    farmaco.block_1()
+    farmaco.inleiding()
     farmaco.id_table()
     farmaco.inhoudsopgave()
+    farmaco.table_heading()
     farmaco.uitslag_table()
+    farmaco.verklaring_fenotype()
+    farmaco.toelichting()
+    farmaco.variaties_waarop_is_getest()
     farmaco.save()
 print('Generating farmacogenetic reports DONE')

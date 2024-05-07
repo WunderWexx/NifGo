@@ -23,8 +23,12 @@
             "id": "ef9a8419b05b45d6",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "TO DO.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ],
@@ -94,6 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "TO DO.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,6 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "TO DO.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -131,7 +137,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "TO DO.md"
+              }
             }
           }
         ]
@@ -153,9 +161,10 @@
   },
   "active": "ef9a8419b05b45d6",
   "lastOpenFiles": [
-    "Main.md",
-    "Untitled.md",
     "TO DO.md",
-    "Notes.md"
+    "Notes.md",
+    "Hoe je dingen moet aanpassen.md",
+    "Main.md",
+    "Untitled.md"
   ]
 }

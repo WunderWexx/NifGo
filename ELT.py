@@ -199,7 +199,7 @@ class DataPreparation:
         self.pheno_df = pheno_df
 
     def select_geno_columns_for_insertion_into_pheno(self):
-        self.geno_df['phenotype'] = 'unknown'
+        self.geno_df['phenotype'] = 'Not_Determined'
         insertion_geno_df = self.geno_df[['sample_id','gene','phenotype','genotype']]
         return insertion_geno_df
 
@@ -222,7 +222,7 @@ class DataPreparation:
             "MTHFRA1298C": {"T/T": "NM", "G/G": "PM", "T/G": "IM", "G/T": "IM"},
             "MTHFRC677T": {"G/G": "NM", "A/A": "PM", "G/A": "IM", "A/G": "IM"},
             "HLA-B*1502": {"G/G": "negatief", "C/C": "risico", "G/C": "risico", "C/G": "risico"},
-            "ABCB1": {"C/C": "NM", "T/T": "PM", "C/T": "IM", "T/C": "IM"},
+            "ABCB1": {"G/G": "NM", "A/A": "PM", "G/A": "IM", "A/G": "IM"},
             "COMT": {"A/A": "PM", "A/G": "IM", "G/G": "NM"},
             "SLCO1B1": {"T/T": "NF", "T/C": "DF", "C/C": "PF"},
             "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"}
