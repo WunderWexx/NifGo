@@ -1,13 +1,10 @@
 # This is where the farmacogenetic report is generated
 
-# Needs to be rewritten to be more modular. Maybe use class inheritance
-
-# Imports
-import docx as dx
+# Imports'
 import Utilities as util
-from docx.shared import RGBColor,Pt, Cm
-from docx.enum.style import WD_STYLE_TYPE
+from docx.shared import Pt, RGBColor, Cm
 from datetime import date
+from WordDocument import WordEditing as wd
 
 # Globals
 # Dict van tekst die informatie geeft over de genen die voorkomen in het rapport
@@ -85,15 +82,14 @@ getesteVariatiesDict = {
 "VKORC1":"*2",
 }
 
-class FarmacoGeneticReport:
-
+class FarmacoGeneticReport(wd):
        def block_1(self):
               """
               Generates block 1 of all standard text.
               :return:
               """
-              self.document.add_picture("niFGo_logo.png")
-              self.nutriheading("\nFarmacogenetisch Rapport {}".format(date.today()))
+              self.document.add_picture("Input/NifGo_logo.png")
+              self.heading("\nFarmacogenetisch Rapport {}".format(date.today()))
               self.colour_bar()
               run = self.document.add_paragraph().add_run(
                      "Dit farmacogenetisch rapport geeft een analyse van het DNA en identificeert de relevante genetische variaties en hun effecten op de veiligheid en werkzaamheid van medicijnen. U bent getest op die genen, die de werkzaamheid van uw medicatie kunnen beïnvloeden. DNA is geïsoleerd uit speeksel.\n\n"
@@ -103,3 +99,128 @@ class FarmacoGeneticReport:
               )
               run.font.name = "Calibri"
               run.font.size = Pt(12)
+
+       def id_table(self):
+              """
+              Generates the table containing the customer data.
+              :return:
+              """
+              self.colour_bar()
+              customer_table = self.document.add_table(rows=1, cols=6)  # style = "Table Grid"
+              customerDatatypes = ["Naam", "Geb. datum", "Code"]
+              for type, column in zip(customerDatatypes, range(0, 5, 2)):
+                     paragraph = customer_table.cell(0, column).paragraphs[0]
+                     run = paragraph.add_run(type)
+                     run.bold = True
+                     run.font.name = "Calibri"
+                     run.font.size = Pt(12)
+              paragraph = customer_table.cell(0, 5).paragraphs[0]
+              run = paragraph.add_run(self.sample_id)
+              run.font.name = "Calibri"
+              run.font.size = Pt(12)
+              customer_table.allow_autofit = False
+              width_dict = {0: 2.63, 1: 3.39, 2: 3.92, 3: 2.5, 4: 2.25, 5: 2.78}
+              for i in range(5):
+                     for cell in customer_table.columns[i].cells:
+                            cell.width = Cm(width_dict[i])
+              self.colour_bar()
+
+       def inhoudsopgave(self):
+              """
+              Maakt de inhoudsopgave
+              :return:
+              """
+              self.heading("\nInhoudsopgave")
+              paragraph = self.document.add_paragraph()
+              run = paragraph.add_run("- overzicht uitslag\n\n"
+                                      "- toelichting uitslag\n\n"
+                                      "- variaties waarop is getest\n\n"
+                                      "- bijlage medicatiematch\n\n"
+                                      "- bijlage nutrigenomics (indien aangevraagd)")
+              run.font.name = 'Calibri'
+              run.font.size = Pt(12)
+
+       def block_farmaco(self):
+              """
+              :return: Standard text preceding the table of results from the farmacogenetic research.
+              """
+              self.document.add_page_break()
+              self.heading("De uitslag van het farmacogenetische onderzoek:", lined=True)
+              paragraph = self.document.add_paragraph()
+              self.linepacing(paragraph, 0.75)
+              run = paragraph.add_run(
+                     "(rood: afwijkend van normaal gemiddelde fenotype/functie/acetylatie en expressie)")
+              run.font.color.rgb = RGBColor(255, 0, 0)
+              run.font.name = "Calibri"
+              run.font.size = Pt(10)
+              run.bold = True
+
+       def uitslag_table(self):
+              report_genes = [
+                     "CACNA1S",
+                     "CFTR",
+                     "COMT",
+                     "CYP1A2",
+                     "CYP2A6",
+                     "CYP2B6",
+                     "CYP2C8",
+                     "CYP2C9",
+                     "CYP2C19",
+                     "CYP2D6",
+                     "CYP2E1",
+                     "CYP3A4",
+                     "CYP3A5",
+                     "CYP4F2",
+                     "DPYD",
+                     "F2",
+                     "F5",
+                     "G6PD",
+                     "GSTP1",
+                     "HLA-B*1502",
+                     "IFNL3",
+                     "MTHFR1298",
+                     "MTHFR677",
+                     "MTRNR1",
+                     "NAT1",
+                     "NAT2",
+                     "RYR1",
+                     "SLCO1B1",
+                     "TPMT",
+                     "UGT1A1",
+                     "VKORC1"
+              ]
+              df = self.dataframe[self.dataframe['sample_id'] == self.sample_id]
+              df = df[df['gene'].isin(report_genes)]
+              df.drop(['sample_id'], axis= 'columns', inplace=True)
+              df.rename(columns={'gene':'Gen', 'phenotype':'Fenotype/functie', 'genotype':'Uitslag'}, inplace=True)
+
+              # add a table to the end and create a reference variable
+              # extra row is so we can add the header row
+              t = self.document.add_table(df.shape[0] + 1, df.shape[1])
+              t.style = "Table Grid"
+
+              # add the header rows.
+              for j in range(df.shape[-1]):
+                     header_cells = t.rows[0].cells
+                     paragraph = header_cells[j].paragraphs[0]
+                     run = paragraph.add_run(df.columns[j])
+                     run.bold = True
+                     run.font.name = 'Calibri'
+                     run.font.size = Pt(12)
+
+              # add the rest of the data frame
+              for i in range(df.shape[0]):
+                     for j in range(df.shape[-1]):
+                            normal_cells = t.rows[i + 1].cells
+                            paragraph = normal_cells[j].paragraphs[0]
+                            run = paragraph.add_run(str(df.values[i, j]))
+                            run.font.name = 'Calibri'
+                            run.font.size = Pt(12)
+
+       def save(self):
+              """
+              Saves the document with a name based on the customer id and the type of document.
+              :return:
+              """
+              document_name = 'FarmacogeneticReport' + "_" + self.sample_id + ".docx"
+              self.document.save(f"Output\\Reports\\{document_name}")

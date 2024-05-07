@@ -1,17 +1,17 @@
 # The class that has all the Word editing functions
 
 import docx as dx
-from docx.shared import RGBColor,Pt
+from docx.shared import RGBColor,Pt, Cm
 from docx.enum.style import WD_STYLE_TYPE
 from docx.oxml import parse_xml
 from docx.oxml.ns import qn,nsdecls
 from docx.oxml.shared import OxmlElement
 
 class WordEditing:
-    def __init__(self, customer_id, doc_type):
-        self.customer_id = customer_id
+    def __init__(self, sample_id, dataframe):
+        self.sample_id = sample_id
         self.document = dx.Document()
-        self.doc_type = doc_type
+        self.dataframe = dataframe
 
         # Adds a style to the document meant for the coloured bars
         styles = self.document.styles
@@ -25,6 +25,14 @@ class WordEditing:
         style.base_style = styles['Normal']
         style.font.name = "Calibri"
         style.font.size = Pt(11)
+
+        # Sets the margins of the document
+        sections = self.document.sections
+        for section in sections:
+            section.top_margin = Cm(1)
+            section.bottom_margin = Cm(-0.9)
+            section.left_margin = Cm(2.5)
+            section.right_margin = Cm(1.5)
 
     def linepacing(self, paragraph, spacing):
         paragraph_format = paragraph.paragraph_format
