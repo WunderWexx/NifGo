@@ -1,0 +1,1 @@
+De filosofie is dat alle functies los van elkaar staan, en vrijwel zelfvoorzienend zijn. Als er ergens iets niet klopt hoeft daar idealiter maar 1 functie voor gewijzigd te worden.

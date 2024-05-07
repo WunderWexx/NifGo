@@ -4,54 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="Fixed bug where determine_phenotype function would make almost all phenotypes unknown.">
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000035.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000057.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000085.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000105.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000126.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000159.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000160.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000161.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000182.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000184.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000201.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000204.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000205.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000206.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000208.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000209.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000215.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000216.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000217.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000227.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000229.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000230.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000231.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000232.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000233.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000238.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000239.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000240.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000242.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000243.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000244.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000246.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000250.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D402000388.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D402000408.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Documentation/.obsidian/workspace.json" beforeDir="false" afterPath="$PROJECT_DIR$/Documentation/.obsidian/workspace.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Documentation/Notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/Documentation/Notes.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Documentation/TO DO.md" beforeDir="false" afterPath="$PROJECT_DIR$/Documentation/TO DO.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ELT.py" beforeDir="false" afterPath="$PROJECT_DIR$/ELT.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FarmacogeneticReport.py" beforeDir="false" afterPath="$PROJECT_DIR$/FarmacogeneticReport.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NifgoProprietaryChanges.py" beforeDir="false" afterPath="$PROJECT_DIR$/NifgoProprietaryChanges.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Output/Dataframes/complete.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Output/Dataframes/complete.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Output/Dataframes/genotypes.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Output/Dataframes/genotypes.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Output/Dataframes/phenotypes.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Output/Dataframes/phenotypes.xlsx" afterDir="false" />
-    </list>
+    <list default="true" id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="Fixed bug where determine_phenotype function would make almost all phenotypes unknown." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,7 +25,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="FarmacogeneticReport" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -83,12 +36,22 @@
     &quot;assignee&quot;: &quot;WunderWexx&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/WunderWexx/NifGo.git&quot;,
-    &quot;accountId&quot;: &quot;e5504e76-7277-4409-b005-40e8c5702233&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/WunderWexx/NifGo.git",
+    "accountId": "e5504e76-7277-4409-b005-40e8c5702233"
+  },
+  "recentNewPullRequestHead": {
+    "server": {
+      "useHttp": false,
+      "host": "github.com",
+      "port": null,
+      "suffix": null
+    },
+    "owner": "WunderWexx",
+    "repository": "NifGo"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -112,7 +75,7 @@
     "Python.test.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "FarmacogeneticReport",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "D:/Documents/Werk/NifGo"
   }
