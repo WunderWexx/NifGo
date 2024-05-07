@@ -4,7 +4,54 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="Implemented all the changes. Changed the data preparation order to accommodate these changes.&#10;MTHFR677 and 1298 now have their old names in the ELT process, which is updated in the proprietary changes." />
+    <list default="true" id="3a4c9d63-258b-40aa-9ff2-ea2ea00363e9" name="Changes" comment="Fixed bug where determine_phenotype function would make almost all phenotypes unknown.">
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000035.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000057.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000085.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000105.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000126.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000159.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000160.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000161.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000182.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000184.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000201.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000204.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000205.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000206.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000208.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000209.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000215.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000216.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000217.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000227.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000229.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000230.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000231.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000232.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000233.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000238.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000239.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000240.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000242.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000243.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000244.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000246.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D306000250.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D402000388.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Output/Reports/FarmacogeneticReport_D402000408.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/.obsidian/workspace.json" beforeDir="false" afterPath="$PROJECT_DIR$/Documentation/.obsidian/workspace.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/Documentation/Notes.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/TO DO.md" beforeDir="false" afterPath="$PROJECT_DIR$/Documentation/TO DO.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ELT.py" beforeDir="false" afterPath="$PROJECT_DIR$/ELT.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FarmacogeneticReport.py" beforeDir="false" afterPath="$PROJECT_DIR$/FarmacogeneticReport.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NifgoProprietaryChanges.py" beforeDir="false" afterPath="$PROJECT_DIR$/NifgoProprietaryChanges.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Output/Dataframes/complete.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Output/Dataframes/complete.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Output/Dataframes/genotypes.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Output/Dataframes/genotypes.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Output/Dataframes/phenotypes.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Output/Dataframes/phenotypes.xlsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -56,19 +103,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Python.ELT.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;NifGo__changes&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Documents/Werk/NifGo&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Python.ELT.executor": "Run",
+    "Python.FarmacogeneticReport.executor": "Run",
+    "Python.Main.executor": "Run",
+    "Python.test.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "FarmacogeneticReport",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/Documents/Werk/NifGo"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -165,7 +213,39 @@
       <option name="project" value="LOCAL" />
       <updated>1714729316746</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="That's the last of the Changes!">
+      <option name="closed" value="true" />
+      <created>1714983507626</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1714983507626</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Renamed the files to match a common style guide, and made a separate file for the class that edits Word documents.">
+      <option name="closed" value="true" />
+      <created>1714985118419</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1714985118419</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Removed empty class">
+      <option name="closed" value="true" />
+      <created>1714985144570</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1714985144570</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Fixed bug where determine_phenotype function would make almost all phenotypes unknown.">
+      <option name="closed" value="true" />
+      <created>1715082347376</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1715082347376</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -203,6 +283,10 @@
     <MESSAGE value="Created the complete dataframe, consisting of the genotype and phenotype dataframes." />
     <MESSAGE value="Implemented about a quarter of the NifGo changes, but I figured out all the vectorization to use for the other changes." />
     <MESSAGE value="Implemented all the changes. Changed the data preparation order to accommodate these changes.&#10;MTHFR677 and 1298 now have their old names in the ELT process, which is updated in the proprietary changes." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented all the changes. Changed the data preparation order to accommodate these changes.&#10;MTHFR677 and 1298 now have their old names in the ELT process, which is updated in the proprietary changes." />
+    <MESSAGE value="That's the last of the Changes!" />
+    <MESSAGE value="Renamed the files to match a common style guide, and made a separate file for the class that edits Word documents." />
+    <MESSAGE value="Removed empty class" />
+    <MESSAGE value="Fixed bug where determine_phenotype function would make almost all phenotypes unknown." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed bug where determine_phenotype function would make almost all phenotypes unknown." />
   </component>
 </project>

@@ -3,7 +3,7 @@
 # You might try using a loop for PhenotypeChanges instead of applying each change. See whats faster.
 
 import numpy as np
-import utilities as util
+import Utilities as util
 
 class GeneralChanges:
     def __init__(self, dataframe):
@@ -170,7 +170,7 @@ class PhenotypeChanges:
         mask = self.dataframe['gene'] == 'CYP3A5'
         condition = self.dataframe.loc[mask, 'phenotype'].isin(CYP3A5_dict.keys())  # This is also a mask
         if_true = self.dataframe.loc[mask, 'phenotype'].map(CYP3A5_dict)
-        self.dataframe.loc[mask, 'phenotype'] = np.where(condition, if_true, 'unknown')
+        self.dataframe.loc[mask, 'phenotype'] = np.where(condition, if_true, 'ERROR')
 
 class GenotypeChanges:
     def __init__(self, dataframe):
@@ -189,7 +189,7 @@ class GenotypeChanges:
         mask = self.dataframe['gene'] == 'COMT'
         condition = self.dataframe.loc[mask, 'phenotype'].isin(COMT_dict.keys())  # This is also a mask
         if_true = self.dataframe.loc[mask, 'phenotype'].map(COMT_dict)
-        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'unknown')
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
 
 
     def IFNL3(self):
@@ -210,7 +210,7 @@ class GenotypeChanges:
         mask = self.dataframe['gene'] == 'VKORC1'
         condition = self.dataframe.loc[mask, 'phenotype'].isin(VKORC1_dict.keys()) #This is also a mask
         if_true = self.dataframe.loc[mask,'phenotype'].map(VKORC1_dict)
-        self.dataframe.loc[mask,'genotype'] = np.where(condition, if_true, 'unknown')
+        self.dataframe.loc[mask,'genotype'] = np.where(condition, if_true, 'ERROR')
 
     def SLCO1B1(self):
         SLCO1B1_dict = {
@@ -221,7 +221,7 @@ class GenotypeChanges:
         mask = self.dataframe['gene'] == 'SLCO1B1'
         condition = self.dataframe.loc[mask, 'phenotype'].isin(SLCO1B1_dict.keys())  # This is also a mask
         if_true = self.dataframe.loc[mask, 'phenotype'].map(SLCO1B1_dict)
-        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'unknown')
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
 
     def CYP2C9(self):
         mask = self.dataframe['gene'] == 'CYP12C9'
@@ -286,7 +286,7 @@ class GenotypeChanges:
         mask = self.dataframe['gene'] == 'MTHFR677'
         condition = self.dataframe.loc[mask, 'genotype'].isin(MTHFR677_dict.keys())
         if_true = self.dataframe.loc[mask, 'genotype'].map(MTHFR677_dict)
-        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'unknown')
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
 
     def MTHFR1298(self):
         MTHFR1298_dict = {
@@ -298,4 +298,4 @@ class GenotypeChanges:
         mask = self.dataframe['gene'] == 'MTHFR1298'
         condition = self.dataframe.loc[mask, 'genotype'].isin(MTHFR1298_dict.keys())
         if_true = self.dataframe.loc[mask, 'genotype'].map(MTHFR1298_dict)
-        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'unknown')
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')

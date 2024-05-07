@@ -1,12 +1,13 @@
 # Where everything comes together
 
+# Could be rewritten to be clearer.
+
 # imports
 import ELT
-import utilities as util
+import Utilities as util
 import pandas as pd
-import Nifgo_proprietary_changes as changes
-
-# Could be rewritten to be clearer.
+import NifgoProprietaryChanges as changes
+from FarmacogeneticReport import FarmacoGeneticReport
 
 # settings
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -79,7 +80,7 @@ probeset_id_dict = gene_probe_mapping = {
     "AX-122936861": "VKORC1"
 }
 
-# body
+# Data preparation
 phenotypes_df = ELT.Extract().phenotype_rpt()
 phenotypes_df = ELT.Load().phenotype_rpt(phenotypes_df)
 phenotype_transformation = ELT.Transform().phenotype_rpt(phenotypes_df)
@@ -116,9 +117,8 @@ complete_dataframe = data_preparation.complete_dataframe
 util.store_dataframe(complete_dataframe, 'complete')
 print('complete dataframe creation DONE')
 
-print('implementing NifGo changes [...]')
 general_changes = changes.GeneralChanges(complete_dataframe)
-general_changes.pick_first_result()
+util.execute_all_methods(general_changes)
 complete_dataframe = general_changes.dataframe
 
 gene_name_changes = changes.GeneNameChanges(complete_dataframe)
@@ -135,3 +135,19 @@ util.execute_all_methods(genotype_changes)
 complete_dataframe = genotype_changes.dataframe
 util.store_dataframe(complete_dataframe, 'complete')
 print('implementing NifGo changes DONE')
+
+# Reports generation
+unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
+for id in unique_sample_id_list:
+    farmaco = FarmacoGeneticReport(sample_id= id,
+                                   dataframe= complete_dataframe)
+    farmaco.inleiding()
+    farmaco.id_table()
+    farmaco.inhoudsopgave()
+    farmaco.table_heading()
+    farmaco.uitslag_table()
+    farmaco.verklaring_fenotype()
+    farmaco.toelichting()
+    farmaco.variaties_waarop_is_getest()
+    farmaco.save()
+print('Generating farmacogenetic reports DONE')

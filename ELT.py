@@ -5,7 +5,7 @@ import pandas as pd
 import PySimpleGUI as sg
 import math
 import csv
-
+import numpy as np
 
 class Extract:
     """
@@ -27,11 +27,11 @@ class Extract:
 
     @staticmethod
     def pharmacydata():
-        return pd.read_excel("Input/global_files/apotheekinfosysteem.xlsx")
+        return pd.read_excel("Inputs/apotheekinfosysteem.xlsx")
 
     @staticmethod
     def nutrimarkers():
-        return pd.read_excel("Input/global_files/nutri_markers.xlsx")
+        return pd.read_excel("Inputs/nutri_markers.xlsx")
 
     def phenotype_rpt(self):
         return self.extract_user_specified_file('phenotype.rpt')
@@ -193,14 +193,13 @@ class Transform:
             self.dataframe['gene'] = new_column
 
 
-
 class DataPreparation:
     def __init__(self, geno_df, pheno_df):
         self.geno_df = geno_df
         self.pheno_df = pheno_df
 
     def select_geno_columns_for_insertion_into_pheno(self):
-        self.geno_df['phenotype'] = 'unknown'
+        self.geno_df['phenotype'] = 'Not_Determined'
         insertion_geno_df = self.geno_df[['sample_id','gene','phenotype','genotype']]
         return insertion_geno_df
 
@@ -217,18 +216,24 @@ class DataPreparation:
         :return: A list of phenotypes corresponding to the entered sample.
         """
         phenotype_map = {
-            "F2": {"G/G": "PM", "A/A": "NM", "G/A": "IM", "A/G": "IM"},
-            "F5": {"C/C": "PM", "T/T": "NM", "C/T": "IM", "T/C": "IM"},
+            "F2": {"G/G": "PM", "A/A": "risico", "G/A": "risico", "A/G": "risico"},
+            "F5": {"C/C": "PM", "T/T": "risico", "C/T": "risico", "T/C": "risico"},
             "OPRM1": {"A/A": "NM", "G/G": "PM", "A/G": "IM", "G/A": "IM"},
             "MTHFRA1298C": {"T/T": "NM", "G/G": "PM", "T/G": "IM", "G/T": "IM"},
             "MTHFRC677T": {"G/G": "NM", "A/A": "PM", "G/A": "IM", "A/G": "IM"},
             "HLA-B*1502": {"G/G": "negatief", "C/C": "risico", "G/C": "risico", "C/G": "risico"},
-            "ABCB1": {"C/C": "NM", "T/T": "PM", "C/T": "IM", "T/C": "IM"},
+            "ABCB1": {"G/G": "NM", "A/A": "PM", "G/A": "IM", "A/G": "IM"},
             "COMT": {"A/A": "PM", "A/G": "IM", "G/G": "NM"},
             "SLCO1B1": {"T/T": "NF", "T/C": "DF", "C/C": "PF"},
             "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"}
         }
 
-        map_gene_to_phenotype = lambda gene, genotype: phenotype_map.get(gene, {}).get(genotype, 'unknown')
-        self.complete_dataframe['phenotype'] = self.complete_dataframe.apply(
-            lambda row: map_gene_to_phenotype(row['gene'], row['genotype']), axis=1)
+        def change_gen(gene, gene_map):
+            mask = self.complete_dataframe['gene'] == gene
+            no_change = self.complete_dataframe.loc[mask, 'phenotype']
+            self.complete_dataframe.loc[mask, 'phenotype'] = \
+                np.where(self.complete_dataframe.loc[mask, 'genotype'].isin(gene_map.keys()),
+                self.complete_dataframe.loc[mask, 'genotype'].map(gene_map), "ERROR")
+
+        for gene in phenotype_map.keys():
+            change_gen(gene, phenotype_map[gene])
