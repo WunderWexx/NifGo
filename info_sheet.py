@@ -1,7 +1,6 @@
 # This is where the pharmacist info sheet is generated
 
-# Imports'
-import Utilities as util
+# Imports
 from docx.shared import Pt, Cm
 from WordDocument import WordEditing as wd
 import ELT

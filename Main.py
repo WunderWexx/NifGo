@@ -137,9 +137,9 @@ complete_dataframe = genotype_changes.dataframe
 util.store_dataframe(complete_dataframe, 'complete')
 print('implementing NifGo changes DONE')
 
-# Farmacogenetic Reports generation
 unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
 
+# Farmacogenetic Reports generation
 print('Generating farmacogenetic reports [...]')
 for id in unique_sample_id_list:
     farmaco = FarmacoGeneticReport(sample_id= id,
@@ -155,6 +155,7 @@ for id in unique_sample_id_list:
     farmaco.save()
 print('Generating farmacogenetic reports DONE')
 
+# Infosheet generation
 print('Generating info sheets [...]')
 for id in unique_sample_id_list:
     infosheet = InfoSheet(sample_id= id,
