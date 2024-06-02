@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Hoe je dingen moet aanpassen.md",
+                "file": "TO DO.md",
                 "mode": "source",
                 "source": false
               }
@@ -98,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Hoe je dingen moet aanpassen.md",
+                "file": "TO DO.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Hoe je dingen moet aanpassen.md",
+                "file": "TO DO.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Hoe je dingen moet aanpassen.md"
+                "file": "TO DO.md"
               }
             }
           }
@@ -161,9 +161,9 @@
   },
   "active": "ef9a8419b05b45d6",
   "lastOpenFiles": [
+    "Hoe je dingen moet aanpassen.md",
     "TO DO.md",
     "Notes.md",
-    "Hoe je dingen moet aanpassen.md",
     "Main.md",
     "Untitled.md"
   ]

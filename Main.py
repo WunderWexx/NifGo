@@ -49,7 +49,7 @@ probeset_id_dict = gene_probe_mapping = {
     "AX-11620565": "VDR",
     "AX-11626417": "BCO1",
     "AX-11652775": "TCF7L2",
-    "AX-122940319": "Sult1A1",
+    "rs1042028": "Sult1A1",
     "AX-14792713": "ADRA2A",
     "AX-15693373": "GCK,YKT6",
     "AX-165872626": "MTHFRA1298C",
