@@ -8,6 +8,7 @@ import Utilities as util
 import pandas as pd
 import NifgoProprietaryChanges as changes
 from FarmacogeneticReport import FarmacoGeneticReport
+from info_sheet import InfoSheet
 
 # settings
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -83,8 +84,8 @@ probeset_id_dict = gene_probe_mapping = {
 # Data preparation
 phenotypes_df = ELT.Extract().phenotype_rpt()
 phenotypes_df = ELT.Load().phenotype_rpt(phenotypes_df)
-phenotype_transformation = ELT.Transform().phenotype_rpt(phenotypes_df)
 print('phenotype import DONE')
+phenotype_transformation = ELT.Transform().phenotype_rpt(phenotypes_df)
 phenotype_transformation.remove_cel_suffix()
 phenotype_transformation.drop_gene_function()
 phenotype_transformation.filter_thermofisher_genes(ThermoFisher_determined_genes)
@@ -139,6 +140,7 @@ print('implementing NifGo changes DONE')
 # Farmacogenetic Reports generation
 unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
 
+print('Generating farmacogenetic reports [...]')
 for id in unique_sample_id_list:
     farmaco = FarmacoGeneticReport(sample_id= id,
                                    dataframe= complete_dataframe)
@@ -152,3 +154,12 @@ for id in unique_sample_id_list:
     farmaco.variaties_waarop_is_getest()
     farmaco.save()
 print('Generating farmacogenetic reports DONE')
+
+print('Generating info sheets [...]')
+for id in unique_sample_id_list:
+    infosheet = InfoSheet(sample_id= id,
+                          dataframe= complete_dataframe)
+    infosheet.standard_text()
+    infosheet.table()
+    infosheet.save()
+print('Generating info sheets [DONE]')

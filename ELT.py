@@ -27,11 +27,11 @@ class Extract:
 
     @staticmethod
     def pharmacydata():
-        return pd.read_excel("Inputs/apotheekinfosysteem.xlsx")
+        return pd.read_excel("Input/apotheekinfosysteem.xlsx")
 
     @staticmethod
     def nutrimarkers():
-        return pd.read_excel("Inputs/nutri_markers.xlsx")
+        return pd.read_excel("Input/nutri_markers.xlsx")
 
     def phenotype_rpt(self):
         return self.extract_user_specified_file('phenotype.rpt')
