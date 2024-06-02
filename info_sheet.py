@@ -1,12 +1,15 @@
 # This is where the pharmacist info sheet is generated
 
-# Imports'
-import Utilities as util
+# Imports
 from docx.shared import Pt, Cm
 from WordDocument import WordEditing as wd
 import ELT
 
 class InfoSheet(wd):
+    def __init__(self, sample_id, dataframe):
+        super().__init__(sample_id, dataframe)
+        self.pharmacy_data = ELT.Extract().pharmacydata()
+
     def standard_text(self):
         self.heading("Apotheker informatieblad", chosen_size=16, lined=True, colour=(0,0,0), is_bold=False)
         run = self.document.add_paragraph().add_run("Naam :\nGeboortedatum :")
@@ -49,7 +52,7 @@ class InfoSheet(wd):
         df.drop(['sample_id'], axis='columns', inplace=True)
         df.rename(columns={'gene': 'Gen', 'phenotype': 'Fenotype/functie', 'genotype': 'Uitslag'}, inplace=True)
 
-        pharmacy_data = ELT.Extract().pharmacydata()
+        pharmacy_data = self.pharmacy_data
         pharmacy_codes = []
         infosystem_texts = []
         for gen, phenotype, genotype in zip(df['Gen'], df['Fenotype/functie'], df['Uitslag']):
