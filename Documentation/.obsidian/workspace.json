@@ -30,9 +30,21 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "590c6c57722c0549",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "TO DO.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -159,7 +171,7 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "ef9a8419b05b45d6",
+  "active": "590c6c57722c0549",
   "lastOpenFiles": [
     "Hoe je dingen moet aanpassen.md",
     "TO DO.md",

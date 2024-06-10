@@ -14,7 +14,7 @@ class Extract:
 
     def __init__(self):
         """
-        Sets the field_size_liimit to the maximum number the
+        Sets the field_size_limit to the maximum number the
         """
         csv.field_size_limit(1000000000)
 
@@ -54,7 +54,7 @@ class Load:
         :param dataframe: phenotype.rpt dataframe
         :return: The cleaned phenotype.rpt dataframe
         """
-        rowcount = dataframe[dataframe[0].str.contains("0001")].index.min()
+        rowcount = dataframe[dataframe[0].str.contains("0001-0016")].index.min()
         dataframe = dataframe.iloc[rowcount:]
         dataframe.reset_index(drop=True, inplace=True)
 

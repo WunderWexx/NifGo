@@ -1,4 +1,4 @@
-DPYD proces aanpassen
+DPYD proces aanpassen zodat het overeen komt met NifGo logica.
 
 ABCB1 genotype aanpassen. G->C en A->T
 
