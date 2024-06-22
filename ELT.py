@@ -154,13 +154,17 @@ class Transform:
             self.dataframe = dataframe
             self.probeset_ids = probeset_ids
 
-        def drop_columns_after_dbsnp(self):
+        def drop_columns_after_last_sample(self):
             """
-            Drops all columns after the dbSNP_RS_ID column.
+            Drops all columns after the last sample. Samples are assumed to always start with D.
             :return: DataFrame with columns dropped
             """
-            dbSNP_index = self.dataframe.columns.get_loc('dbSNP_RS_ID')
-            self.dataframe = self.dataframe.iloc[:, :dbSNP_index + 1]
+            for column in self.dataframe.columns:
+                if column[0] not in ['p','D']: #Being either probeset_id or something like D402000223.CEL_call_code.
+                    drop_from_here_column = column
+                    break
+            index = self.dataframe.columns.get_loc(drop_from_here_column)
+            self.dataframe = self.dataframe.iloc[:, :index + 1]
 
         def drop_cel_call_code_suffix(self):
             """
