@@ -215,7 +215,7 @@ class GenotypeChanges:
     def SLCO1B1(self):
         SLCO1B1_dict = {
             "NF": "521TT",
-            "PF": "521CC",
+            "PF": "521util",
             "DF": "521TC"
         }
         mask = self.dataframe['gene'] == 'SLCO1B1'
@@ -254,27 +254,53 @@ class GenotypeChanges:
 
     def DPYD(self):
         def DPYD_get_activity(known_call):
+            # *13 = c.1679T>G
+            #'c.1129-5923C>G', 'c.1905+1G>A', 'c.1129-5923C>G', 'c.295_298delTCAT'
             allel_list = known_call.split("/")
             allel1 = allel_list[0]
-            if allel1 == "":  # Meaning that  DPYD is unknown, giving an empty field in known_call
-                return None
+            if allel1 == '':
+                return 'ERROR' #If DPYD is unknown, and thus the known_call is empty, an ERROR will be inserted into the dataframe to denote an unknown
             allel2 = allel_list[1]
-            if (allel1 == allel2) and (allel1 not in ["*13", "c.1236G>A", "c.2846A>T"]):
-                return "AS: 2"
-            if (allel1 or allel2) in ["c.2846A>T", "c.1236G>A", 'c.1129-5923C>G', 'c.1905+1G>A']:
-                return "AS: 1.5"
-            if (allel1 or allel2) == "*13":
-                return "AS: 1"
-            if (allel1 != allel2) and ((allel1 and allel2) in ["*13", "c.1236G>A", "c.2846A>T"]):
-                return "AS: 0.5"
-            if allel1 == allel2 == ("*13" or "*2"):
-                return "AS: 0"
-            raise Exception("No activity level determined")
+            actLvl = None
+            #Eurofins test onder andere de variaties c.1679T>G, c.1236G>A en c.2846A>T.
+            # Als deze 3 variaties niet zijn gevonden dan aangeven in de rapportage activiteitsscore 2
+            if not util.common_data(allel_list, ['c.1679T>G', "c.1236G>A", "c.2846A>T"]):
+                actLvl = 2
+
+            # Als bij 1 allel een van de variaties c.2846A>T of c.1236G>A worden gevonden dan aangeven
+            # in de rapportage activiteitsscore 1,5.
+            variaties = ["c.2846A>T", "c.1236G>A"]
+            if (
+                (allel1 in variaties and allel2 not in variaties)
+                or (allel2 in variaties and allel1 not in variaties)
+            ):
+                actLvl = 1.5
+
+            # Als bij 1 allel de variatie *13 wordt gevonden dan aangeven in de rapportage activiteitsscore 1
+            if ('c.1679T>G' in allel_list) and (allel1 != allel2):
+                actLvl = 1
+
+            # Bij uitslagen 1236GA/2846AT, 1236GA/*13 en 2846AT/*13 de activiteitsscore 0,5
+            if (
+                ("c.2846A>T" and "c.1236G>A" in allel_list)
+                or (actLvl == 1 and util.common_data(allel_list, ["c.2846A>T", "c.1236G>A"]))
+            ):
+                actLvl = 0.5
+
+            # Bij de uitslag *13/*13 aangeven in de rapportage de activiteitsscore 0
+            if (allel1 == allel2) and allel1 == 'c.1679T>G':
+                actLvl = 0
+
+            if actLvl == None:
+                raise Exception(f"No activity level determined for DYPD {known_call}")
+            else:
+                return f'AS: {actLvl}'
 
         mask = self.dataframe['gene'] == 'DPYD'
         no_change = self.dataframe.loc[mask, 'genotype']
         self.dataframe.loc[mask, 'genotype'] = np.where(True, self.dataframe.loc[mask, 'genotype'].apply(DPYD_get_activity),
                                                         no_change)
+
 
     def MTHFR677(self):
         MTHFR677_dict = {
