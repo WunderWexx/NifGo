@@ -34,6 +34,13 @@ class WordEditing:
             section.left_margin = Cm(2.5)
             section.right_margin = Cm(1.5)
 
+    @staticmethod
+    def centimeters(amount):
+        """
+        Converts pyhton-docx's English Metric Units to Inches by multiplying by 914400, then divides by 2.54 to get centimeters.
+        """
+        return (amount * 914400) / 2.54
+
     def linepacing(self, paragraph, spacing):
         paragraph_format = paragraph.paragraph_format
         paragraph_format.line_spacing = spacing

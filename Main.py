@@ -10,6 +10,7 @@ import NifgoProprietaryChanges as changes
 from FarmacogeneticReport import FarmacoGeneticReport
 from info_sheet import InfoSheet
 from NutrinomicsReport import NutrinomicsReport
+from MedicationReport import MedicationReport
 from Globals import ThermoFisher_determined_genes, probeset_id_dict
 
 # settings
@@ -34,7 +35,7 @@ genotypes_df = ELT.Extract().genotype_txt()
 genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.keys())
 print('genotype import DONE')
 genotypes_transformation = ELT.Transform().genotype_txt(genotypes_df, probeset_id_dict)
-genotypes_transformation.drop_columns_after_dbsnp()
+genotypes_transformation.drop_columns_after_last_sample()
 genotypes_transformation.drop_cel_call_code_suffix()
 genotypes_transformation.unpivot_dataframe()
 genotypes_transformation.reorder_and_rename_columns()
@@ -109,3 +110,13 @@ for id in unique_sample_id_list:
     nutrinomics.Toelichting()
     nutrinomics.save()
 print('Generating nutrinomics reports [DONE]')
+
+# Medication report generation
+print('Generating medication reports [...]')
+for id in unique_sample_id_list:
+    medrep = MedicationReport(sample_id= id,
+                              dataframe= complete_dataframe)
+    medrep.medrep_intro_text()
+    medrep.medrep_core_exec()
+    medrep.save()
+print('Generating medication reports [DONE]')
