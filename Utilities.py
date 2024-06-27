@@ -44,7 +44,7 @@ def is_substring_present_in_substring(data_to_search,string_to_find):
     :param string_to_find: The smaller string you are trying to find.
     :return: True or False
     """
-    if data_to_search.find(string_to_find) >= 0:
+    if data_to_search.find(string_to_find) >= -1:
         return True
     else:
         return False
