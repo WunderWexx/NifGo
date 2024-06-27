@@ -57,3 +57,10 @@ def execute_all_methods(instance):
     for method_name in methods:
         method = getattr(instance, method_name)
         method()
+
+def get_key_from_value(dict, value):
+    # list out keys and values separately
+    key_list = list(dict.keys())
+    val_list = list(dict.values())
+    position = val_list.index(value)
+    return key_list[position]
