@@ -36,6 +36,14 @@ def common_data(list1, list2):
                 return result
     return
 
+def lists_contain_same_data(list1, list2):
+    for item in list1:
+        if item in list2:
+            continue
+        else: return False
+    return True
+
+
 def is_substring_present_in_substring(data_to_search,string_to_find):
     """
     Tells you, by returning True or False, if the string you're looking for has been found,
@@ -59,8 +67,14 @@ def execute_all_methods(instance):
         method()
 
 def get_key_from_value(dict, value):
-    # list out keys and values separately
-    key_list = list(dict.keys())
-    val_list = list(dict.values())
-    position = val_list.index(value)
-    return key_list[position]
+    key = list(dict.keys())[list(dict.values()).index(value)]
+    return key
+
+def get_key_from_nested_value(dict, value):
+    keys = list(dict.keys())
+    values = list(dict.values())
+    for value_list, index in zip(values, range(len(values))):
+        for nested_value in value_list:
+            if nested_value == value:
+                key = list(dict.keys())[index]
+                return key
