@@ -12,12 +12,12 @@
 # Zijn alle genen present? [DONE]
 
 # Voor de nutrinomics:
-# Kloppen de dbSNP nummers?
+# Kloppen de dbSNP nummers? [PENDING]
 # Zijn de genotypes plausibel? [DONE]
 # Zijn alle genen present? [DONE]
 
 # Algemeen:
-# Frequentie van allellen (moeilijk / tijdrovend)
+# Frequentie van allellen (moeilijk / tijdrovend) [PENDING]
 # Afwijking van de norm
 # Frequentie van fenotypes
 
@@ -289,3 +289,74 @@ class GeneralDiagnostics(Diagnostics):
             diag_file.write('⚠️ UNEXPECTED AMOUNT OF REPORTS ⚠️\n')
         diag_file.write(f'Number of batches to bill: {number_of_samples / 24}')
         diag_file.close()
+
+    def sample_data(self):
+        # Afwijking van de norm [DONE]
+        # Frequentie van fenotypes [Dynamische code?]
+
+        genes_dict = {
+            "CACNA1S": [],
+            "CFTR": [],
+            "CYP1A2": [],
+            "CYP2A6": [],
+            "CYP2B6": [],
+            "CYP2C19": [],
+            "CYP2C8": [],
+            "CYP2C9": [],
+            "CYP2D6": [],
+            "CYP2E1": [],
+            "CYP3A4": [],
+            "CYP3A5": [],
+            "CYP4F2": [],
+            "DPYD": [],
+            "F2": [],
+            "F5": [],
+            "G6PD": [],
+            "GSTP1": [],
+            "HLA-B*1502": [],
+            "IFNL3": [],
+            "MTHFR1298": [],
+            "MTHFR677": [],
+            "MTRNR1": [],
+            "NAT1": [],
+            "NAT2": [],
+            "RYR1": [],
+            "SLCO1B1": [],
+            "TPMT": [],
+            "UGT1A1": [],
+            "VKORC1": []
+        }
+        normal_phenotype_per_type = {
+            'NM_phenotype_genes': 'NM',
+            'NA_phenotype_genes': 'NA',
+            'NF_phenotype_genes': 'NF',
+            'expressor_phenotype_genes': 'non-expressor',
+            'pos_neg_phenotype_genes': 'negatief',
+            'PM_risico_phenotype_genes': 'risico'
+        }
+
+        diag_file = open('Output/Diagnostics/sample_data', 'w')
+        diag_file.write('Sample data:\n')
+
+        for report in self.reports:
+            if util.is_substring_present_in_substring(report, 'FarmacogeneticReport'):
+                document_path = self.path + '\\' + report
+                print(document_path)
+                document = Document(document_path)
+                table = document.tables[0]
+                for row in table.rows[1:]:
+                    gene = row.cells[0].text
+                    phenotype = row.cells[1].text
+                    print(phenotype)
+                    genes_dict[gene].append(phenotype)
+
+        for gene in genes_dict.keys():
+            normal = 0
+            abnormal = 0
+            for phenotype in genes_dict[gene]:
+                phenotype_type = util.get_key_from_nested_value(self.genes_by_phenotype_type, gene)
+                if phenotype != normal_phenotype_per_type[phenotype_type]:
+                    abnormal += 1
+                else:
+                    normal += 1
+            diag_file.write(f'{gene} heeft voor {abnormal / len(genes_dict[gene])}% van de samples een afwijkend fenotype.\n')
