@@ -3,10 +3,12 @@
 # Could be rewritten to be clearer.
 
 # imports
+from timeit import default_timer as timer
 import ELT
 import Utilities as util
 import pandas as pd
 import NifgoProprietaryChanges as changes
+import Diagnostics
 from FarmacogeneticReport import FarmacoGeneticReport
 from info_sheet import InfoSheet
 from NutrinomicsReport import NutrinomicsReport
@@ -76,6 +78,7 @@ unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
 
 # Farmacogenetic Reports generation
 print('Generating farmacogenetic reports [...]')
+timer_start = timer()
 for id in unique_sample_id_list:
     farmaco = FarmacoGeneticReport(sample_id= id,
                                    dataframe= complete_dataframe)
@@ -88,20 +91,26 @@ for id in unique_sample_id_list:
     farmaco.toelichting()
     farmaco.variaties_waarop_is_getest()
     farmaco.save()
+timer_end = timer()
+farmacogenetics_generation_time = timer_end - timer_start
 print('Generating farmacogenetic reports DONE')
 
 # Infosheet generation
 print('Generating info sheets [...]')
+timer_start = timer()
 for id in unique_sample_id_list:
     infosheet = InfoSheet(sample_id= id,
                           dataframe= complete_dataframe)
     infosheet.standard_text()
     infosheet.table()
     infosheet.save()
+timer_end = timer()
+infosheets_generation_time = timer_end - timer_start
 print('Generating info sheets [DONE]')
 
 # Nutrinomics Reports generation
 print('Generating nutrinomics reports [...]')
+timer_start = timer()
 for id in unique_sample_id_list:
     nutrinomics = NutrinomicsReport(sample_id= id,
                                     dataframe= complete_dataframe)
@@ -109,14 +118,25 @@ for id in unique_sample_id_list:
     nutrinomics.table()
     nutrinomics.Toelichting()
     nutrinomics.save()
+timer_end = timer()
+nutrinomics_generation_time = timer_end - timer_start
 print('Generating nutrinomics reports [DONE]')
 
 # Medication report generation
 print('Generating medication reports [...]')
+timer_start = timer()
 for id in unique_sample_id_list:
     medrep = MedicationReport(sample_id= id,
                               dataframe= complete_dataframe)
     medrep.medrep_intro_text()
     medrep.medrep_core_exec()
     medrep.save()
+timer_end = timer()
+medication_generation_time = timer_end - timer_start
 print('Generating medication reports [DONE]')
+
+# Diagnostics
+print('Generating diagnostic reports [...]')
+generation_times = [farmacogenetics_generation_time, infosheets_generation_time,
+                        nutrinomics_generation_time, medication_generation_time]
+

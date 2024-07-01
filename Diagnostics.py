@@ -9,11 +9,11 @@
 # Zijn de apothekercodes plausibel?
 # Zijn de fenotypes plausibel? [DONE]
 # Zijn de genotypes plausibel? [DONE]
-# Zijn alle genen present?
+# Zijn alle genen present? [DONE]
 
 # Voor de nutrinomics:
 # Kloppen de dbSNP nummers?
-# Zijn de genotypes plausibel?  [DONE]
+# Zijn de genotypes plausibel? [DONE]
 # Zijn alle genen present? [DONE]
 
 # Algemeen:
@@ -22,11 +22,11 @@
 # Frequentie van fenotypes
 
 # Metadata:
-# Software versie
-# rapporten gegenereerd in X seconden
-# Aantal rapporten
-# Aantal samples
-# Zodoende aantal batches
+# Software versie [DONE]
+# rapporten gegenereerd in X seconden [DONE]
+# Aantal rapporten [DONE]
+# Aantal samples [DONE]
+# Zodoende aantal batches [DONE]
 
 import re
 import Utilities as util
@@ -272,4 +272,20 @@ class NutrinomicsDiagnostics(Diagnostics):
         diag_file.close()
 
 class GeneralDiagnostics(Diagnostics):
-    pass
+    def metadata(self, generation_times, unique_samples_list):
+        diag_file = open('Output/Diagnostics/metadata', 'w')
+        diag_file.write('Metadata:\n')
+        diag_file.write('Version 0.7.0\n\n') #.8 voor unknown handling, .9 voor diagnostics, en 1.0.0 voor release met UI.
+
+        for report, time in zip(['Farmacogenetics','Infosheets','Nutrinomics','Medication'], generation_times):
+            diag_file.write(f'{report} generated in {time:.1f} seconds.\n')
+        diag_file.write(f'Total time: {sum(generation_times):.1f} seconds\n\n')
+
+        number_of_samples = len(unique_samples_list)
+        diag_file.write(f'Number of samples: {number_of_samples}\n')
+        number_of_reports = len(self.reports)
+        diag_file.write(f'Number of reports: {number_of_reports}\n')
+        if number_of_reports != 4 * number_of_samples:
+            diag_file.write('⚠️ UNEXPECTED AMOUNT OF REPORTS ⚠️\n')
+        diag_file.write(f'Number of batches to bill: {number_of_samples / 24}')
+        diag_file.close()
