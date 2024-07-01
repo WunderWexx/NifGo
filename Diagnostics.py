@@ -2,19 +2,19 @@
 
 # Voor de farmacogenetische rapporten:
 # Zijn de fenotypes plausibel? [DONE]
-# Zijn de genotypes plausibel?
-# Zijn alle genen present?
+# Zijn de genotypes plausibel? [DONE]
+# Zijn alle genen present? [DONE]
 
 # Voor de info sheets:
 # Zijn de apothekercodes plausibel?
 # Zijn de fenotypes plausibel? [DONE]
-# Zijn de genotypes plausibel?
+# Zijn de genotypes plausibel? [DONE]
 # Zijn alle genen present?
 
 # Voor de nutrinomics:
 # Kloppen de dbSNP nummers?
-# Zijn de genotypes plausibel?
-# Zijn alle genen present?
+# Zijn de genotypes plausibel?  [DONE]
+# Zijn alle genen present? [DONE]
 
 # Algemeen:
 # Frequentie van allellen (moeilijk / tijdrovend)
@@ -28,6 +28,7 @@
 # Aantal samples
 # Zodoende aantal batches
 
+import re
 import Utilities as util
 from os import listdir
 from os.path import isfile, join
@@ -40,21 +41,31 @@ class Diagnostics:
         self.genes_by_phenotype_type = {
             'NM_phenotype_genes': [
                 'CYP1A2', 'CYP2A6', 'CYP2B6', 'CYP2C19', 'CYP2C8', 'CYP2C9',
-                'CYP2D6', 'CYP2E1', 'CYP3A4', 'CYP4F2', 'DPYD', 'F2', 'F5',
+                'CYP2D6', 'CYP2E1', 'CYP3A4', 'CYP4F2', 'DPYD',
                 'G6PD', 'GSTP1', 'IFNL3', 'MTHFR1298', 'MTHFR677', 'RYR1',
                 'TPMT', 'UGT1A1', 'VKORC1'
             ],
             'NA_phenotype_genes': ['NAT1', 'NAT2'],
             'NF_phenotype_genes': ['CACNA1S', 'CFTR', 'SLCO1B1','MTRNR1'],
             'expressor_phenotype_genes': ['CYP3A5'],
-            'pos_neg_phenotype_genes': ['HLA-B*1502']
+            'pos_neg_phenotype_genes': ['HLA-B*1502'],
+            'PM_risico_phenotype_genes': ['F2','F5']
         }
         self.possible_phenotypes_by_type = {
             'NM_phenotype_genes': ['UM','RM','NM','IM','PM'],
             'NA_phenotype_genes': ['RA','NA','IA','SA'],
             'NF_phenotype_genes': ['IF','NF','DF','PF'],
             'expressor_phenotype_genes': ['non-expressor','homozygoot','heterozygoot'],
-            'pos_neg_phenotype_genes': ['positief','negatief','risico']
+            'pos_neg_phenotype_genes': ['positief','negatief','risico'],
+            'PM_risico_phenotype_genes': ['PM','risico']
+        }
+        self.genotype_regex = {
+            '\D\D/\D\D' : ['CACNA1S','CFTR','IFNL3','RYR1'],
+            '\d\d\d\D\D' : ['SLCO1B1'],
+            '\d\d\d\d\D\D' : ['VKORC1'],
+            '\AAS' : ['DPYD'],
+            '(Null|\D)/(Null|\D)' : ['F2','F5','G6PD','HLA-B*1502','MTHFR1298','MTHFR677','MTRNR1'],
+            '\*.*/\*.*' : ['other']
         }
 
     def get_doc_type(self, document_path):
@@ -89,6 +100,42 @@ class Diagnostics:
                     pass
         return genes_to_check
 
+    def check_genotypes(self, document_path):
+        document = Document(document_path)
+
+        if util.is_substring_present_in_substring(document_path, 'NutrinomicsReport'):
+            genes_to_check = []
+            table = document.tables[0]
+            for row in table.rows[1:]:
+                gene = row.cells[0].text
+                genotype = row.cells[2].text
+                if not re.search('(\D/\D)|(\D)', genotype):
+                    genes_to_check.append(gene)
+            return genes_to_check
+
+
+        table_to_check = None
+        if util.is_substring_present_in_substring(document_path, 'FarmacogeneticReport'):
+            table_to_check = 1
+        elif util.is_substring_present_in_substring(document_path, 'InfoSheet'):
+            table_to_check = 0
+
+        genes_to_check = []
+        table = document.tables[table_to_check]
+        for row in table.rows[1:]:
+            gene = row.cells[0].text
+            genotype = row.cells[2].text
+            regex = util.get_key_from_nested_value(self.genotype_regex, gene)
+            if regex is not None:
+                if not re.search(regex, genotype):
+                    genes_to_check.append(gene)
+            else:
+                regex = util.get_key_from_nested_value(self.genotype_regex, 'other')
+                if not re.search(regex, genotype):
+                    genes_to_check.append(gene)
+
+        return genes_to_check
+
     def check_gene_presence(self, document_path):
         pharmacogenetic_genes_list = [
             'CACNA1S', 'CFTR', 'CYP1A2', 'CYP2A6', 'CYP2B6', 'CYP2C19',
@@ -103,10 +150,10 @@ class Diagnostics:
             'TPMT', 'UGT1A1', 'VKORC1'
         ]
         nutrinomics_genes_list = [
-            'ABCB1', 'ACE', 'ADIPOQ', 'ADRA2A', 'ALDH2', 'BCO1', 'BDNF-AS', 'BDNF',
-            'DRD2', 'FTO', 'GC', 'GCK', 'YKT6', 'IGF1', 'LDLR', 'LOC105447645',
-            'FUT2', 'MAO-B', 'MC4R', 'MTNR1B', 'NADSYN1', 'NBPF3', 'Sult1A1',
-            'Sult1E1', 'TCF7L2', 'TMEM165', 'CLOCK', 'TNFa', 'UCP2', 'VDR'
+            'ABCB1', 'ACE', 'ADIPOQ', 'ADRA2A', 'ALDH2', 'BCO1', 'BDNF-AS;BDNF',
+            'DRD2', 'FTO', 'GC', 'GCK,YKT6', 'IGF1', 'LDLR', 'LOC105447645;FUT2',
+            'MAO-B', 'MC4R', 'MTNR1B', 'NADSYN1', 'NBPF3', 'Sult1A1',
+            'Sult1E1', 'TCF7L2', 'TMEM165;CLOCK', 'TNFa', 'UCP2', 'VDR'
         ]
         document = Document(document_path)
         doc_type = self.get_doc_type(document_path)
@@ -149,6 +196,7 @@ class PharmacoDiagnostics(Diagnostics):
     def pharmaco_reports_diagnostics(self):
         diag_file = open('Output/Diagnostics/pharmaco_reports_diagnostics.txt','w')
         diag_file.write('FarmacogeneticReport diagnostics\n')
+        diag_file.write('Sample\tGene\tIssue\n')
         for report in self.reports:
             if util.is_substring_present_in_substring(report, 'FarmacogeneticReport'):
                 document_path = self.path + '\\' + report
@@ -162,7 +210,14 @@ class PharmacoDiagnostics(Diagnostics):
                 list_of_genes_to_check = self.check_phenotypes(document_path)
                 if len(list_of_genes_to_check) != 0:
                     for gene in list_of_genes_to_check:
-                        diag_file.write(f'Sample: {sample_id}\tIssue: {gene}\n')
+                        diag_file.write(f'Sample: {sample_id}\tGene: {gene}\tIssue: Implausible phenotype\n')
+
+                # Checking if genotypes are plausible
+                list_of_genes_to_check = self.check_genotypes(document_path)
+                if len(list_of_genes_to_check) != 0:
+                    for gene in list_of_genes_to_check:
+                        diag_file.write(f'Sample: {sample_id}\tGene: {gene}\tIssue: Implausible genotype\n')
+
         diag_file.close()
 
 
@@ -170,6 +225,7 @@ class InfosheetDiagnostics(Diagnostics):
     def infosheet_diagnostics(self):
         diag_file = open('Output/Diagnostics/infosheet_diagnostics.txt', 'w')
         diag_file.write('Infosheet diagnostics\n')
+        diag_file.write('Sample\tGene\tIssue\n')
         for report in self.reports:
             if util.is_substring_present_in_substring(report, 'InfoSheet'):
                 document_path = self.path + '\\' + report
@@ -183,5 +239,37 @@ class InfosheetDiagnostics(Diagnostics):
                 list_of_genes_to_check = self.check_phenotypes(document_path)
                 if len(list_of_genes_to_check) != 0:
                     for gene in list_of_genes_to_check:
-                        diag_file.write(f'Sample: {sample_id}\tIssue: {gene}\n')
+                        diag_file.write(f'Sample: {sample_id}\tGene: {gene}\tIssue: Implausible phenotype\n')
+
+                # Checking if genotypes are plausible
+                list_of_genes_to_check = self.check_genotypes(document_path)
+                if len(list_of_genes_to_check) != 0:
+                    for gene in list_of_genes_to_check:
+                        diag_file.write(f'Sample: {sample_id}\tGene: {gene}\tIssue: Implausible genotype\n')
+
         diag_file.close()
+
+class NutrinomicsDiagnostics(Diagnostics):
+    def nutrinomics_diagnostics(self):
+        diag_file = open('Output/Diagnostics/nutrinomics_diagnostics.txt', 'w')
+        diag_file.write('Nutrinomics diagnostics\n')
+        diag_file.write('Sample\tGene\tIssue\n')
+        for report in self.reports:
+            if util.is_substring_present_in_substring(report, 'NutrinomicsReport'):
+                document_path = self.path + '\\' + report
+                sample_id = document_path.split('_')[1]
+
+                # Checking if all genes are present
+                if not self.check_gene_presence(document_path):
+                    diag_file.write(f'Sample: {sample_id}\t Issue: Not all genes present\n')
+
+                # Checking if all genotypes are plausible
+                list_of_genes_to_check = self.check_genotypes(document_path)
+                if len(list_of_genes_to_check) != 0:
+                    for gene in list_of_genes_to_check:
+                        diag_file.write(f'Sample: {sample_id}\tGene: {gene}\tIssue: Implausible genotype\n')
+
+        diag_file.close()
+
+class GeneralDiagnostics(Diagnostics):
+    pass
