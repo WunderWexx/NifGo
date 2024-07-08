@@ -1,0 +1,4 @@
+Infosheet diagnostics
+Sample: D402000304.docx	Issue: CYP2B6
+Sample: D402000332.docx	Issue: CYP2C9
+Sample: D402000365.docx	Issue: CYP2D6

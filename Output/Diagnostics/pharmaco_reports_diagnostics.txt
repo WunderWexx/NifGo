@@ -1,0 +1,16 @@
+FarmacogeneticReport diagnostics
+Sample: D306000067.docx	Issue: RYR1
+Sample: D402000268.docx	Issue: RYR1
+Sample: D402000297.docx	Issue: F5
+Sample: D402000299.docx	Issue: RYR1
+Sample: D402000304.docx	Issue: CYP2B6
+Sample: D402000312.docx	Issue: RYR1
+Sample: D402000316.docx	Issue: RYR1
+Sample: D402000332.docx	Issue: CYP2C9
+Sample: D402000332.docx	Issue: G6PD
+Sample: D402000332.docx	Issue: NAT1
+Sample: D402000332.docx	Issue: RYR1
+Sample: D402000356.docx	Issue: RYR1
+Sample: D402000365.docx	Issue: CYP2D6
+Sample: D402000372.docx	Issue: RYR1
+Sample: D402000384.docx	Issue: CYP2A6

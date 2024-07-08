@@ -36,6 +36,14 @@ def common_data(list1, list2):
                 return result
     return
 
+def lists_contain_same_data(list1, list2):
+    for item in list1:
+        if item in list2:
+            continue
+        else: return False
+    return True
+
+
 def is_substring_present_in_substring(data_to_search,string_to_find):
     """
     Tells you, by returning True or False, if the string you're looking for has been found,
@@ -44,7 +52,7 @@ def is_substring_present_in_substring(data_to_search,string_to_find):
     :param string_to_find: The smaller string you are trying to find.
     :return: True or False
     """
-    if data_to_search.find(string_to_find) >= 0:
+    if data_to_search.find(string_to_find) > -1:
         return True
     else:
         return False
@@ -57,3 +65,16 @@ def execute_all_methods(instance):
     for method_name in methods:
         method = getattr(instance, method_name)
         method()
+
+def get_key_from_value(dict, value):
+    key = list(dict.keys())[list(dict.values()).index(value)]
+    return key
+
+def get_key_from_nested_value(dict, value):
+    keys = list(dict.keys())
+    values = list(dict.values())
+    for value_list, index in zip(values, range(len(values))):
+        for nested_value in value_list:
+            if nested_value == value:
+                key = list(dict.keys())[index]
+                return key
