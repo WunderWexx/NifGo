@@ -56,7 +56,7 @@ class NutrinomicsReport(wd):
         return df
 
     def logo_titel_header(self):
-        self.document.add_picture("Input/niFGo_logo.png")
+        self.document.add_picture("Input/Icons/niFGo_logo.png")
         self.heading("\nFarmacogenetisch Rapport")
         self.heading("Bijlage nutrigenomics {}".format(self.sample_id))
         self.colour_bar()

@@ -12,7 +12,7 @@ class FarmacoGeneticReport(wd):
               Generates block 1 of all standard text.
               :return:
               """
-              self.document.add_picture("Input/NifGo_logo.png")
+              self.document.add_picture("Input/Icons/NifGo_logo.png")
               self.heading("\nFarmacogenetisch Rapport {}".format(date.today()))
               self.colour_bar()
               run = self.document.add_paragraph().add_run(

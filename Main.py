@@ -12,6 +12,7 @@ from info_sheet import InfoSheet
 from NutrinomicsReport import NutrinomicsReport
 from MedicationReport import MedicationReport
 from Globals import ThermoFisher_determined_genes, probeset_id_dict
+from HandlingUnknowns import HandlingUnknowns
 
 # settings
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -71,6 +72,15 @@ util.execute_all_methods(genotype_changes)
 complete_dataframe = genotype_changes.dataframe
 util.store_dataframe(complete_dataframe, 'complete')
 print('implementing NifGo changes DONE')
+
+#Handling unknowns
+handler = HandlingUnknowns(complete_dataframe)
+handler.detect_unkowns()
+handler.correct_unknowns()
+complete_dataframe = handler.dataframe
+util.store_dataframe(complete_dataframe, 'complete')
+handler.detect_unkowns()
+print('Handling unknowns DONE')
 
 unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
 
