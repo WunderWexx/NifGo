@@ -291,7 +291,7 @@ class GeneralDiagnostics(Diagnostics):
         diag_file.close()
 
     def sample_data(self):
-        # Afwijking van de norm [DONE]
+        # Afwijking van de norm [ACTIVE]
         # Frequentie van fenotypes [Dynamische code?]
 
         genes_dict = {

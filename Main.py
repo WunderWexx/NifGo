@@ -139,4 +139,9 @@ print('Generating medication reports [DONE]')
 print('Generating diagnostic reports [...]')
 generation_times = [farmacogenetics_generation_time, infosheets_generation_time,
                         nutrinomics_generation_time, medication_generation_time]
-
+Diagnostics.GeneralDiagnostics().metadata(generation_times, unique_sample_id_list)
+# Diagnostics.GeneralDiagnostics().sample_data() werkt nog niet
+Diagnostics.PharmacoDiagnostics().pharmaco_reports_diagnostics()
+Diagnostics.InfosheetDiagnostics().infosheet_diagnostics()
+Diagnostics.NutrinomicsDiagnostics().nutrinomics_diagnostics()
+print('Generating diagnostic reports [DONE]')
