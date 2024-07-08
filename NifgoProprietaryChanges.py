@@ -16,6 +16,7 @@ class GeneralChanges:
         columns = ['phenotype','genotype']
         for column in columns:
             self.dataframe[column] = self.dataframe[column].apply(lambda x: x.split(',')[0] if isinstance(x, str) else x)
+            self.dataframe[column] = self.dataframe[column].apply(lambda x: x.split('_or_')[0] if isinstance(x, str) else x)
 
 class GeneNameChanges:
     def __init__(self, dataframe):
