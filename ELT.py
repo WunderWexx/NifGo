@@ -39,6 +39,12 @@ class Extract:
     def genotype_txt(self):
         return self.extract_user_specified_file('genotype.txt')
 
+    def customer_data(self):
+        filepath = sg.popup_get_file(f'Please select the customer data file',
+                                     title='File selection', keep_on_top=True)
+        df = pd.read_excel(filepath, header=None)
+        return df
+
 
 class Load:
     """
