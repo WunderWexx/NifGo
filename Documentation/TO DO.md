@@ -1,6 +1,6 @@
 ## Voor NifGo
 3. Namen moeten automatisch toegevoegd worden. ✅ 
-4. Rapporten ook in PDF
+4. Rapporten ook in PDF✅
 5. ABCB1 genotype aanpassen. G->C en A->T
 6. Not_ en \_or_ eruit werken
 7. CYP2C19 een paar regels naar beneden brengen.
