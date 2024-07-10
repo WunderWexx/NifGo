@@ -7,6 +7,10 @@ from timeit import default_timer as timer
 import ELT
 import Utilities as util
 import pandas as pd
+from docx2pdf import convert
+from os import listdir
+from os.path import isfile, join
+import PySimpleGUI as sg
 import NifgoProprietaryChanges as changes
 import Diagnostics
 from FarmacogeneticReport import FarmacoGeneticReport
@@ -149,6 +153,18 @@ print('Generating medication reports [DONE]')
 
 # Filling in customer data
 CustomerData().execute()
+
+# Export to PDF
+ask_pdf_generation = sg.popup_yes_no("Wilt u de PDF bestanden aanmaken?\nLET OP! Dit kan enkele minuten duren.")
+print('Exporting to PDF [...]')
+basepath = 'Output\Reports'
+reports = [file for file in listdir(basepath) if isfile(join(basepath, file))]
+for report in reports:
+    if report.split('_')[0] != 'MedicationReport':
+        filepath = basepath + '\\' + report
+        pdf_name = report.replace('docx','pdf')
+        convert(filepath, output_path='Output\Reports\PDF')
+print('Exporting to PDF [DONE]')
 
 # Diagnostics
 print('Generating diagnostic reports [...]')

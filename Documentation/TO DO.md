@@ -5,6 +5,7 @@
 6. Not_ en \_or_ eruit werken
 7. CYP2C19 een paar regels naar beneden brengen.
 4. MTHFR1298 een regel naar beneden verplaatsen.
+5. Transfer naar andere pc's voorbereiden met requirements.txt
 ## Voor mij
 1. UI moet toegevoegd worden
 2. Multicore
