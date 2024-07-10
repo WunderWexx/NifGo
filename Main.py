@@ -15,6 +15,7 @@ from NutrinomicsReport import NutrinomicsReport
 from MedicationReport import MedicationReport
 from Globals import ThermoFisher_determined_genes, probeset_id_dict
 from HandlingUnknowns import HandlingUnknowns
+from AddCustomerData import CustomerData
 
 # settings
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -76,6 +77,7 @@ util.store_dataframe(complete_dataframe, 'complete')
 print('implementing NifGo changes DONE')
 
 #Handling unknowns
+print('Handling unknowns [...]')
 handler = HandlingUnknowns(complete_dataframe)
 handler.detect_unkowns()
 handler.correct_unknowns()
@@ -145,12 +147,15 @@ timer_end = timer()
 medication_generation_time = timer_end - timer_start
 print('Generating medication reports [DONE]')
 
+# Filling in customer data
+CustomerData().execute()
+
 # Diagnostics
 print('Generating diagnostic reports [...]')
 generation_times = [farmacogenetics_generation_time, infosheets_generation_time,
                         nutrinomics_generation_time, medication_generation_time]
 Diagnostics.GeneralDiagnostics().metadata(generation_times, unique_sample_id_list)
-# Diagnostics.GeneralDiagnostics().sample_data() werkt nog niet
+# Diagnostics.GeneralDiagnostics().sample_data() DOES NOT WORK YET
 Diagnostics.PharmacoDiagnostics().pharmaco_reports_diagnostics()
 Diagnostics.InfosheetDiagnostics().infosheet_diagnostics()
 Diagnostics.NutrinomicsDiagnostics().nutrinomics_diagnostics()

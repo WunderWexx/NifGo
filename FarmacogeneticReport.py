@@ -43,7 +43,7 @@ class FarmacoGeneticReport(wd):
               run.font.name = "Calibri"
               run.font.size = Pt(12)
               customer_table.allow_autofit = False
-              width_dict = {0: 2.63, 1: 3.39, 2: 3.92, 3: 2.5, 4: 2.25, 5: 2.78}
+              width_dict = {0: 1.30, 1: 6, 2: 2.5, 3: 2.5, 4: 1.25, 5: 2.78}
               for i in range(5):
                      for cell in customer_table.columns[i].cells:
                             cell.width = Cm(width_dict[i])
