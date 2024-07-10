@@ -55,9 +55,17 @@ def generate_medication_report(id, dataframe):
     medrep.save()
 
 def convert_to_pdf(report):
-    basepath = 'Output\Reports'
-    filepath = basepath + '\\' + report
-    convert(filepath, output_path='Output\Reports\PDF')
+    attempts = 3
+    for attempt in range(attempts):
+        try:
+            basepath = 'Output\\Reports'
+            filepath = join(basepath, report)
+            convert(filepath, output_path='Output\\Reports\\PDF')
+            print(f"Converted {report} successfully.")
+            break
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed for {report}: {e}")
+        print(f"Failed to convert {report}: {e}")
 
 if __name__ == "__main__":
 
