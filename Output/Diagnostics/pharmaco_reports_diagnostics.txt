@@ -1,16 +1,25 @@
 FarmacogeneticReport diagnostics
-Sample: D306000067.docx	Issue: RYR1
-Sample: D402000268.docx	Issue: RYR1
-Sample: D402000297.docx	Issue: F5
-Sample: D402000299.docx	Issue: RYR1
-Sample: D402000304.docx	Issue: CYP2B6
-Sample: D402000312.docx	Issue: RYR1
-Sample: D402000316.docx	Issue: RYR1
-Sample: D402000332.docx	Issue: CYP2C9
-Sample: D402000332.docx	Issue: G6PD
-Sample: D402000332.docx	Issue: NAT1
-Sample: D402000332.docx	Issue: RYR1
-Sample: D402000356.docx	Issue: RYR1
-Sample: D402000365.docx	Issue: CYP2D6
-Sample: D402000372.docx	Issue: RYR1
-Sample: D402000384.docx	Issue: CYP2A6
+Sample	Gene	Issue
+Sample: D402000237.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402000243.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402000266.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402000349.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007223.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007226.docx	Gene: CYP2D6	Issue: Implausible phenotype
+Sample: D402007226.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007227.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007229.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007230.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007231.docx	Gene: CYP2B6	Issue: Implausible phenotype
+Sample: D402007231.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007232.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007233.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007239.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007240.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007242.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007244.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007251.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007252.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007254.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007258.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007262.docx	Gene: COMT	Issue: Implausible genotype

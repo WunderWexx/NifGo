@@ -8,7 +8,7 @@ from docx.oxml.ns import qn,nsdecls
 from docx.oxml.shared import OxmlElement
 
 class WordEditing:
-    def __init__(self, sample_id, dataframe):
+    def __init__(self, sample_id, dataframe = None):
         self.sample_id = sample_id
         self.document = dx.Document()
         self.dataframe = dataframe
