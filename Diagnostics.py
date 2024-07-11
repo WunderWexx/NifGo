@@ -30,14 +30,12 @@
 
 import re
 import Utilities as util
-from os import listdir
-from os.path import isfile, join
 from docx import Document
 
 class Diagnostics:
     def __init__(self):
         self.path = 'Output\Reports'
-        self.reports = [file for file in listdir(self.path) if isfile(join(self.path, file))]
+        self.reports = util.get_reports()
         self.genes_by_phenotype_type = {
             'NM_phenotype_genes': [
                 'CYP1A2', 'CYP2A6', 'CYP2B6', 'CYP2C19', 'CYP2C8', 'CYP2C9',
@@ -273,7 +271,7 @@ class NutrinomicsDiagnostics(Diagnostics):
 
 class GeneralDiagnostics(Diagnostics):
     def metadata(self, generation_times, unique_samples_list):
-        diag_file = open('Output/Diagnostics/metadata', 'w')
+        diag_file = open('Output/Diagnostics/metadata.txt', 'w')
         diag_file.write('Metadata:\n')
         diag_file.write('Version 0.9.1\n\n') #.8 voor unknown handling, .9 voor diagnostics, en 1.0.0 voor release met UI.
 
@@ -286,7 +284,7 @@ class GeneralDiagnostics(Diagnostics):
         number_of_reports = len(self.reports)
         diag_file.write(f'Number of reports: {number_of_reports}\n')
         if number_of_reports != 4 * number_of_samples:
-            diag_file.write('⚠️ UNEXPECTED AMOUNT OF REPORTS ⚠️\n')
+            diag_file.write(f'UNEXPECTED AMOUNT OF REPORTS \nEXPECTED {number_of_samples*4}, GOT {number_of_reports}')
         diag_file.write(f'Number of batches to bill: {number_of_samples / 24}')
         diag_file.close()
 
@@ -335,7 +333,7 @@ class GeneralDiagnostics(Diagnostics):
             'PM_risico_phenotype_genes': 'risico'
         }
 
-        diag_file = open('Output/Diagnostics/sample_data', 'w')
+        diag_file = open('Output/Diagnostics/sample_data.txt', 'w')
         diag_file.write('Sample data:\n')
 
         for report in self.reports:

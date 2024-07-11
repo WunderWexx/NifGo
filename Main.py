@@ -7,9 +7,8 @@ from timeit import default_timer as timer
 import ELT
 import Utilities as util
 import pandas as pd
-from docx2pdf import convert
-from os import listdir
-from os.path import isfile, join
+from os.path import join
+from spire.doc import *
 import PySimpleGUI as sg
 import NifgoProprietaryChanges as changes
 import Diagnostics
@@ -60,12 +59,19 @@ def convert_to_pdf(report):
         try:
             basepath = 'Output\\Reports'
             filepath = join(basepath, report)
-            convert(filepath, output_path='Output\\Reports\\PDF')
+            document = Document()
+            document.LoadFromFile(filepath)
+            pdf_basepath = 'Output\\Reports\\PDF'
+            report_pdf = join(pdf_basepath, report.replace('docx','pdf'))
+            document.SaveToFile(report_pdf, FileFormat.PDF)
+            document.Close()
             print(f"Converted {report} successfully.")
             break
         except Exception as e:
-            print(f"Attempt {attempt + 1} failed for {report}: {e}")
-        print(f"Failed to convert {report}: {e}")
+            if attempt < 2:
+                print(f"Attempt {attempt + 1} failed for {report}: {e}")
+            else:
+                print(f"{report} FAILED TO CONVERT WITH ERROR {e}")
 
 if __name__ == "__main__":
 
@@ -187,8 +193,7 @@ if __name__ == "__main__":
     ask_pdf_generation = sg.popup_yes_no("Wilt u de PDF bestanden aanmaken?\nLET OP! Dit kan enkele minuten duren.")
     if ask_pdf_generation == 'Yes':
         print('Exporting to PDF [...]')
-        basepath = 'Output\\Reports'
-        reports = [file for file in listdir(basepath) if isfile(join(basepath, file))]
+        reports = util.get_reports()
         with Pool(cpu_count()) as pool:
             pool.map(convert_to_pdf, reports)
         print('Exporting to PDF [DONE]')

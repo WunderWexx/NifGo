@@ -3,9 +3,9 @@
 import PySimpleGUI as sg
 from ELT import Extract
 from docx import Document
-from os import listdir
-from os.path import isfile, join
+from os.path import join
 from docx.shared import Pt
+import Utilities as util
 
 class CustomerData:
     def customer_data_IA(self):
@@ -20,12 +20,12 @@ class CustomerData:
 
     def fill_customer_data(self):
         customerdata_df = self.customer_data_IA()
-        path = 'Output\Reports'
-        reports = [file for file in listdir(path) if isfile(join(path, file))]
+        path = 'Output\\Reports'
+        reports = util.get_reports()
 
         reported_file_ids = []
         for file in reports:
-            filepath = path + '\\' + file
+            filepath = join(path,file)
             doc = Document(filepath)
             report_type = file.split('_')[0]
             sample_id = file.split('_')[1].split('.')[0]
@@ -63,7 +63,7 @@ class CustomerData:
                         pass
 
             else:
-                print(f'⚠️{file} heeft geen geassocieerde klantdata⚠️')
+                print(f'{file} heeft geen geassocieerde klantdata')
 
             doc.save(filepath)
 
@@ -71,7 +71,7 @@ class CustomerData:
             if sample not in reported_file_ids:
                 status = customerdata_df[customerdata_df['sample_id'] == sample].values[0][4]
                 if status != 'niet gelukt':
-                    print(f'⚠️{sample} heeft wel klantdata, maar geen geassocieerd rapport⚠️')
+                    print(f'{sample} heeft wel klantdata, maar geen geassocieerd rapport')
 
     def execute(self):
         file_is_present = sg.popup_yes_no("Heeft u het bestand met de klantdata?")
