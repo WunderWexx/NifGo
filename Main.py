@@ -65,7 +65,6 @@ def convert_to_pdf(report):
             report_pdf = join(pdf_basepath, report.replace('docx','pdf'))
             document.SaveToFile(report_pdf, FileFormat.PDF)
             document.Close()
-            print(f"Converted {report} successfully.")
             break
         except Exception as e:
             if attempt < 2:
@@ -190,7 +189,7 @@ if __name__ == "__main__":
     CustomerData().execute()
 
     # Export to PDF
-    ask_pdf_generation = sg.popup_yes_no("Wilt u de PDF bestanden aanmaken?\nLET OP! Dit kan enkele minuten duren.")
+    ask_pdf_generation = sg.popup_yes_no("Wilt u de PDF bestanden aanmaken?")
     if ask_pdf_generation == 'Yes':
         print('Exporting to PDF [...]')
         reports = util.get_reports()
