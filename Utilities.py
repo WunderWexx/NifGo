@@ -3,6 +3,8 @@
 # Imports
 import time
 import pandas as pd
+from os import listdir
+from os.path import isfile, join
 
 def printEntire(dataframe):
     """
@@ -71,10 +73,14 @@ def get_key_from_value(dict, value):
     return key
 
 def get_key_from_nested_value(dict, value):
-    keys = list(dict.keys())
     values = list(dict.values())
     for value_list, index in zip(values, range(len(values))):
         for nested_value in value_list:
             if nested_value == value:
                 key = list(dict.keys())[index]
                 return key
+
+def get_reports():
+    path = 'Output\\Reports'
+    reports = [file for file in listdir(path) if isfile(join(path, file)) and not file.startswith('~$')]
+    return reports
