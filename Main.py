@@ -106,6 +106,7 @@ if __name__ == "__main__":
     data_preparation = ELT.DataPreparation(genotypes_df, phenotypes_df)
     data_preparation.merge_geno_and_phenotype_dataframes()
     data_preparation.determine_phenotype()
+    data_preparation.move_MTHFR1298_and_CYP2C19()
 
     complete_dataframe = data_preparation.complete_dataframe
     util.store_dataframe(complete_dataframe, 'complete')

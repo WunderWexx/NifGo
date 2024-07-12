@@ -3,9 +3,9 @@
 4. Namen moeten automatisch toegevoegd worden. ✅ 
 5. Rapporten ook in PDF✅
 6. ABCB1 genotype aanpassen. C-T zijn en niet G-A✅
-7. Not_ en \_or_ eruit werken
-8. CYP2C19 een paar regels naar beneden brengen.
-9. MTHFR1298 een regel naar beneden verplaatsen.
+7. Not_ en \_or_ eruit werken✅
+8. CYP2C19 een paar regels naar beneden brengen.✅
+9. MTHFR1298 een regel naar beneden verplaatsen.✅
 10. Requirements.txt ✅
 ## Voor mij
 1. UI moet toegevoegd worden

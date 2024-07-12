@@ -220,6 +220,35 @@ class DataPreparation:
         complete_dataframe.reset_index(drop=True, inplace=True)
         self.complete_dataframe = complete_dataframe
 
+    def move_MTHFR1298_and_CYP2C19(self):
+        # Define the values and corresponding move down counts
+        values_to_find = ['CYP2C19', 'MTHFRA1298C']
+        move_down_counts = [2, 1]
+
+        for value_to_find, move_down_by in zip(values_to_find, move_down_counts):
+            df = self.complete_dataframe
+            # Find the indices of the rows to move
+            rows_to_move_indices = df[df['gene'] == value_to_find].index.tolist()
+
+            # Extract the rows to be moved
+            rows_to_move = df.loc[rows_to_move_indices]
+
+            # Remove the rows from the DataFrame
+            df = df.drop(rows_to_move_indices).reset_index(drop=True)
+
+            # Calculate new indices for the rows to be inserted
+            new_indices = [min(index + move_down_by, len(df)) for index in rows_to_move_indices]
+
+            # Sort new indices and rows to insert in the order to avoid index shifting issues
+            sorted_new_indices = sorted(new_indices)
+            sorted_rows_to_move = rows_to_move.reset_index(drop=True)
+
+            # Insert the rows back into the DataFrame at the new indices
+            for i, new_index in enumerate(sorted_new_indices):
+                df = pd.concat([df.iloc[:new_index], sorted_rows_to_move.iloc[[i]], df.iloc[new_index:]]).reset_index(
+                    drop=True)
+            self.complete_dataframe = df
+
     def determine_phenotype(self):
         """
         Makes a column of determined genotypes.
