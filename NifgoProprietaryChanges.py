@@ -246,7 +246,7 @@ class GenotypeChanges:
             return new_known_call
 
         mask = self.dataframe['gene'] == 'UGT1A1'
-        find_plus = lambda x: util.is_substring_present_in_substring(x, '+')
+        find_plus = lambda x: util.is_substring_present_in_string(x, '+')
         condition = self.dataframe.loc[mask, 'genotype'].map(find_plus)
         no_change = self.dataframe.loc[mask, 'genotype']
         self.dataframe.loc[mask, 'genotype'] = np.where(condition,

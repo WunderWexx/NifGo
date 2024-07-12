@@ -31,6 +31,7 @@
 import re
 import Utilities as util
 from docx import Document
+from math import ceil
 
 class Diagnostics:
     def __init__(self):
@@ -62,16 +63,17 @@ class Diagnostics:
             '\d\d\d\D\D' : ['SLCO1B1'],
             '\d\d\d\d\D\D' : ['VKORC1'],
             '\AAS' : ['DPYD'],
+            '\D\D\D/\D\D\D' : ['COMT'],
             '(Null|\D)/(Null|\D)' : ['F2','F5','G6PD','HLA-B*1502','MTHFR1298','MTHFR677','MTRNR1'],
             '\*.*/\*.*' : ['other']
         }
 
     def get_doc_type(self, document_path):
-        if util.is_substring_present_in_substring(document_path, 'FarmacogeneticReport'):
+        if util.is_substring_present_in_string(document_path, 'FarmacogeneticReport'):
             return 'Farmacogenetics'
-        elif util.is_substring_present_in_substring(document_path, 'InfoSheet'):
+        elif util.is_substring_present_in_string(document_path, 'InfoSheet'):
             return 'InfoSheet'
-        elif util.is_substring_present_in_substring(document_path, 'NutrinomicsReport'):
+        elif util.is_substring_present_in_string(document_path, 'NutrinomicsReport'):
             return 'Nutrinomics'
         else:
             return 'Medication'
@@ -80,9 +82,9 @@ class Diagnostics:
         document = Document(document_path)
 
         table_to_check = None
-        if util.is_substring_present_in_substring(document_path, 'FarmacogeneticReport'):
+        if util.is_substring_present_in_string(document_path, 'FarmacogeneticReport'):
             table_to_check = 1
-        elif util.is_substring_present_in_substring(document_path, 'InfoSheet'):
+        elif util.is_substring_present_in_string(document_path, 'InfoSheet'):
             table_to_check = 0
 
         genes_to_check = []
@@ -101,7 +103,7 @@ class Diagnostics:
     def check_genotypes(self, document_path):
         document = Document(document_path)
 
-        if util.is_substring_present_in_substring(document_path, 'NutrinomicsReport'):
+        if util.is_substring_present_in_string(document_path, 'NutrinomicsReport'):
             genes_to_check = []
             table = document.tables[0]
             for row in table.rows[1:]:
@@ -113,9 +115,9 @@ class Diagnostics:
 
 
         table_to_check = None
-        if util.is_substring_present_in_substring(document_path, 'FarmacogeneticReport'):
+        if util.is_substring_present_in_string(document_path, 'FarmacogeneticReport'):
             table_to_check = 1
-        elif util.is_substring_present_in_substring(document_path, 'InfoSheet'):
+        elif util.is_substring_present_in_string(document_path, 'InfoSheet'):
             table_to_check = 0
 
         genes_to_check = []
@@ -189,6 +191,16 @@ class Diagnostics:
 
         return True
 
+    def check_infosysteem(self, document_path):
+        document = Document(document_path)
+        table = document.tables[0]
+        genes_to_check = []
+        for row in table.rows[1:]:
+            gene = row.cells[0].text
+            infosysteem_text = row.cells[4]
+            if infosysteem_text == 'Is (nog) niet verwerkt in het infosysteem':
+                genes_to_check.append(gene)
+        return genes_to_check
 
 class PharmacoDiagnostics(Diagnostics):
     def pharmaco_reports_diagnostics(self):
@@ -196,7 +208,7 @@ class PharmacoDiagnostics(Diagnostics):
         diag_file.write('FarmacogeneticReport diagnostics\n')
         diag_file.write('Sample\tGene\tIssue\n')
         for report in self.reports:
-            if util.is_substring_present_in_substring(report, 'FarmacogeneticReport'):
+            if util.is_substring_present_in_string(report, 'FarmacogeneticReport'):
                 document_path = self.path + '\\' + report
                 sample_id = document_path.split('_')[1]
 
@@ -225,7 +237,7 @@ class InfosheetDiagnostics(Diagnostics):
         diag_file.write('Infosheet diagnostics\n')
         diag_file.write('Sample\tGene\tIssue\n')
         for report in self.reports:
-            if util.is_substring_present_in_substring(report, 'InfoSheet'):
+            if util.is_substring_present_in_string(report, 'InfoSheet'):
                 document_path = self.path + '\\' + report
                 sample_id = document_path.split('_')[1]
 
@@ -245,6 +257,12 @@ class InfosheetDiagnostics(Diagnostics):
                     for gene in list_of_genes_to_check:
                         diag_file.write(f'Sample: {sample_id}\tGene: {gene}\tIssue: Implausible genotype\n')
 
+                #Checking if infosystem has data
+                list_of_genes_to_check = self.check_infosysteem(document_path)
+                if len(list_of_genes_to_check) != 0:
+                    for gene in list_of_genes_to_check:
+                        diag_file.write(f'Sample: {sample_id}\tGene: {gene}\tIssue: No data in infosystem\n')
+
         diag_file.close()
 
 class NutrinomicsDiagnostics(Diagnostics):
@@ -253,7 +271,7 @@ class NutrinomicsDiagnostics(Diagnostics):
         diag_file.write('Nutrinomics diagnostics\n')
         diag_file.write('Sample\tGene\tIssue\n')
         for report in self.reports:
-            if util.is_substring_present_in_substring(report, 'NutrinomicsReport'):
+            if util.is_substring_present_in_string(report, 'NutrinomicsReport'):
                 document_path = self.path + '\\' + report
                 sample_id = document_path.split('_')[1]
 
@@ -285,7 +303,7 @@ class GeneralDiagnostics(Diagnostics):
         diag_file.write(f'Number of reports: {number_of_reports}\n')
         if number_of_reports != 4 * number_of_samples:
             diag_file.write(f'UNEXPECTED AMOUNT OF REPORTS \nEXPECTED {number_of_samples*4}, GOT {number_of_reports}')
-        diag_file.write(f'Number of batches to bill: {number_of_samples / 24}')
+        diag_file.write(f'Number of batches to bill: {ceil((number_of_samples / 24))}')
         diag_file.close()
 
     def sample_data(self):
@@ -333,11 +351,11 @@ class GeneralDiagnostics(Diagnostics):
             'PM_risico_phenotype_genes': 'risico'
         }
 
-        diag_file = open('Output/Diagnostics/sample_data.txt', 'w')
+        diag_file = open('Output/Diagnostics/sample_data.txt    ', 'w')
         diag_file.write('Sample data:\n')
 
         for report in self.reports:
-            if util.is_substring_present_in_substring(report, 'FarmacogeneticReport'):
+            if util.is_substring_present_in_string(report, 'FarmacogeneticReport'):
                 document_path = self.path + '\\' + report
                 print(document_path)
                 document = Document(document_path)

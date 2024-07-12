@@ -3,13 +3,12 @@
 import pandas as pd
 import PySimpleGUI as sg
 
-
 class HandlingUnknowns:
     def __init__(self, dataframe):
         self.dataframe = dataframe
-        self.unknown_signs_list = ['ERROR', 'Not_', 'unknown', '---', '']
+        self.unknown_signs_list = ['ERROR', 'Not_PM', 'Not_NM', 'Not_IM', 'Not_RM', 'Not_UM', 'unknown', '---', '']
 
-    def detect_unkowns(self):
+    def detect_unknowns(self):
         unknowns_df = self.dataframe[
             self.dataframe['phenotype'].isin(self.unknown_signs_list) |
             self.dataframe['genotype'].isin(self.unknown_signs_list)
