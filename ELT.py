@@ -48,7 +48,7 @@ class Extract:
 
 class Load:
     """
-    The data is "loaded" into a more efficient from. Still a local DataFrame though.
+    The data is "loaded" into a more efficient form. Still a local DataFrame though.
     """
 
     @staticmethod

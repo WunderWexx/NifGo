@@ -1,8 +1,8 @@
 ## Voor NifGo
-3. DPYD aflezen fixen. Fout in iig 2754
+3. DPYD phenotype fixen ✅
 4. Namen moeten automatisch toegevoegd worden. ✅ 
 5. Rapporten ook in PDF✅
-6. ABCB1 genotype aanpassen. G->C en A->T
+6. ABCB1 genotype aanpassen. C-T zijn en niet G-A✅
 7. Not_ en \_or_ eruit werken
 8. CYP2C19 een paar regels naar beneden brengen.
 9. MTHFR1298 een regel naar beneden verplaatsen.

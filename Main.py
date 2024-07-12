@@ -125,8 +125,11 @@ if __name__ == "__main__":
 
     genotype_changes = changes.GenotypeChanges(complete_dataframe)
     util.execute_all_methods(genotype_changes)
-
     complete_dataframe = genotype_changes.dataframe
+
+    combined_changes = changes.CombinedChanges(complete_dataframe)
+    util.execute_all_methods(combined_changes)
+    complete_dataframe = combined_changes.dataframe
     util.store_dataframe(complete_dataframe, 'complete')
     print('implementing NifGo changes DONE')
 
