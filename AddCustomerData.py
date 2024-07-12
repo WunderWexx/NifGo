@@ -43,6 +43,7 @@ class CustomerData:
                         cells_to_edit = [1,3]
                         for cell_index, new_text in zip(cells_to_edit, list(customer_data_dict.keys())):
                             cell = table.rows[0].cells[cell_index]
+                            cell.text = ''
                             paragraph = cell.paragraphs[0]
                             run = paragraph.add_run(customer_data_dict[new_text])
                             run.font.name = 'Calibri'

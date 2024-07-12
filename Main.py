@@ -7,8 +7,7 @@ from timeit import default_timer as timer
 import ELT
 import Utilities as util
 import pandas as pd
-from os.path import join
-from spire.doc import *
+from os.path import join, abspath
 import PySimpleGUI as sg
 import NifgoProprietaryChanges as changes
 import Diagnostics
@@ -21,6 +20,7 @@ from HandlingUnknowns import HandlingUnknowns
 from AddCustomerData import CustomerData
 from multiprocessing import Pool, cpu_count
 from functools import partial
+from docx2pdf import convert
 
 def generate_farmacogenetic_report(id, dataframe):
     farmaco = FarmacoGeneticReport(sample_id=id, dataframe=dataframe)
@@ -54,17 +54,14 @@ def generate_medication_report(id, dataframe):
     medrep.save()
 
 def convert_to_pdf(report):
-    attempts = 3
+    attempts = 5
     for attempt in range(attempts):
         try:
             basepath = 'Output\\Reports'
-            filepath = join(basepath, report)
-            document = Document()
-            document.LoadFromFile(filepath)
+            docxpath = join(basepath, report)
             pdf_basepath = 'Output\\Reports\\PDF'
-            report_pdf = join(pdf_basepath, report.replace('docx','pdf'))
-            document.SaveToFile(report_pdf, FileFormat.PDF)
-            document.Close()
+            pdfpath = join(pdf_basepath, report.replace('docx','pdf'))
+            convert(docxpath, pdfpath)
             break
         except Exception as e:
             if attempt < 2:
@@ -109,6 +106,7 @@ if __name__ == "__main__":
     data_preparation = ELT.DataPreparation(genotypes_df, phenotypes_df)
     data_preparation.merge_geno_and_phenotype_dataframes()
     data_preparation.determine_phenotype()
+    data_preparation.move_MTHFR1298_and_CYP2C19()
 
     complete_dataframe = data_preparation.complete_dataframe
     util.store_dataframe(complete_dataframe, 'complete')
@@ -128,19 +126,22 @@ if __name__ == "__main__":
 
     genotype_changes = changes.GenotypeChanges(complete_dataframe)
     util.execute_all_methods(genotype_changes)
-
     complete_dataframe = genotype_changes.dataframe
+
+    combined_changes = changes.CombinedChanges(complete_dataframe)
+    util.execute_all_methods(combined_changes)
+    complete_dataframe = combined_changes.dataframe
     util.store_dataframe(complete_dataframe, 'complete')
     print('implementing NifGo changes DONE')
 
     #Handling unknowns
     print('Handling unknowns [...]')
     handler = HandlingUnknowns(complete_dataframe)
-    handler.detect_unkowns()
+    handler.detect_unknowns()
     handler.correct_unknowns()
     complete_dataframe = handler.dataframe
     util.store_dataframe(complete_dataframe, 'complete')
-    handler.detect_unkowns()
+    handler.detect_unknowns()
     print('Handling unknowns DONE')
 
     unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
@@ -193,8 +194,28 @@ if __name__ == "__main__":
     if ask_pdf_generation == 'Yes':
         print('Exporting to PDF [...]')
         reports = util.get_reports()
+        '''
+        print(f'Generating {len(reports)} PDF\'s')
         with Pool(cpu_count()) as pool:
             pool.map(convert_to_pdf, reports)
+        '''
+        try:
+            convert('Output/Reports/','Output/Reports/PDF')
+        except:
+            pdf_reports = util.get_reports('Output\\Reports\\PDF')
+            if len(pdf_reports) == len(reports):
+                pass
+            else:
+                missed_conversions = []
+                print('ERROR ENCOUNTERED\n{} out of {} reports converted.\nMissed conversions:')
+                for pdf in pdf_reports:
+                    pdf_report = pdf.replace('pdf','docx')
+                    if pdf_report not in reports:
+                        missed_conversions.append(pdf_report)
+                for report in missed_conversions:
+                    print(report)
+
+
         print('Exporting to PDF [DONE]')
 
     # Diagnostics

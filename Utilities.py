@@ -46,7 +46,7 @@ def lists_contain_same_data(list1, list2):
     return True
 
 
-def is_substring_present_in_substring(data_to_search,string_to_find):
+def is_substring_present_in_string(data_to_search, string_to_find):
     """
     Tells you, by returning True or False, if the string you're looking for has been found,
     instead of the position of the found string.
@@ -58,6 +58,12 @@ def is_substring_present_in_substring(data_to_search,string_to_find):
         return True
     else:
         return False
+
+def is_any_substring_present_in_string(list_of_substrings,string_to_search):
+    for substring in list_of_substrings:
+        if is_substring_present_in_string(string_to_search, substring):
+            return True
+    return False
 
 def execute_all_methods(instance):
     methods = [method for method in dir(instance) if
@@ -80,7 +86,6 @@ def get_key_from_nested_value(dict, value):
                 key = list(dict.keys())[index]
                 return key
 
-def get_reports():
-    path = 'Output\\Reports'
+def get_reports(path = 'Output\\Reports'):
     reports = [file for file in listdir(path) if isfile(join(path, file)) and not file.startswith('~$')]
     return reports

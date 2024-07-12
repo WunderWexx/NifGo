@@ -4,6 +4,7 @@
 
 import numpy as np
 import Utilities as util
+from ELT import Extract
 
 class GeneralChanges:
     def __init__(self, dataframe):
@@ -17,6 +18,7 @@ class GeneralChanges:
         for column in columns:
             self.dataframe[column] = self.dataframe[column].apply(lambda x: x.split(',')[0] if isinstance(x, str) else x)
             self.dataframe[column] = self.dataframe[column].apply(lambda x: x.split('_or_')[0] if isinstance(x, str) else x)
+
 
 class GeneNameChanges:
     def __init__(self, dataframe):
@@ -173,6 +175,7 @@ class PhenotypeChanges:
         if_true = self.dataframe.loc[mask, 'phenotype'].map(CYP3A5_dict)
         self.dataframe.loc[mask, 'phenotype'] = np.where(condition, if_true, 'ERROR')
 
+
 class GenotypeChanges:
     def __init__(self, dataframe):
         self.dataframe = dataframe
@@ -246,14 +249,55 @@ class GenotypeChanges:
             return new_known_call
 
         mask = self.dataframe['gene'] == 'UGT1A1'
-        find_plus = lambda x: util.is_substring_present_in_substring(x, '+')
+        find_plus = lambda x: util.is_substring_present_in_string(x, '+')
         condition = self.dataframe.loc[mask, 'genotype'].map(find_plus)
         no_change = self.dataframe.loc[mask, 'genotype']
         self.dataframe.loc[mask, 'genotype'] = np.where(condition,
                                                          self.dataframe.loc[mask, 'genotype'].apply(take_first_stars),
                                                          no_change)
 
-    def DPYD(self):
+    def MTHFR677(self):
+        MTHFR677_dict = {
+            "A/A": "T/T",
+            "G/G": "C/C",
+            "A/G": "T/C",
+            "G/A": "T/C"
+        }
+        mask = self.dataframe['gene'] == 'MTHFR677'
+        condition = self.dataframe.loc[mask, 'genotype'].isin(MTHFR677_dict.keys())
+        if_true = self.dataframe.loc[mask, 'genotype'].map(MTHFR677_dict)
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
+
+    def MTHFR1298(self):
+        MTHFR1298_dict = {
+            "T/T": "A/A",
+            "G/G": "C/C",
+            "T/G": "A/C",
+            "G/T": "A/C"
+        }
+        mask = self.dataframe['gene'] == 'MTHFR1298'
+        condition = self.dataframe.loc[mask, 'genotype'].isin(MTHFR1298_dict.keys())
+        if_true = self.dataframe.loc[mask, 'genotype'].map(MTHFR1298_dict)
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
+
+    def ABCB1(self):
+        ABCB1_dict = {
+            "A/A": "T/T",
+            "G/G": "C/C",
+            "A/G": "T/C",
+            "G/A": "T/C"
+        }
+        mask = self.dataframe['gene'] == 'ABCB1'
+        condition = self.dataframe.loc[mask, 'genotype'].isin(ABCB1_dict.keys())
+        if_true = self.dataframe.loc[mask, 'genotype'].map(ABCB1_dict)
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
+
+
+class CombinedChanges:
+    def __init__(self, dataframe):
+        self.dataframe = dataframe
+
+    def DPYD_genotype(self):
         def DPYD_get_activity(known_call):
             # *13 = c.1679T>G
             #'c.1129-5923C>G', 'c.1905+1G>A', 'c.1129-5923C>G', 'c.295_298delTCAT'
@@ -302,27 +346,15 @@ class GenotypeChanges:
         self.dataframe.loc[mask, 'genotype'] = np.where(True, self.dataframe.loc[mask, 'genotype'].apply(DPYD_get_activity),
                                                         no_change)
 
+    def DPYD_phenotype(self):
+        data = Extract().pharmacydata()
+        DPYD_data = data[data['Gen'] == 'DPYD']
 
-    def MTHFR677(self):
-        MTHFR677_dict = {
-            "A/A": "T/T",
-            "G/G": "C/C",
-            "A/G": "T/C",
-            "G/A": "T/C"
-        }
-        mask = self.dataframe['gene'] == 'MTHFR677'
-        condition = self.dataframe.loc[mask, 'genotype'].isin(MTHFR677_dict.keys())
-        if_true = self.dataframe.loc[mask, 'genotype'].map(MTHFR677_dict)
-        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
+        def DPYD_get_phenotype(genotype):
+            return DPYD_data.loc[DPYD_data['Uitslag'] == genotype, 'Fenotype/Functie'].iloc[0]
 
-    def MTHFR1298(self):
-        MTHFR1298_dict = {
-            "T/T": "A/A",
-            "G/G": "C/C",
-            "T/G": "A/C",
-            "G/T": "A/C"
-        }
-        mask = self.dataframe['gene'] == 'MTHFR1298'
-        condition = self.dataframe.loc[mask, 'genotype'].isin(MTHFR1298_dict.keys())
-        if_true = self.dataframe.loc[mask, 'genotype'].map(MTHFR1298_dict)
-        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
+        mask = self.dataframe['gene'] == 'DPYD'
+        no_change = self.dataframe.loc[mask, 'phenotype']
+        self.dataframe.loc[mask, 'phenotype'] = np.where(True,
+                                                        self.dataframe.loc[mask, 'genotype'].apply(DPYD_get_phenotype),
+                                                        no_change)
