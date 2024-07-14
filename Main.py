@@ -1,5 +1,4 @@
 # Where everything comes together
-#Kan je dit zien?
 
 # Could be rewritten to be clearer.
 
