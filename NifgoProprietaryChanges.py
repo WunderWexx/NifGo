@@ -1,6 +1,6 @@
 # All the changes NifGo wants made to the standard ThermoFisher output.
 
-# You might try using a loop for PhenotypeChanges instead of applying each change. See whats faster.
+# You might try using a loop for PhenotypeChanges instead of applying each change. See what's faster.
 
 import numpy as np
 import Utilities as util
@@ -351,7 +351,11 @@ class CombinedChanges:
         DPYD_data = data[data['Gen'] == 'DPYD']
 
         def DPYD_get_phenotype(genotype):
-            return DPYD_data.loc[DPYD_data['Uitslag'] == genotype, 'Fenotype/Functie'].iloc[0]
+            result = DPYD_data.loc[DPYD_data['Uitslag'] == genotype, 'Fenotype/Functie']
+            if not result.empty:
+                return result.iloc[0]
+            else:
+                return 'ERROR'
 
         mask = self.dataframe['gene'] == 'DPYD'
         no_change = self.dataframe.loc[mask, 'phenotype']
