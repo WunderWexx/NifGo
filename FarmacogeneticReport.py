@@ -113,7 +113,7 @@ class FarmacoGeneticReport(wd):
                      "TPMT",
                      "UGT1A1",
                      "VKORC1",
-                     'OPLMR1'
+                     'OPRM1'
               ]
               df = self.dataframe[self.dataframe['sample_id'] == self.sample_id]
               df = df[df['gene'].isin(report_genes)]

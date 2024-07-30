@@ -132,7 +132,7 @@ if __name__ == "__main__":
     util.execute_all_methods(combined_changes)
     complete_dataframe = combined_changes.dataframe
     util.store_dataframe(complete_dataframe, 'complete')
-    print('implementing NifGo changes DONE')
+    print('Implementing NifGo changes DONE')
 
     #Handling unknowns
     print('Handling unknowns [...]')
