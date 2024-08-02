@@ -14,8 +14,10 @@ class CustomerData:
         customerdata_df = customerdata_df.fillna('')
         customerdata_df = customerdata_df.apply(lambda col: col.map(lambda x: x.strip() if isinstance(x, str) else x))
         customerdata_df['birthdate'] = customerdata_df['birthdate'].dt.strftime('%Y-%m-%d')
+        customerdata_df['birthdate'].fillna('20237-01-01', inplace=True)
         customerdata_df.sort_values(by='sample_id', ascending=True, inplace=True)
         customerdata_df.reset_index(inplace=True, drop=True)
+        util.printEntire(customerdata_df)
         return customerdata_df
 
     def fill_customer_data(self):
@@ -82,3 +84,5 @@ class CustomerData:
             print('Filling in customer data [DONE]')
         else:
             pass
+
+CustomerData().customer_data_IA()
