@@ -142,7 +142,7 @@ class Diagnostics:
             'CYP2C8', 'CYP2C9', 'CYP2D6', 'CYP2E1', 'CYP3A4', 'CYP3A5',
             'CYP4F2', 'DPYD', 'F2', 'F5', 'G6PD', 'GSTP1', 'HLA-B*1502',
             'IFNL3', 'MTHFR1298', 'MTHFR677', 'MTRNR1', 'NAT1', 'NAT2',
-            'RYR1', 'SLCO1B1', 'TPMT', 'UGT1A1', 'VKORC1'
+            'RYR1', 'SLCO1B1', 'TPMT', 'UGT1A1', 'VKORC1', 'OPRM1'
         ]
         infosheet_genes_list = [
             'CYP1A2', 'CYP2B6', 'CYP2C19', 'CYP2C9', 'CYP2D6', 'CYP3A4',
