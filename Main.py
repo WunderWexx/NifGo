@@ -230,4 +230,4 @@ if __name__ == "__main__":
     Diagnostics.NutrinomicsDiagnostics().nutrinomics_diagnostics()
     print('Generating diagnostic reports [DONE]')
 
-    print('\nPROGRAM EXECUTED SUCCESSFULLY\n')
+    print('\nPROGRAM EXECUTED SUCCESSFULLY')

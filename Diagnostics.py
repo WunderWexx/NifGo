@@ -42,30 +42,13 @@ class Diagnostics:
                 'CYP1A2', 'CYP2A6', 'CYP2B6', 'CYP2C19', 'CYP2C8', 'CYP2C9',
                 'CYP2D6', 'CYP2E1', 'CYP3A4', 'CYP4F2', 'DPYD',
                 'G6PD', 'GSTP1', 'IFNL3', 'MTHFR1298', 'MTHFR677', 'RYR1',
-                'TPMT', 'UGT1A1', 'VKORC1'
+                'TPMT', 'UGT1A1', 'VKORC1','OPRM1'
             ],
             'NA_phenotype_genes': ['NAT1', 'NAT2'],
             'NF_phenotype_genes': ['CACNA1S', 'CFTR', 'SLCO1B1','MTRNR1'],
             'expressor_phenotype_genes': ['CYP3A5'],
             'pos_neg_phenotype_genes': ['HLA-B*1502'],
             'PM_risico_phenotype_genes': ['F2','F5']
-        }
-        self.possible_phenotypes_by_type = {
-            'NM_phenotype_genes': ['UM','RM','NM','IM','PM'],
-            'NA_phenotype_genes': ['RA','NA','IA','SA'],
-            'NF_phenotype_genes': ['IF','NF','DF','PF'],
-            'expressor_phenotype_genes': ['non-expressor','homozygoot','heterozygoot'],
-            'pos_neg_phenotype_genes': ['positief','negatief','risico'],
-            'PM_risico_phenotype_genes': ['PM','risico']
-        }
-        self.genotype_regex = {
-            '\D\D/\D\D' : ['CACNA1S','CFTR','IFNL3','RYR1'],
-            '\d\d\d\D\D' : ['SLCO1B1'],
-            '\d\d\d\d\D\D' : ['VKORC1'],
-            '\AAS' : ['DPYD'],
-            '\D\D\D/\D\D\D' : ['COMT'],
-            '(Null|\D)/(Null|\D)' : ['F2','F5','G6PD','HLA-B*1502','MTHFR1298','MTHFR677','MTRNR1'],
-            '\*.*/\*.*' : ['other']
         }
 
     def get_doc_type(self, document_path):
@@ -79,6 +62,15 @@ class Diagnostics:
             return 'Medication'
 
     def check_phenotypes(self, document_path):
+        self.possible_phenotypes_by_type = {
+            'NM_phenotype_genes': ['UM', 'RM', 'NM', 'IM', 'PM'],
+            'NA_phenotype_genes': ['RA', 'NA', 'IA', 'SA'],
+            'NF_phenotype_genes': ['IF', 'NF', 'DF', 'PF'],
+            'expressor_phenotype_genes': ['non-expressor', 'homozygoot', 'heterozygoot'],
+            'pos_neg_phenotype_genes': ['positief', 'negatief', 'risico'],
+            'PM_risico_phenotype_genes': ['PM', 'risico']
+        }
+
         document = Document(document_path)
 
         table_to_check = None
@@ -101,6 +93,16 @@ class Diagnostics:
         return genes_to_check
 
     def check_genotypes(self, document_path):
+        self.genotype_regex = {
+            '\D\D/\D\D' : ['CACNA1S','CFTR','IFNL3','RYR1'],
+            '\d\d\d\D\D' : ['SLCO1B1'],
+            '\d\d\d\d\D\D' : ['VKORC1'],
+            '\AAS' : ['DPYD'],
+            '\D\D\D/\D\D\D' : ['COMT'],
+            '(Null|\D)/(Null|\D)' : ['F2','F5','G6PD','HLA-B*1502','MTHFR1298','MTHFR677','MTRNR1','OPRM1'],
+            '\*.*/\*.*' : ['other']
+        }
+
         document = Document(document_path)
 
         if util.is_substring_present_in_string(document_path, 'NutrinomicsReport'):
