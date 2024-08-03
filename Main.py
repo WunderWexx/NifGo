@@ -107,6 +107,7 @@ if __name__ == "__main__":
     data_preparation.merge_geno_and_phenotype_dataframes()
     data_preparation.determine_phenotype()
     data_preparation.move_MTHFR1298_and_CYP2C19()
+    data_preparation.keep_only_batch_relevant_data()
 
     complete_dataframe = data_preparation.complete_dataframe
     util.store_dataframe(complete_dataframe, 'complete')
@@ -228,3 +229,5 @@ if __name__ == "__main__":
     Diagnostics.InfosheetDiagnostics().infosheet_diagnostics()
     Diagnostics.NutrinomicsDiagnostics().nutrinomics_diagnostics()
     print('Generating diagnostic reports [DONE]')
+
+    print('\nPROGRAM EXECUTED SUCCESSFULLY\n')

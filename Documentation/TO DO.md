@@ -9,8 +9,9 @@
 10. Requirements.txt ✅
 11. Gen toevoegen ✅
 12. Geen klantdata geeft error ✅
-13. Omgaan met missende geboortedatum
-14. Missende klantdata diagnostiseren / klantdata automatisch checken.
+13. Omgaan met missende geboortedatum ✅
+14. Er worden halve rapporten gegenereerd als er halve data beschikbaar is. Alles of niets. ✅
+15. Missende klantdata diagnostiseren / klantdata automatisch checken.
 ## Voor mij
 1. UI moet toegevoegd worden
 2. Multicore✅
