@@ -1,4 +1,5 @@
 # Widely used variables
+# We want to remove this.
 
 ThermoFisher_determined_genes = [
     'CACNA1S',
@@ -24,6 +25,7 @@ ThermoFisher_determined_genes = [
     'RYR1',
     'TPMT',
     'UGT1A1',
+    'OPLMR1'
 ]
 probeset_id_dict = {
     "AX-11340068": "MC4R",

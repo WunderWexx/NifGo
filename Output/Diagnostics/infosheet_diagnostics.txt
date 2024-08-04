@@ -1,4 +1,17 @@
 Infosheet diagnostics
 Sample	Gene	Issue
-Sample: D402007226.docx	Gene: CYP2D6	Issue: Implausible phenotype
-Sample: D402007231.docx	Gene: CYP2B6	Issue: Implausible phenotype
+Sample: D402000264.docx	Gene: CYP2D6	Issue: Implausible phenotype
+Sample: D402007276.docx	Gene: CYP2D6	Issue: Implausible phenotype
+Sample: D402007276.docx	Gene: DPYD	Issue: Implausible phenotype
+Sample: D402007276.docx	Gene: CYP2D6	Issue: Implausible genotype
+Sample: D402007276.docx	Gene: DPYD	Issue: Implausible genotype
+Sample: D402007287.docx	Gene: DPYD	Issue: Implausible phenotype
+Sample: D402007287.docx	Gene: DPYD	Issue: Implausible genotype
+Sample: D402007295.docx	Gene: DPYD	Issue: Implausible phenotype
+Sample: D402007295.docx	Gene: DPYD	Issue: Implausible genotype
+Sample: D402007297.docx	Gene: CYP2C9	Issue: Implausible phenotype
+Sample: D402007297.docx	Gene: CYP2C9	Issue: Implausible genotype
+Sample: D402007298.docx	Gene: CYP2D6	Issue: Implausible phenotype
+Sample: D402007362.docx	Gene: CYP2D6	Issue: Implausible phenotype
+Sample: D402007362.docx	Gene: COMT	Issue: Implausible genotype
+Sample: D402007362.docx	Gene: CYP2D6	Issue: Implausible genotype

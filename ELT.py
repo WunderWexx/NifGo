@@ -276,3 +276,7 @@ class DataPreparation:
 
         for gene in phenotype_map.keys():
             change_gen(gene, phenotype_map[gene])
+
+    def keep_only_batch_relevant_data(self):
+        relevant_samples = self.pheno_df['sample_id'].unique().tolist()
+        self.complete_dataframe = self.complete_dataframe[self.complete_dataframe['sample_id'].isin(relevant_samples)]

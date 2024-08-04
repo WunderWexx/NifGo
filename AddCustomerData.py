@@ -14,6 +14,7 @@ class CustomerData:
         customerdata_df = customerdata_df.fillna('')
         customerdata_df = customerdata_df.apply(lambda col: col.map(lambda x: x.strip() if isinstance(x, str) else x))
         customerdata_df['birthdate'] = customerdata_df['birthdate'].dt.strftime('%Y-%m-%d')
+        customerdata_df['birthdate']= customerdata_df['birthdate'].fillna('20237-01-01')
         customerdata_df.sort_values(by='sample_id', ascending=True, inplace=True)
         customerdata_df.reset_index(inplace=True, drop=True)
         return customerdata_df
@@ -37,6 +38,9 @@ class CustomerData:
                     'name': this_customers_data[1] + ' ' + this_customers_data[2],
                     'birthdate': this_customers_data[3],
                 }
+                if customer_data_dict['birthdate'] == '20237-01-01':
+                    customer_data_dict['birthdate'] = ' '
+
                 match report_type:
                     case 'FarmacogeneticReport':
                         table = doc.tables[0]
@@ -67,11 +71,10 @@ class CustomerData:
                 print(f'{file} heeft geen geassocieerde klantdata')
 
             doc.save(filepath)
+            doc.save(filepath)
 
         for sample in customerdata_df['sample_id']:
             if sample not in reported_file_ids:
-                status = customerdata_df[customerdata_df['sample_id'] == sample].values[0][4]
-                if status != 'niet gelukt':
                     print(f'{sample} heeft wel klantdata, maar geen geassocieerd rapport')
 
     def execute(self):
