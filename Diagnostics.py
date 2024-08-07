@@ -18,8 +18,8 @@
 
 # Algemeen:
 # Frequentie van allellen (moeilijk / tijdrovend) [PENDING]
-# Afwijking van de norm
-# Frequentie van fenotypes
+# Afwijking van de norm [ACTIVE]
+# Frequentie van fenotypes [ACTIVE]
 
 # Metadata:
 # Software versie [DONE]
