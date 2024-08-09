@@ -177,6 +177,7 @@ if __name__ == "__main__":
     nutrinomics_generation_time = timer_end - timer_start
     print('Generating nutrinomics reports [DONE]')
 
+    """
     # Medication report generation
     print('Generating medication reports [...]')
     timer_start = timer()
@@ -186,7 +187,7 @@ if __name__ == "__main__":
     timer_end = timer()
     medication_generation_time = timer_end - timer_start
     print('Generating medication reports [DONE]')
-
+    """
     # Filling in customer data
     CustomerData().execute()
 
@@ -222,7 +223,7 @@ if __name__ == "__main__":
     # Diagnostics
     print('Generating diagnostic reports [...]')
     generation_times = [farmacogenetics_generation_time, infosheets_generation_time,
-                            nutrinomics_generation_time, medication_generation_time]
+                            nutrinomics_generation_time] #, medication_generation_time
     Diagnostics.GeneralDiagnostics().metadata(generation_times, unique_sample_id_list)
     # Diagnostics.GeneralDiagnostics().sample_data() DOES NOT WORK YET
     Diagnostics.PharmacoDiagnostics().pharmaco_reports_diagnostics()
