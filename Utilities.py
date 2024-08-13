@@ -3,7 +3,7 @@
 # Imports
 import time
 import pandas as pd
-from os import listdir
+from os import listdir, remove
 from os.path import isfile, join
 
 def printEntire(dataframe):
@@ -89,3 +89,13 @@ def get_key_from_nested_value(dict, value):
 def get_reports(path = 'Output\\Reports'):
     reports = [file for file in listdir(path) if isfile(join(path, file)) and not file.startswith('~$')]
     return reports
+
+def empty_folder(path):
+    # Iterate over all the items in the folder
+    for item in listdir(path):
+        # Create the full path of the item
+        item_path = join(path, item)
+        # Check if the item is a file
+        if isfile(item_path):
+            # Remove the file
+            remove(item_path)

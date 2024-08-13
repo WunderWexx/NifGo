@@ -74,6 +74,12 @@ if __name__ == "__main__":
     # settings
     pd.options.mode.chained_assignment = None  # default='warn'
 
+    # Delete existing reports
+    ask_delete_reports = sg.popup_yes_no("Wilt u de bestaande rapporten verwijderen?")
+    if ask_delete_reports == 'Yes':
+        util.empty_folder('Output/Reports')
+        util.empty_folder('Output/Reports/PDF')
+
     # Data preparation
     phenotypes_df = ELT.Extract().phenotype_rpt()
     phenotypes_df = ELT.Load().phenotype_rpt(phenotypes_df)
