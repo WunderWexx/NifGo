@@ -222,8 +222,6 @@ if __name__ == "__main__":
                         missed_conversions.append(pdf_report)
                 for report in missed_conversions:
                     print(report)
-
-
         print('Exporting to PDF [DONE]')
 
     # Diagnostics
