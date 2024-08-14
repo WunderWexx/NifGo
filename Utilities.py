@@ -5,6 +5,8 @@ import time
 import pandas as pd
 from os import listdir, remove
 from os.path import isfile, join
+import subprocess
+from time import sleep
 
 def printEntire(dataframe):
     """
@@ -99,3 +101,16 @@ def empty_folder(path):
         if isfile(item_path):
             # Remove the file
             remove(item_path)
+
+def open_all_reports():
+    # Define the folder containing the Word files
+    folder_path = r"Output/Reports"
+
+    # Get a list of all Word files in the folder
+    word_files = [f for f in listdir(folder_path) if f.endswith(('.doc', '.docx'))]
+
+    # Open each Word file
+    for word_file in word_files:
+        file_path = join(folder_path, word_file)
+        subprocess.Popen(['start', 'winword', file_path], shell=True)
+        sleep(1)
