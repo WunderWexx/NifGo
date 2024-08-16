@@ -229,7 +229,7 @@ if __name__ == "__main__":
     generation_times = [farmacogenetics_generation_time, infosheets_generation_time,
                             nutrinomics_generation_time] #, medication_generation_time
     Diagnostics.GeneralDiagnostics().metadata(generation_times, unique_sample_id_list)
-    # Diagnostics.GeneralDiagnostics().sample_data() DOES NOT WORK YET
+    Diagnostics.GeneralDiagnostics().sample_data(complete_dataframe)
     Diagnostics.PharmacoDiagnostics().pharmaco_reports_diagnostics()
     Diagnostics.InfosheetDiagnostics().infosheet_diagnostics()
     Diagnostics.NutrinomicsDiagnostics().nutrinomics_diagnostics()

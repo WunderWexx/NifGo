@@ -81,12 +81,15 @@ def get_key_from_value(dict, value):
     return key
 
 def get_key_from_nested_value(dict, value):
-    values = list(dict.values())
-    for value_list, index in zip(values, range(len(values))):
-        for nested_value in value_list:
-            if nested_value == value:
-                key = list(dict.keys())[index]
-                return key
+    try:
+        values = list(dict.values())
+        for value_list, index in zip(values, range(len(values))):
+            for nested_value in value_list:
+                if nested_value == value:
+                    key = list(dict.keys())[index]
+                    return key
+    except:
+        return None
 
 def get_reports(path = 'Output\\Reports'):
     reports = [file for file in listdir(path) if isfile(join(path, file)) and not file.startswith('~$')]

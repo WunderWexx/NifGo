@@ -12,7 +12,7 @@
 # Zijn alle genen present? [DONE]
 
 # Voor de nutrinomics:
-# Kloppen de dbSNP nummers? [PENDING]
+# Kloppen de dbSNP nummers? [DONE]
 # Zijn de genotypes plausibel? [DONE]
 # Zijn alle genen present? [DONE]
 
@@ -68,6 +68,22 @@ class Diagnostics:
             'MAO-B', 'MC4R', 'MTNR1B', 'NADSYN1', 'NBPF3', 'Sult1A1',
             'Sult1E1', 'TCF7L2', 'TMEM165;CLOCK', 'TNFa', 'UCP2', 'VDR'
         ]
+        self.possible_phenotypes_by_type = {
+            'NM_phenotype_genes': ['UM', 'RM', 'NM', 'IM', 'PM'],
+            'NA_phenotype_genes': ['RA', 'NA', 'IA', 'SA'],
+            'NF_phenotype_genes': ['IF', 'NF', 'DF', 'PF'],
+            'expressor_phenotype_genes': ['non-expressor', 'homozygoot', 'heterozygoot'],
+            'pos_neg_phenotype_genes': ['positief', 'negatief', 'risico'],
+            'PM_risico_phenotype_genes': ['PM', 'risico']
+        }
+        self.normal_phenotype_dict = {
+            'NM_phenotype_genes': 'NM',
+            'NA_phenotype_genes': 'NA',
+            'NF_phenotype_genes': 'NF',
+            'expressor_phenotype_genes': 'non-expressor',
+            'pos_neg_phenotype_genes': 'negatief',
+            'PM_risico_phenotype_genes': 'PM'
+        }
 
     def get_doc_type(self, document_path):
         if util.is_substring_present_in_string(document_path, 'FarmacogeneticReport'):
@@ -80,15 +96,6 @@ class Diagnostics:
             return 'Medication'
 
     def check_phenotypes(self, document_path):
-        self.possible_phenotypes_by_type = {
-            'NM_phenotype_genes': ['UM', 'RM', 'NM', 'IM', 'PM'],
-            'NA_phenotype_genes': ['RA', 'NA', 'IA', 'SA'],
-            'NF_phenotype_genes': ['IF', 'NF', 'DF', 'PF'],
-            'expressor_phenotype_genes': ['non-expressor', 'homozygoot', 'heterozygoot'],
-            'pos_neg_phenotype_genes': ['positief', 'negatief', 'risico'],
-            'PM_risico_phenotype_genes': ['PM', 'risico']
-        }
-
         document = Document(document_path)
 
         table_to_check = None
@@ -352,73 +359,39 @@ class GeneralDiagnostics(Diagnostics):
         diag_file.write(f'Number of batches to bill: {ceil((number_of_samples / 24))}')
         diag_file.close()
 
-    def sample_data(self):
+    def sample_data(self, dataframe):
         # Afwijking van de norm [ACTIVE]
-        # Frequentie van fenotypes [Dynamische code?]
+        # Frequentie van fenotypes [DONE]
 
-        genes_dict = {
-            "CACNA1S": [],
-            "CFTR": [],
-            "CYP1A2": [],
-            "CYP2A6": [],
-            "CYP2B6": [],
-            "CYP2C19": [],
-            "CYP2C8": [],
-            "CYP2C9": [],
-            "CYP2D6": [],
-            "CYP2E1": [],
-            "CYP3A4": [],
-            "CYP3A5": [],
-            "CYP4F2": [],
-            "DPYD": [],
-            "F2": [],
-            "F5": [],
-            "G6PD": [],
-            "GSTP1": [],
-            "HLA-B*1502": [],
-            "IFNL3": [],
-            "MTHFR1298": [],
-            "MTHFR677": [],
-            "MTRNR1": [],
-            "NAT1": [],
-            "NAT2": [],
-            "RYR1": [],
-            "SLCO1B1": [],
-            "TPMT": [],
-            "UGT1A1": [],
-            "VKORC1": []
-        }
-        normal_phenotype_per_type = {
-            'NM_phenotype_genes': 'NM',
-            'NA_phenotype_genes': 'NA',
-            'NF_phenotype_genes': 'NF',
-            'expressor_phenotype_genes': 'non-expressor',
-            'pos_neg_phenotype_genes': 'negatief',
-            'PM_risico_phenotype_genes': 'risico'
-        }
+        diag_file = open('Output/Diagnostics/sample_data.txt', 'w')
 
-        diag_file = open('Output/Diagnostics/sample_data.txt    ', 'w')
-        diag_file.write('Sample data:\n')
+        unique_gene_list = dataframe['gene'].unique().tolist()
 
-        for report in self.reports:
-            if util.is_substring_present_in_string(report, 'FarmacogeneticReport'):
-                document_path = self.path + '\\' + report
-                print(document_path)
-                document = Document(document_path)
-                table = document.tables[0]
-                for row in table.rows[1:]:
-                    gene = row.cells[0].text
-                    phenotype = row.cells[1].text
-                    print(phenotype)
-                    genes_dict[gene].append(phenotype)
+        for gene in unique_gene_list:
+            # Bepaalt de frequentie van de fenotypes
+            subset = dataframe[dataframe['gene'] == gene]
+            normalized_values = subset['phenotype'].value_counts(normalize=True)
+            diag_file.write(f'{gene}:\n{normalized_values}\n')
 
-        for gene in genes_dict.keys():
-            normal = 0
-            abnormal = 0
-            for phenotype in genes_dict[gene]:
-                phenotype_type = util.get_key_from_nested_value(self.genes_by_phenotype_type, gene)
-                if phenotype != normal_phenotype_per_type[phenotype_type]:
-                    abnormal += 1
+            # Bepaalt hoeveel dat afwijkt van de norm
+            gene_type = util.get_key_from_nested_value(self.genes_by_phenotype_type, gene)
+            if gene_type != None:
+                normal_phenotype = self.normal_phenotype_dict[gene_type]
+                amount_of_normal_genes = subset.loc[subset['phenotype'] == normal_phenotype, 'phenotype'].value_counts()
+                if len(amount_of_normal_genes) == 0:
+                    amount_of_normal_genes = 0
                 else:
-                    normal += 1
-            diag_file.write(f'{gene} heeft voor {abnormal / len(genes_dict[gene])}% van de samples een afwijkend fenotype.\n')
+                    amount_of_normal_genes = amount_of_normal_genes.iloc[0]
+                amount_of_abnormal_genes = subset.loc[subset['phenotype'] != normal_phenotype, 'phenotype'].value_counts()
+                if len(amount_of_abnormal_genes) == 0:
+                    amount_of_abnormal_genes = 0
+                else:
+                    amount_of_abnormal_genes = amount_of_abnormal_genes.iloc[0]
+                total_genes = amount_of_normal_genes + amount_of_abnormal_genes
+                proportion_abnormal_genes = (amount_of_abnormal_genes / total_genes) * 100
+                diag_file.write(f'Percentage deviant phenotypes: {proportion_abnormal_genes}%\n')
+            else:
+                diag_file.write(f'Phenotype did not have to be determined\n\n')
+                continue
+
+        diag_file.close()
