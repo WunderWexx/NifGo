@@ -50,6 +50,24 @@ class Diagnostics:
             'pos_neg_phenotype_genes': ['HLA-B*1502'],
             'PM_risico_phenotype_genes': ['F2','F5']
         }
+        self.pharmacogenetic_genes_list = [
+            'CACNA1S', 'CFTR', 'CYP1A2', 'CYP2A6', 'CYP2B6', 'CYP2C19',
+            'CYP2C8', 'CYP2C9', 'CYP2D6', 'CYP2E1', 'CYP3A4', 'CYP3A5',
+            'CYP4F2', 'DPYD', 'F2', 'F5', 'G6PD', 'GSTP1', 'HLA-B*1502',
+            'IFNL3', 'MTHFR1298', 'MTHFR677', 'MTRNR1', 'NAT1', 'NAT2',
+            'RYR1', 'SLCO1B1', 'TPMT', 'UGT1A1', 'VKORC1', 'OPRM1'
+        ]
+        self.infosheet_genes_list = [
+            'CYP1A2', 'CYP2B6', 'CYP2C19', 'CYP2C9', 'CYP2D6', 'CYP3A4',
+            'CYP3A5', 'DPYD', 'HLA-B*1502', 'MTHFR677', 'SLCO1B1',
+            'TPMT', 'UGT1A1', 'VKORC1'
+        ]
+        self.nutrinomics_genes_list = [
+            'ABCB1', 'ACE', 'ADIPOQ', 'ADRA2A', 'ALDH2', 'BCO1', 'BDNF-AS;BDNF',
+            'DRD2', 'FTO', 'GC', 'GCK,YKT6', 'IGF1', 'LDLR', 'LOC105447645;FUT2',
+            'MAO-B', 'MC4R', 'MTNR1B', 'NADSYN1', 'NBPF3', 'Sult1A1',
+            'Sult1E1', 'TCF7L2', 'TMEM165;CLOCK', 'TNFa', 'UCP2', 'VDR'
+        ]
 
     def get_doc_type(self, document_path):
         if util.is_substring_present_in_string(document_path, 'FarmacogeneticReport'):
@@ -139,24 +157,6 @@ class Diagnostics:
         return genes_to_check
 
     def check_gene_presence(self, document_path):
-        pharmacogenetic_genes_list = [
-            'CACNA1S', 'CFTR', 'CYP1A2', 'CYP2A6', 'CYP2B6', 'CYP2C19',
-            'CYP2C8', 'CYP2C9', 'CYP2D6', 'CYP2E1', 'CYP3A4', 'CYP3A5',
-            'CYP4F2', 'DPYD', 'F2', 'F5', 'G6PD', 'GSTP1', 'HLA-B*1502',
-            'IFNL3', 'MTHFR1298', 'MTHFR677', 'MTRNR1', 'NAT1', 'NAT2',
-            'RYR1', 'SLCO1B1', 'TPMT', 'UGT1A1', 'VKORC1', 'OPRM1'
-        ]
-        infosheet_genes_list = [
-            'CYP1A2', 'CYP2B6', 'CYP2C19', 'CYP2C9', 'CYP2D6', 'CYP3A4',
-            'CYP3A5', 'DPYD', 'HLA-B*1502', 'MTHFR677', 'SLCO1B1',
-            'TPMT', 'UGT1A1', 'VKORC1'
-        ]
-        nutrinomics_genes_list = [
-            'ABCB1', 'ACE', 'ADIPOQ', 'ADRA2A', 'ALDH2', 'BCO1', 'BDNF-AS;BDNF',
-            'DRD2', 'FTO', 'GC', 'GCK,YKT6', 'IGF1', 'LDLR', 'LOC105447645;FUT2',
-            'MAO-B', 'MC4R', 'MTNR1B', 'NADSYN1', 'NBPF3', 'Sult1A1',
-            'Sult1E1', 'TCF7L2', 'TMEM165;CLOCK', 'TNFa', 'UCP2', 'VDR'
-        ]
         document = Document(document_path)
         doc_type = self.get_doc_type(document_path)
 
@@ -168,7 +168,7 @@ class Diagnostics:
                 for row in table.rows[1:]:
                     gene = row.cells[0].text
                     present_genes.append(gene)
-                if not util.lists_contain_same_data(pharmacogenetic_genes_list, present_genes):
+                if not util.lists_contain_same_data(self.pharmacogenetic_genes_list, present_genes):
                     return False
 
             case 'InfoSheet':
@@ -178,7 +178,7 @@ class Diagnostics:
                 for row in table.rows[1:]:
                     gene = row.cells[0].text
                     present_genes.append(gene)
-                if not util.lists_contain_same_data(infosheet_genes_list, present_genes):
+                if not util.lists_contain_same_data(self.infosheet_genes_list, present_genes):
                     return False
 
             case 'Nutrinomics':
@@ -188,10 +188,45 @@ class Diagnostics:
                 for row in table.rows[1:]:
                     gene = row.cells[0].text
                     present_genes.append(gene)
-                if not util.lists_contain_same_data(nutrinomics_genes_list, present_genes):
+                if not util.lists_contain_same_data(self.nutrinomics_genes_list, present_genes):
                     return False
 
         return True
+
+    def identify_missing_genes(self, document_path):
+        document = Document(document_path)
+        doc_type = self.get_doc_type(document_path)
+
+        match doc_type:
+            case 'Farmacogenetics':
+                table_to_check = 1
+                table = document.tables[table_to_check]
+                present_genes = []
+                for row in table.rows[1:]:
+                    gene = row.cells[0].text
+                    present_genes.append(gene)
+                missing_genes = util.find_missing_items_in_list(self.pharmacogenetic_genes_list, present_genes)
+                return missing_genes
+
+            case 'InfoSheet':
+                table_to_check = 0
+                table = document.tables[table_to_check]
+                present_genes = []
+                for row in table.rows[1:]:
+                    gene = row.cells[0].text
+                    present_genes.append(gene)
+                missing_genes = util.find_missing_items_in_list(self.infosheet_genes_list, present_genes)
+                return missing_genes
+
+            case 'Nutrinomics':
+                table_to_check = 0
+                table = document.tables[table_to_check]
+                present_genes = []
+                for row in table.rows[1:]:
+                    gene = row.cells[0].text
+                    present_genes.append(gene)
+                missing_genes = util.find_missing_items_in_list(self.nutrinomics_genes_list, present_genes)
+                return missing_genes
 
     def check_infosysteem(self, document_path):
         document = Document(document_path)
@@ -216,7 +251,10 @@ class PharmacoDiagnostics(Diagnostics):
 
                 # Checking if all genes are present
                 if not self.check_gene_presence(document_path):
-                    diag_file.write(f'Sample: {sample_id}\t Issue: Not all genes present\n')
+                    diag_file.write(f'Sample: {sample_id}\t Issue: Not all genes present:\n')
+                    missing_genes = self.identify_missing_genes(document_path)
+                    for gene in missing_genes:
+                        diag_file.write(f'\t{gene}')
                 
                 #Checking if all phenotypes are plausible
                 list_of_genes_to_check = self.check_phenotypes(document_path)
@@ -246,6 +284,9 @@ class InfosheetDiagnostics(Diagnostics):
                 # Checking if all genes are present
                 if not self.check_gene_presence(document_path):
                     diag_file.write(f'Sample: {sample_id}\t Issue: Not all genes present\n')
+                    missing_genes = self.identify_missing_genes(document_path)
+                    for gene in missing_genes:
+                        diag_file.write(f'\t{gene}')
 
                 # Checking if all phenotypes are plausible
                 list_of_genes_to_check = self.check_phenotypes(document_path)
@@ -280,6 +321,9 @@ class NutrinomicsDiagnostics(Diagnostics):
                 # Checking if all genes are present
                 if not self.check_gene_presence(document_path):
                     diag_file.write(f'Sample: {sample_id}\t Issue: Not all genes present\n')
+                    missing_genes = self.identify_missing_genes(document_path)
+                    for gene in missing_genes:
+                        diag_file.write(f'\t{gene}')
 
                 # Checking if all genotypes are plausible
                 list_of_genes_to_check = self.check_genotypes(document_path)
@@ -293,7 +337,7 @@ class GeneralDiagnostics(Diagnostics):
     def metadata(self, generation_times, unique_samples_list):
         diag_file = open('Output/Diagnostics/metadata.txt', 'w')
         diag_file.write('Metadata:\n')
-        diag_file.write('Version 0.9.1\n\n') #.8 voor unknown handling, .9 voor diagnostics, en 1.0.0 voor release met UI.
+        diag_file.write('Version 0.9.2\n\n') # 1.0.0 voor release met UI.
 
         for report, time in zip(['Farmacogenetics','Infosheets','Nutrinomics','Medication'], generation_times):
             diag_file.write(f'{report} generated in {time:.1f} seconds.\n')
