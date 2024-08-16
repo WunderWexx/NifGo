@@ -371,7 +371,7 @@ class GeneralDiagnostics(Diagnostics):
             # Bepaalt de frequentie van de fenotypes
             subset = dataframe[dataframe['gene'] == gene]
             normalized_values = subset['phenotype'].value_counts(normalize=True)
-            diag_file.write(f'{gene}:\n{normalized_values}\n')
+            diag_file.write(f'{gene} frequencies:\n{normalized_values}\n')
 
             # Bepaalt hoeveel dat afwijkt van de norm
             gene_type = util.get_key_from_nested_value(self.genes_by_phenotype_type, gene)
