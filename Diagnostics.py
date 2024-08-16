@@ -18,8 +18,8 @@
 
 # Algemeen:
 # Frequentie van allellen (moeilijk / tijdrovend) [PENDING]
-# Afwijking van de norm [ACTIVE]
-# Frequentie van fenotypes [ACTIVE]
+# Afwijking van de norm [DONE]
+# Frequentie van fenotypes [DONE]
 
 # Metadata:
 # Software versie [DONE]
@@ -360,9 +360,6 @@ class GeneralDiagnostics(Diagnostics):
         diag_file.close()
 
     def sample_data(self, dataframe):
-        # Afwijking van de norm [ACTIVE]
-        # Frequentie van fenotypes [DONE]
-
         diag_file = open('Output/Diagnostics/sample_data.txt', 'w')
 
         unique_gene_list = dataframe['gene'].unique().tolist()
