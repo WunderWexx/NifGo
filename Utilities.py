@@ -114,3 +114,9 @@ def open_all_reports():
         file_path = join(folder_path, word_file)
         subprocess.Popen(['start', 'winword', file_path], shell=True)
         sleep(1)
+
+def find_missing_items_in_list(reference_list, suspect_list):
+    missing_items = []
+    for item in suspect_list:
+        if item not in reference_list:
+            missing_items.append(item)
