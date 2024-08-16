@@ -120,3 +120,4 @@ def find_missing_items_in_list(reference_list, suspect_list):
     for item in suspect_list:
         if item not in reference_list:
             missing_items.append(item)
+    return missing_items
