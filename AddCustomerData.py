@@ -76,12 +76,3 @@ class CustomerData:
         for sample in customerdata_df['sample_id']:
             if sample not in reported_file_ids:
                     print(f'{sample} heeft wel klantdata, maar geen geassocieerd rapport')
-
-    def execute(self):
-        file_is_present = sg.popup_yes_no("Heeft u het bestand met de klantdata?")
-        if file_is_present == 'Yes':
-            print('Filling in customer data [...]')
-            self.fill_customer_data()
-            print('Filling in customer data [DONE]')
-        else:
-            pass
