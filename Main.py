@@ -195,7 +195,11 @@ if __name__ == "__main__":
     print('Generating medication reports [DONE]')
     """
     # Filling in customer data
-    CustomerData().execute()
+    file_is_present = sg.popup_yes_no("Heeft u het bestand met de klantdata?")
+    if file_is_present == 'Yes':
+        print('Filling in customer data [...]')
+        CustomerData().fill_customer_data()
+        print('Filling in customer data [DONE]')
 
     # Export to PDF
     ask_pdf_generation = sg.popup_yes_no("Wilt u de PDF bestanden aanmaken?")
