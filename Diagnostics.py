@@ -340,6 +340,15 @@ class NutrinomicsDiagnostics(Diagnostics):
 
         diag_file.close()
 
+"""
+class CustomerDataDiagnostics(Diagnostics):
+    def customerdata_diagnostics(self):
+        diag_file = open('Output/Diagnostics/customerdata_diagnostics.txt', 'w')
+        for report in self.reports:
+            document_path = self.path + '\\' + report
+            sample_id = document_path.split('_')[1]
+"""
+
 class GeneralDiagnostics(Diagnostics):
     def metadata(self, generation_times, unique_samples_list):
         diag_file = open('Output/Diagnostics/metadata.txt', 'w')
