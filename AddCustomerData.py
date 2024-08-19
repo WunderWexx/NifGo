@@ -1,15 +1,15 @@
 # This is where the reports are modified to include customer details
 
-import PySimpleGUI as sg
 from ELT import Extract
 from docx import Document
 from os.path import join
 from docx.shared import Pt
 import Utilities as util
+import pandas as pd
 
 class CustomerData:
-    def customer_data_IA(self):
-        customerdata_df = Extract().customer_data()
+    def __init__(self, filepath):
+        customerdata_df = pd.read_excel(filepath, header=None)
         customerdata_df = customerdata_df.rename(columns={0:'sample_id',1:'initials',2:'lastname',3:'birthdate',4:'status'})
         customerdata_df = customerdata_df.fillna('')
         customerdata_df = customerdata_df.apply(lambda col: col.map(lambda x: x.strip() if isinstance(x, str) else x))
@@ -17,10 +17,10 @@ class CustomerData:
         customerdata_df['birthdate']= customerdata_df['birthdate'].fillna('20237-01-01')
         customerdata_df.sort_values(by='sample_id', ascending=True, inplace=True)
         customerdata_df.reset_index(inplace=True, drop=True)
-        return customerdata_df
+        self.customer_data_df = customerdata_df
 
     def fill_customer_data(self):
-        customerdata_df = self.customer_data_IA()
+        customerdata_df = self.customer_data_df
         path = 'Output\\Reports'
         reports = util.get_reports()
 

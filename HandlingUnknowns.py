@@ -4,8 +4,9 @@ import pandas as pd
 import PySimpleGUI as sg
 
 class HandlingUnknowns:
-    def __init__(self, dataframe):
+    def __init__(self, dataframe, corrected_unknowns_path):
         self.dataframe = dataframe
+        self.corrected_unknowns_path = corrected_unknowns_path
         self.unknown_signs_list = ['ERROR', 'Not_PM', 'Not_NM', 'Not_IM', 'Not_RM', 'Not_UM', 'unknown', '---', '']
 
     def detect_unknowns(self):
@@ -29,8 +30,8 @@ class HandlingUnknowns:
     def correct_unknowns(self):
         # correct_unknowns_df is the hand corrected version of unknowns_df
         # df is the copy of complete.xlsx that is being edited
-        correct_unknowns_df = self.ask_for_unknowns_df()
-        if isinstance(correct_unknowns_df, pd.DataFrame):
+        if len(self.corrected_unknowns_path) > 0:
+            correct_unknowns_df = pd.read_excel(self.corrected_unknowns_path)
             df = self.dataframe
             for index, row in correct_unknowns_df.iterrows():
                 sample_id = row['sample_id']

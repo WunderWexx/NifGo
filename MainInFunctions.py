@@ -1,8 +1,3 @@
-# Where everything comes together
-
-# Could be rewritten to be clearer.
-
-# imports
 from timeit import default_timer as timer
 import ELT
 import Utilities as util
@@ -22,6 +17,7 @@ from multiprocessing import Pool, cpu_count
 from functools import partial
 from docx2pdf import convert
 
+# Multiprocessing functions
 def generate_farmacogenetic_report(id, dataframe):
     farmaco = FarmacoGeneticReport(sample_id=id, dataframe=dataframe)
     farmaco.inleiding()
@@ -47,48 +43,11 @@ def generate_nutrinomics_report(id, dataframe):
     nutrinomics.Toelichting()
     nutrinomics.save()
 
-def generate_medication_report(id, dataframe):
-    medrep = MedicationReport(sample_id=id, dataframe=dataframe)
-    medrep.medrep_intro_text()
-    medrep.medrep_core_exec()
-    medrep.save()
-
-def convert_to_pdf(report):
-    attempts = 5
-    for attempt in range(attempts):
-        try:
-            basepath = 'Output\\Reports'
-            docxpath = join(basepath, report)
-            pdf_basepath = 'Output\\Reports\\PDF'
-            pdfpath = join(pdf_basepath, report.replace('docx','pdf'))
-            convert(docxpath, pdfpath)
-            break
-        except Exception as e:
-            if attempt < 2:
-                print(f"Attempt {attempt + 1} failed for {report}: {e}")
-            else:
-                print(f"{report} FAILED TO CONVERT WITH ERROR {e}")
-
-if __name__ == "__main__":
-
-    # settings
+# Main functions
+def phenotypes_import(phenotypes_rpt):
     pd.options.mode.chained_assignment = None  # default='warn'
 
-    # Deprecation warning
-    ask_continue = sg.popup_yes_no('Dit bestand is verouderd.\n'
-                                   'De meest up to date versie kan gedraaid worden via GraphicalUserInterface.py\n'
-                                   'Wilt u toch doorgaan?')
-    if ask_continue == 'No':
-        exit(69420)
-
-    # Delete existing reports
-    ask_delete_reports = sg.popup_yes_no("Wilt u de bestaande rapporten verwijderen?")
-    if ask_delete_reports == 'Yes':
-        util.empty_folder('Output/Reports')
-        util.empty_folder('Output/Reports/PDF')
-
-    # Data preparation
-    phenotypes_df = ELT.Extract().phenotype_rpt()
+    phenotypes_df = pd.read_csv(phenotypes_rpt, sep="@", header=None, engine="python")
     phenotypes_df = ELT.Load().phenotype_rpt(phenotypes_df)
     print('phenotype import DONE')
     phenotype_transformation = ELT.Transform().phenotype_rpt(phenotypes_df)
@@ -101,8 +60,11 @@ if __name__ == "__main__":
     util.store_dataframe(phenotypes_df, 'phenotypes')
     print('phenotype transformation DONE')
 
-    print('genotype import [...]',end='\r')
-    genotypes_df = ELT.Extract().genotype_txt()
+    return phenotypes_df
+
+def genotypes_import(genotypes_txt):
+    print('genotype import [...]', end='\r')
+    genotypes_df = pd.read_csv(genotypes_txt, sep="@", header=None, engine="python")
     genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.keys())
     print('genotype import DONE')
     genotypes_transformation = ELT.Transform().genotype_txt(genotypes_df, probeset_id_dict)
@@ -116,6 +78,9 @@ if __name__ == "__main__":
     util.store_dataframe(genotypes_df, 'genotypes')
     print('genotype transformation DONE')
 
+    return genotypes_df
+
+def data_preparation(genotypes_df, phenotypes_df):
     data_preparation = ELT.DataPreparation(genotypes_df, phenotypes_df)
     data_preparation.merge_geno_and_phenotype_dataframes()
     data_preparation.determine_phenotype()
@@ -148,9 +113,11 @@ if __name__ == "__main__":
     util.store_dataframe(complete_dataframe, 'complete')
     print('Implementing NifGo changes DONE')
 
-    #Handling unknowns
+    return complete_dataframe
+
+def handling_unknowns(complete_dataframe, corrected_unknowns_path):
     print('Handling unknowns [...]')
-    handler = HandlingUnknowns(complete_dataframe)
+    handler = HandlingUnknowns(complete_dataframe, corrected_unknowns_path)
     handler.detect_unknowns()
     handler.correct_unknowns()
     complete_dataframe = handler.dataframe
@@ -158,9 +125,10 @@ if __name__ == "__main__":
     handler.detect_unknowns()
     print('Handling unknowns DONE')
 
-    unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
+    return complete_dataframe
 
-    # Farmacogenetic Reports generation
+def generating_pharmacogenetic(complete_dataframe):
+    unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
     print('Generating farmacogenetic reports [...]')
     timer_start = timer()
     partial_generate_farmacogenetic_report = partial(generate_farmacogenetic_report, dataframe=complete_dataframe)
@@ -170,7 +138,10 @@ if __name__ == "__main__":
     farmacogenetics_generation_time = timer_end - timer_start
     print('Generating farmacogenetic reports DONE')
 
-    # Infosheet generation
+    return farmacogenetics_generation_time
+
+def generating_infosheet(complete_dataframe):
+    unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
     print('Generating info sheets [...]')
     timer_start = timer()
     partial_generate_infosheet = partial(generate_infosheet, dataframe=complete_dataframe)
@@ -180,7 +151,10 @@ if __name__ == "__main__":
     infosheets_generation_time = timer_end - timer_start
     print('Generating info sheets [DONE]')
 
-    # Nutrinomics Reports generation
+    return infosheets_generation_time
+
+def generating_nutrinomics(complete_dataframe):
+    unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
     print('Generating nutrinomics reports [...]')
     timer_start = timer()
     partial_generate_nutrinomics_report = partial(generate_nutrinomics_report, dataframe=complete_dataframe)
@@ -190,53 +164,39 @@ if __name__ == "__main__":
     nutrinomics_generation_time = timer_end - timer_start
     print('Generating nutrinomics reports [DONE]')
 
-    """
-    # Medication report generation
-    print('Generating medication reports [...]')
-    timer_start = timer()
-    partial_generate_medication_report = partial(generate_medication_report, dataframe=complete_dataframe)
-    with Pool(cpu_count()) as pool:
-        pool.map(partial_generate_medication_report, unique_sample_id_list)
-    timer_end = timer()
-    medication_generation_time = timer_end - timer_start
-    print('Generating medication reports [DONE]')
-    """
-    # Filling in customer data
-    file_is_present = sg.popup_yes_no("Heeft u het bestand met de klantdata?")
-    if file_is_present == 'Yes':
-        print('Filling in customer data [...]')
-        CustomerData().fill_customer_data()
-        print('Filling in customer data [DONE]')
+    return nutrinomics_generation_time
 
-    # Export to PDF
-    ask_pdf_generation = sg.popup_yes_no("Wilt u de PDF bestanden aanmaken?")
-    if ask_pdf_generation == 'Yes':
-        print('Exporting to PDF [...]')
-        reports = util.get_reports()
-        '''
-        print(f'Generating {len(reports)} PDF\'s')
-        with Pool(cpu_count()) as pool:
-            pool.map(convert_to_pdf, reports)
-        '''
-        try:
-            convert('Output/Reports/','Output/Reports/PDF')
-        except:
-            pdf_reports = util.get_reports('Output\\Reports\\PDF')
-            if len(pdf_reports) == len(reports):
-                pass
-            else:
-                missed_conversions = []
-                print('ERROR ENCOUNTERED\n{} out of {} reports converted.\nMissed conversions:')
-                for pdf in pdf_reports:
-                    pdf_report = pdf.replace('pdf','docx')
-                    if pdf_report not in reports:
-                        missed_conversions.append(pdf_report)
-                for report in missed_conversions:
-                    print(report)
-        print('Exporting to PDF [DONE]')
+def enter_customer_data(filepath):
+    print('Filling in customer data [...]')
+    CustomerData(filepath).fill_customer_data()
+    print('Filling in customer data [DONE]')
 
-    # Diagnostics
+def export_to_pdf():
+    print('Exporting to PDF [...]')
+    reports = util.get_reports()
+    try:
+        convert('Output/Reports/', 'Output/Reports/PDF')
+    except:
+        pdf_reports = util.get_reports('Output\\Reports\\PDF')
+        if len(pdf_reports) == len(reports):
+            pass
+        else:
+            missed_conversions = []
+            print('ERROR ENCOUNTERED\n{} out of {} reports converted.\nMissed conversions:')
+            for pdf in pdf_reports:
+                pdf_report = pdf.replace('pdf', 'docx')
+                if pdf_report not in reports:
+                    missed_conversions.append(pdf_report)
+            for report in missed_conversions:
+                print(report)
+            return missed_conversions
+    print('Exporting to PDF [DONE]')
+    return None
+
+def diagnostics(times, complete_dataframe):
     print('Generating diagnostic reports [...]')
+    unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
+    (farmacogenetics_generation_time, infosheets_generation_time, nutrinomics_generation_time) = times
     generation_times = [farmacogenetics_generation_time, infosheets_generation_time, nutrinomics_generation_time]
     Diagnostics.GeneralDiagnostics().metadata(generation_times, unique_sample_id_list)
     Diagnostics.GeneralDiagnostics().sample_data(complete_dataframe)
@@ -244,10 +204,3 @@ if __name__ == "__main__":
     Diagnostics.InfosheetDiagnostics().infosheet_diagnostics()
     Diagnostics.NutrinomicsDiagnostics().nutrinomics_diagnostics()
     print('Generating diagnostic reports [DONE]')
-
-    # Open all Word files
-    ask_open_reports = sg.popup_yes_no("Wilt u de gegenereerde rapporten openen?\nLET OP! Dit opent ALLE rapporten")
-    if ask_open_reports == 'Yes':
-        util.open_all_reports()
-
-    print('\nPROGRAM EXECUTED SUCCESSFULLY')
