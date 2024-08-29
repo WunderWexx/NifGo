@@ -13,8 +13,10 @@
 14. Er worden halve rapporten gegenereerd als er halve data beschikbaar is. Alles of niets. ✅
 15. Als er data mist in nutrinomics moet er ERROR komen ipv een exception ✅
 16. Diagnostiek afmaken ✅
-17. Missende klantdata diagnostiseren / klantdata automatisch checken.
-18. Klantdata met koppen laten werken, niet met kolomindex.
+17. Omgaan met missende data in source bestanden.
+18. Kolommen in genotype.txt herkennen veranderen, aangezien die structuur niet constant is.
+19. Missende klantdata diagnostiseren / klantdata automatisch checken.
+20. Klantdata met koppen laten werken, niet met kolomindex.
 ## Voor mij
 1. UI moet toegevoegd worden
 2. Multicore✅

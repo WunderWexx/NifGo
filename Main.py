@@ -179,6 +179,7 @@ if __name__ == "__main__":
     partial_generate_nutrinomics_report = partial(generate_nutrinomics_report, dataframe=complete_dataframe)
     with Pool(cpu_count()) as pool:
         pool.map(partial_generate_nutrinomics_report, unique_sample_id_list)
+        # ValueError: Length of values (26) does not match length of index (23) betekent dat er genen missen uit het source bestand
     timer_end = timer()
     nutrinomics_generation_time = timer_end - timer_start
     print('Generating nutrinomics reports [DONE]')
