@@ -293,7 +293,7 @@ class InfosheetDiagnostics(Diagnostics):
                     diag_file.write(f'Sample: {sample_id}\t Issue: Not all genes present\n')
                     missing_genes = self.identify_missing_genes(document_path)
                     for gene in missing_genes:
-                        diag_file.write(f'\t{gene}')
+                        diag_file.write(f'\t{gene}\n')
 
                 # Checking if all phenotypes are plausible
                 list_of_genes_to_check = self.check_phenotypes(document_path)
@@ -330,7 +330,7 @@ class NutrinomicsDiagnostics(Diagnostics):
                     diag_file.write(f'Sample: {sample_id}\t Issue: Not all genes present\n')
                     missing_genes = self.identify_missing_genes(document_path)
                     for gene in missing_genes:
-                        diag_file.write(f'\t{gene}')
+                        diag_file.write(f'\t{gene}\n')
 
                 # Checking if all genotypes are plausible
                 list_of_genes_to_check = self.check_genotypes(document_path)
