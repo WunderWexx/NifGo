@@ -58,7 +58,7 @@ class Diagnostics:
             'RYR1', 'SLCO1B1', 'TPMT', 'UGT1A1', 'VKORC1', 'OPRM1'
         ]
         self.infosheet_genes_list = [
-            'CYP1A2', 'CYP2B6', 'CYP2C19', 'CYP2C9', 'CYP2D6', 'CYP3A4',
+            'COMT','CYP1A2', 'CYP2B6', 'CYP2C19', 'CYP2C9', 'CYP2D6', 'CYP3A4',
             'CYP3A5', 'DPYD', 'HLA-B*1502', 'MTHFR677', 'SLCO1B1',
             'TPMT', 'UGT1A1', 'VKORC1'
         ]
