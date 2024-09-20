@@ -118,7 +118,7 @@ def open_all_reports():
         subprocess.Popen(['start', 'winword', file_path], shell=True)
         sleep(1)
 
-def find_missing_items_in_list(reference_list, suspect_list):
+def find_missing_items_in_list(suspect_list, reference_list):
     missing_items = []
     for item in suspect_list:
         if item not in reference_list:
