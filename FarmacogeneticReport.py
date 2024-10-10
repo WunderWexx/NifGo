@@ -56,11 +56,10 @@ class FarmacoGeneticReport(wd):
               """
               self.heading("\nInhoudsopgave")
               paragraph = self.document.add_paragraph()
-              run = paragraph.add_run("- overzicht uitslag\n\n"
-                                      "- toelichting uitslag\n\n"
-                                      "- variaties waarop is getest\n\n"
-                                      "- bijlage medicatiematch\n\n"
-                                      "- bijlage nutrigenomics (indien aangevraagd)")
+              run = paragraph.add_run("- Overzicht uitslag\n\n"
+                                      "- Toelichting uitslag\n\n"
+                                      "- Variaties waarop is getest\n\n"
+                                      "- Bijlage nutrigenomics (indien aangevraagd)")
               run.font.name = 'Calibri'
               run.font.size = Pt(12)
 
