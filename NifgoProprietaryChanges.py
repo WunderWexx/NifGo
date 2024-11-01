@@ -71,9 +71,10 @@ class PhenotypeChanges:
         """
         mask = self.dataframe['gene'] == 'G6PD'
         no_change = self.dataframe.loc[mask, 'phenotype']
-        self.dataframe.loc[mask, 'phenotype'] = np.where(self.dataframe.loc[mask, 'phenotype'] == 'Indeterminate',
-                                                         'NM',
-                                                         no_change)
+        self.dataframe.loc[mask, 'phenotype'] = np.where(
+            self.dataframe.loc[mask, 'phenotype'].isin(['Indeterminate', 'Normal']),
+            'NM',
+            no_change)
 
     def CYP1A2(self):
         """
