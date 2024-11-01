@@ -7,7 +7,7 @@ from timeit import default_timer as timer
 import ELT
 import Utilities as util
 import pandas as pd
-from os.path import join, abspath
+from os.path import join
 import PySimpleGUI as sg
 import NifgoProprietaryChanges as changes
 import Diagnostics

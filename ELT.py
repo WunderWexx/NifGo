@@ -60,7 +60,7 @@ class Load:
         :param dataframe: phenotype.rpt dataframe
         :return: The cleaned phenotype.rpt dataframe
         """
-        rowcount = dataframe[dataframe[0].str.contains("0001-0016")].index.min()
+        rowcount = dataframe[dataframe[0].str.contains("0001-0014")].index.min()
         dataframe = dataframe.iloc[rowcount:]
         dataframe.reset_index(drop=True, inplace=True)
 
@@ -166,7 +166,7 @@ class Transform:
             :return: DataFrame with columns dropped
             """
             for column in self.dataframe.columns:
-                if column[0] not in ['p','D','B']: #Being either probeset_id or something like D402000223.CEL_call_code.
+                if column[0] not in ['p','D','B','G']: #Being either probeset_id or something like D402000223.CEL_call_code.
                     drop_from_here_column = column
                     break
             index = self.dataframe.columns.get_loc(drop_from_here_column)
