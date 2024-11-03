@@ -30,7 +30,7 @@ class Extract:
         return pd.read_excel("Input/Dataframes/apotheekinfosysteem.xlsx")
 
     @staticmethod
-    def nutrimarkers():
+    def nutrimarkers(): #Isn't called anywhere. Data is represented in Globals.py.
         return pd.read_excel("Input/Dataframes/nutri_markers.xlsx")
 
     def phenotype_rpt(self):
