@@ -6,7 +6,7 @@ import PySimpleGUI as sg
 class HandlingUnknowns:
     def __init__(self, dataframe):
         self.dataframe = dataframe
-        self.unknown_signs_list = ['ERROR', 'Not_PM', 'Not_NM', 'Not_IM', 'Not_RM', 'Not_UM', 'unknown', '---', '']
+        self.unknown_signs_list = ['ERROR', 'Not_PM', 'Not_NM', 'Not_IM', 'Not_RM', 'Not_UM','Not_Off', 'unknown', '---', '']
 
     def detect_unknowns(self):
         unknowns_df = self.dataframe[
