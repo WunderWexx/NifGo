@@ -23,6 +23,7 @@ ThermoFisher_determined_genes = [
     'MTRNR1',
     'NAT1',
     'NAT2',
+    'NUDT15',
     'RYR1',
     'TPMT',
     'UGT1A1',
