@@ -2,6 +2,7 @@
 # We want to remove this.
 
 ThermoFisher_determined_genes = [
+    'ABCG2',
     'CACNA1S',
     'CFTR',
     'CYP1A2',

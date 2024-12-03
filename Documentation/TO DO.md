@@ -18,10 +18,10 @@
 19. Missende klantdata diagnostiseren / klantdata automatisch checken.
 20. Klantdata met koppen laten werken, niet met kolomindex.
 ## Voor mij
-1. UI moet toegevoegd worden
-2. Multicore✅
-3. Programma opschonen
-4. Batch file maken voor automatische updates
+1. Unknowns herkennen en verwerken ABCB2 in card.xlsx
+2. Sommige dingen werken op globals/probeset_id_dict, andere werken direct uit nutri_markers.xlsx
+3. UI moet toegevoegd worden
+4. Multicore✅
 5. Diagnostics moet afgemaakt worden
 6. Alles naar het Engels vertalen
 7. Exceptions inbouwen voor dingen zoals een leeg vakje in de aanpassingen.xlsx

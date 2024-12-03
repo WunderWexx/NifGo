@@ -1,5 +1,6 @@
 """
-Maakt Excel bestand aan voor aanlevering aan Card Vision BV
+Maakt Excel bestand aan voor aanlevering aan Card Vision BV.
+Kan pas gedraaid worden nadat alle unknowns en klantdata kloppen.
 """
 
 import pandas as pd
@@ -33,36 +34,35 @@ card['DATUM AFGIFTE'] = [date] * len(customer_codes)  # Column 3: Current Date
 
 # Populate columns
 def add_filled_column(geno_or_pheno, left_or_right):
-    if left_or_right == 'left':
-        columns_side = genes_left
-        side_denom = 'LINKS'
-    else:
-        columns_side = genes_right
-        side_denom = 'RECHTS'
+    # Determine the columns and the side label
+    columns_side = genes_left if left_or_right == 'left' else genes_right
+    side_denom = 'LINKS' if left_or_right == 'left' else 'RECHTS'
 
-    if geno_or_pheno == 'genotype':
-        trait_denom = 'UITSLAG'
-    else:
-        trait_denom = 'FENOTYPE'
+    # Determine the trait label
+    trait_denom = 'UITSLAG' if geno_or_pheno == 'genotype' else 'FENOTYPE'
 
-    for idx, gen in enumerate(columns_side, start=1):
-        gene_filtered = complete_filtered[complete_filtered['gene'] == gen]
+    # Iterate over the genes and add the corresponding results to the card
+    for idx, gene in enumerate(columns_side, start=1):
+        gene_filtered = complete_filtered[complete_filtered['gene'] == gene]
+
+        # Prepare the result column
         result_column = [
             gene_filtered.loc[gene_filtered['sample_id'] == customer_code, geno_or_pheno].values[0]
             if not gene_filtered.loc[gene_filtered['sample_id'] == customer_code, geno_or_pheno].empty
             else None
             for customer_code in customer_codes
         ]
+
+        # Add the result column to the card with an appropriate label
         card[f"ACHTERZIJDE {trait_denom} {idx} {side_denom}"] = result_column
 
-add_filled_column('genotype','left')
-add_filled_column('phenotype','left')
+# Call the function for different combinations of geno_or_pheno and left_or_right
+add_filled_column('genotype', 'left')
+add_filled_column('phenotype', 'left')
 add_filled_column('phenotype', 'right')
 add_filled_column('genotype', 'right')
 
-util.printEntire(card)
-
-# Eerste kolom mappen naar klantnamen
+# Tweede kolom vullen met geboortedata uit het klantbestand. Als die niet beschikbaar is lege string toevoegen.
 def customer_data_IA():
     customerdata_df = Extract().customer_data()
     customerdata_df = customerdata_df.rename(
@@ -76,9 +76,7 @@ def customer_data_IA():
     return customerdata_df
 
 customer_data = customer_data_IA()
-util.printEntire(customer_data)
 
-# Tweede kolom vullen met geboortedata uit het klantbestand. Als die niet beschikbaar is lege string toevoegen.
 birthdates = []
 for sample_id in card['NAAM']:
     birthdate = customer_data.loc[customer_data['sample_id'] == sample_id, 'birthdate'].values[0]
@@ -87,12 +85,13 @@ for sample_id in card['NAAM']:
     birthdates.append(birthdate)
 card.insert(1, 'GEBOORTEDATUM', birthdates)
 
+# Eerste kolom mappen naar klantnamen
 for sample_id in card['NAAM']:
     initials = customer_data.loc[customer_data['sample_id'] == sample_id, 'initials'].values[0]
     last_name = customer_data.loc[customer_data['sample_id'] == sample_id, 'lastname'].values[0]
-    customer_name = f"{initials} {last_name}"
+    customer_name = f"{initials} {last_name}".strip()
     card.loc[card['NAAM'] == sample_id, 'NAAM'] = customer_name
 
 util.printEntire(card)
 
-card.to_excel(f'Output/Dataframes/cards-{date}.xlsx')
+card.to_excel(f'Output/Dataframes/cards.xlsx')
