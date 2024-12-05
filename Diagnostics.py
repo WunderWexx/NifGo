@@ -364,7 +364,7 @@ class GeneralDiagnostics(Diagnostics):
         number_of_reports = len(self.reports)
         diag_file.write(f'Number of reports: {number_of_reports}\n')
         if number_of_reports != 3 * number_of_samples:
-            diag_file.write(f'UNEXPECTED AMOUNT OF REPORTS \nEXPECTED {number_of_samples*4}, GOT {number_of_reports}')
+            diag_file.write(f'UNEXPECTED AMOUNT OF REPORTS \nEXPECTED {number_of_samples*3}, GOT {number_of_reports}')
         diag_file.write(f'Number of batches to bill: {ceil((number_of_samples / 24))}')
         diag_file.close()
 
