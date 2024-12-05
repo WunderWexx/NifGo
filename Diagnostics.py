@@ -353,7 +353,7 @@ class GeneralDiagnostics(Diagnostics):
     def metadata(self, generation_times, unique_samples_list):
         diag_file = open('Output/Diagnostics/metadata.txt', 'w')
         diag_file.write('Metadata:\n')
-        diag_file.write('Version 0.9.2\n\n') # 1.0.0 voor release met UI.
+        diag_file.write('Version 1.2.0\n\n') # 3.0.0 voor release met UI. 2.0.0 voor release nieuwe vorm. 1.2.0 omdat we een beetje achterliepen
 
         for report, time in zip(['Farmacogenetics','Infosheets','Nutrinomics','Medication'], generation_times):
             diag_file.write(f'{report} generated in {time:.1f} seconds.\n')
