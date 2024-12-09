@@ -7,6 +7,75 @@ import math
 import csv
 import numpy as np
 
+# Lists necessary for importing data
+ThermoFisher_determined_genes = [
+    "CACNA1S",
+    "CFTR",
+    "CYP1A1",
+    "CYP1B1",
+    "CYP2A6",
+    "CYP2C8",
+    "CYP2E1",
+    "CYP2F1",
+    "CYP4F2",
+    "GSTM1",
+    "GSTT1",
+    "MTRNR1",
+    "NAT1",
+    "NAT2",
+    "RYR1"
+]
+
+probeset_id_dict = {
+    'ABCB1': ['AX-112253889'],
+    'ABCG2': ['AX-11376848'],
+    'ACE': ['AX-40214457'],
+    'ADIPOQ': ['AX-41185381'],
+    'ADRA2A': ['AX-14792713'],
+    'ALDH2': ['AX-11579885'],
+    'AMDHD1': ['AX-17082373'],
+    'BCO1': ['AX-82997505'],
+    'BChE': ['AX-165880871 ', 'AX-106714502', 'AX-82936684', 'AX-82919237'],
+    'BDNF-AS; BDNF': ['AX-11561914'],
+    'COMT': ['AX-112185476'],
+    'CYP17A': ['AX-38703715'],
+    'CYP24A1': ['AX-11314597'],
+    'CYP2R1': ['AX-39007361', 'AX-92804126'],
+    'DHCR7': ['AX-39157579'],
+    'DRD2': ['AX-165872577'],
+    'F2': ['AX-11344567'],
+    'F5': ['AX-51294184'],
+    'FTO': ['AX-11151648'],
+    'GC': ['AX-41517991'],
+    'GCK, YKT6': ['AX-15693373', 'AX-15693373'],
+    'GSTP1': ['AX-112060198', 'AX-75179239', 'AX-38703715'],
+    'HLA-B*3101': ['AX-112211962'],
+    'IFNL3/IL28B': ['AX-112063628'],
+    'IGF1': ['AX-11469525'],
+    'LDLR': ['AX-11569288'],
+    'LOC105447645; FUT2': ['AX-11536589'],
+    'MAO-B': ['AX-112075557'],
+    'MC4R': ['AX-11340068'],
+    'MTHFR 1298A>C': ['AX-165872626'],
+    'MTHFRC677T': ['AX-51283185'],
+    'MTNR1B': ['AX-16761721'],
+    'MnSOD': ['AX-41896949'],
+    'NADSYN1': ['AX-39157579'],
+    'NBPF3': ['AX-11515438'],
+    'NQ01': ['AX-11344636'],
+    'OPRM1': ['AX-11344570'],
+    'PON1': ['AX-11575218'],
+    'SLCO1B1': ['AX-165873829'],
+    'Sult1A1': ['AX-112166099', 'AX-165874947'],
+    'Sult1E1': ['AX-112067905'],
+    'TCF7L2': ['AX-11652775'],
+    'TMEM165; CLOCK': ['AX-165873266'],
+    'TNFa': ['AX-41953347'],
+    'UCP2': ['AX-83275492'],
+    'VDR': ['AX-11620565', 'AX-112158761', 'AX-165873135', 'AX-96113594'],
+    'VKORC1': ['AX-122936861']
+}
+
 class Extract:
     """
     The data is extracted from the source files, and loaded into a pandas DataFrame.
@@ -17,6 +86,7 @@ class Extract:
         Sets the field_size_limit to the maximum number the
         """
         csv.field_size_limit(1000000000)
+
 
     @staticmethod
     def extract_user_specified_file(filename):
@@ -30,7 +100,7 @@ class Extract:
         return pd.read_excel("Input/Dataframes/apotheekinfosysteem.xlsx")
 
     @staticmethod
-    def nutrimarkers(): #Isn't called anywhere. Data is represented in Globals.py.
+    def nutrimarkers(): #Isn't called anywhere. Data is represented in ELT.py.
         return pd.read_excel("Input/Dataframes/nutri_markers.xlsx")
 
     def phenotype_rpt(self):

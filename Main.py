@@ -15,7 +15,7 @@ from FarmacogeneticReport import FarmacoGeneticReport
 from info_sheet import InfoSheet
 from NutrinomicsReport import NutrinomicsReport
 from MedicationReport import MedicationReport
-from Globals import ThermoFisher_determined_genes, probeset_id_dict
+from ELT import ThermoFisher_determined_genes, probeset_id_dict
 from HandlingUnknowns import HandlingUnknowns
 from AddCustomerData import CustomerData
 from multiprocessing import Pool, cpu_count
