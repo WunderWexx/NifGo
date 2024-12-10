@@ -174,15 +174,15 @@ class FarmacoGeneticReport(wd):
               fill_cell_with_explanation()
               verklaring_text = ["VKORC1: NM", ": normale expressie, ", "IM", ": verminderde expressie, ", "UM",
                                  ": verhoogde expressie,", " PM", ": geen of nauwelijks expressie;"]
-              paragraph = aanduidingTable.cell(2, 0).paragraphs[0]
+              paragraph = aanduidingTable.cell(1, 0).paragraphs[0]
               fill_cell_with_explanation()
               verklaring_text = ["Overige: AS:", " Activiteitsscore; ", "IF,NF,DF of PF",
                                  ": respectievelijk een verhoogde, normale, verminderde, of geen functie;"]
-              paragraph = aanduidingTable.cell(3, 0).paragraphs[0]
+              paragraph = aanduidingTable.cell(2, 0).paragraphs[0]
               fill_cell_with_explanation()
               verklaring_text = ["Het *1-allel (wildtype):",
                                  " afwezigheid van een testresultaat voor alle geteste varianten voor dat gen. Dit resultaat sluit de aanwezigheid van mogelijke andere varianten niet uit."]
-              paragraph = aanduidingTable.cell(4, 0).paragraphs[0]
+              paragraph = aanduidingTable.cell(3, 0).paragraphs[0]
               fill_cell_with_explanation()
               # More standard text
        def toelichting(self):

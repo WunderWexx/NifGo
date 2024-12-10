@@ -15,7 +15,7 @@ Dit programma is gemaakt met gemak van onderhoud eerst, en daarna pas snelheid.
 ### Aanpassen van rapport opmaak en teksten
 Alle teksten in de rapporten staan in het .py bestand van het desbetreffende rapport. De code is zoveel mogelijk gebouwd om het rapport te spiegelen.
 
-## To-Do
+## To-Do, in order of priority
 ### For NifGo
 - Fix DPYD phenotype ✅
 - Names must be added automatically. ✅ 
@@ -31,6 +31,8 @@ Alle teksten in de rapporten staan in het .py bestand van het desbetreffende rap
 - Ensure complete reports are generated; no partial data allowed ✅
 - If data is missing in Nutrinomics, an ERROR should occur instead of an exception ✅
 - Finalize diagnostics.py ✅
+- Update `Diagnostics.py` for the new array
+- `ELT.Transform.genotype_txt.drop_columns_after_last_sample()` needs to work with regex
 - Handle missing data in source files.
 - Update recognition of columns in `genotype.txt` since the structure is inconsistent.
 - Diagnose missing customer data / auto-check customer data.
@@ -39,7 +41,7 @@ Alle teksten in de rapporten staan in het .py bestand van het desbetreffende rap
 ### For Myself
 - The version will increase by one full point with the release of this branch.
 - Gradually replace all standard input files with code or CSV files.
-- Add a user interface (UI).
+- Add a UI / Make it possible to choose what parts of the program to execute
 - Create a batch file for automatic updates.
 - Finalize diagnostics.
 - Translate everything into English.
@@ -47,8 +49,9 @@ Alle teksten in de rapporten staan in het .py bestand van het desbetreffende rap
 - Add exceptions for issues like empty cells in `aanpassingen.xlsx`.
 - Clean up and split the medication match dictionary (`medicatiematch`) into different dictionaries.
 
-Let me know if you want additional adjustments!
-
 ## Changelog
 ### V2.0.0
 Now using the new array!
+The info in `Globals.py` was moved to `ELT.py`.
+`CheckMissingProbesetID.py` was removes, because it is deprecated with the new array.
+dbSNP is no longer reported in the Nutrinomics report.

@@ -9,7 +9,6 @@ from datetime import date
 class NutrinomicsReport(wd):
     def __init__(self, sample_id, dataframe):
         super().__init__(sample_id, dataframe)
-        self.nutri_markers = ELT.Extract().nutrimarkers()
 
     def nutrinomics_IA(self):
 
@@ -63,19 +62,11 @@ class NutrinomicsReport(wd):
             'VKORC1'
         ]
 
-        nutri_markers = self.nutri_markers[self.nutri_markers['gene_name'].isin(nutrinomics_genes)]
-
         df = self.dataframe[self.dataframe['sample_id'] == self.sample_id]
         df = df[df['gene'].isin(nutrinomics_genes)]
         df.drop(['sample_id','phenotype'], axis='columns', inplace=True)
         df.rename(columns={'gene': 'Gen', 'genotype': 'Uitslag'}, inplace=True)
 
-        dbSNP_list = []
-        for gen in nutrinomics_genes:
-            index = nutri_markers[nutri_markers['gene_name'] == gen].index.values
-            dbSNP_list.append(nutri_markers.loc[index, 'dbSNP_RS_ID'].item())
-
-        df.insert(1, 'dbSNP', dbSNP_list)
         return df
 
     def inleiding(self):
@@ -173,7 +164,7 @@ class NutrinomicsReport(wd):
                 run.font.size = Pt(12)
 
         t.allow_autofit = False
-        width_dict = {0:5.49, 1:3.75 ,2:1.59} #{0:4, 1:3.5 ,2:2 ,3:10} when frequencies are included
+        width_dict = {0:5.49, 1:5.34}
         for i in range(len(width_dict)):
             for cell in t.columns[i].cells:
                 cell.width = Cm(width_dict[i])

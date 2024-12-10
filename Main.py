@@ -96,9 +96,9 @@ if __name__ == "__main__":
 
     print('genotype import [...]',end='\r')
     genotypes_df = ELT.Extract().genotype_txt()
-    genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.keys())
+    genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.values())             #HIER
     print('genotype import DONE')
-    genotypes_transformation = ELT.Transform().genotype_txt(genotypes_df, probeset_id_dict)
+    genotypes_transformation = ELT.Transform().genotype_txt(genotypes_df, probeset_id_dict)     #HIER
     genotypes_transformation.drop_columns_after_last_sample()
     genotypes_transformation.drop_cel_call_code_suffix()
     genotypes_transformation.unpivot_dataframe()
@@ -228,7 +228,7 @@ if __name__ == "__main__":
                 for report in missed_conversions:
                     print(report)
         print('Exporting to PDF [DONE]')
-
+"""
     # Diagnostics
     print('Generating diagnostic reports [...]')
     generation_times = [farmacogenetics_generation_time, infosheets_generation_time,
@@ -244,5 +244,5 @@ if __name__ == "__main__":
     ask_open_reports = sg.popup_yes_no("Wilt u de gegenereerde rapporten openen?\nLET OP! Dit opent ALLE rapporten")
     if ask_open_reports == 'Yes':
         util.open_all_reports()
-
+"""
     print('\nPROGRAM EXECUTED SUCCESSFULLY')

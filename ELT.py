@@ -99,10 +99,6 @@ class Extract:
     def pharmacydata():
         return pd.read_excel("Input/Dataframes/apotheekinfosysteem.xlsx")
 
-    @staticmethod
-    def nutrimarkers(): #Isn't called anywhere. Data is represented in ELT.py.
-        return pd.read_excel("Input/Dataframes/nutri_markers.xlsx")
-
     def phenotype_rpt(self):
         return self.extract_user_specified_file('phenotype.rpt')
 
@@ -157,7 +153,7 @@ class Load:
         all columns get their names.
         :param dataframe: the genotype_txt dataframe
         :param needed_probeset_ids: the probeset_id's of the genes that need their phenotype determined by their
-        rs designation.
+        rs designation. .
         :return: The genotype.txt file but as a dataframe with headers and containing only the specified genes.
         """
         dataframe.columns = ['rest']
@@ -167,6 +163,7 @@ class Load:
         start_row = dataframe[dataframe['rest'].str.startswith("AX-")].index[0]
         dataframe = dataframe.iloc[start_row:]
 
+        needed_probeset_ids = [id_list[0] for id_list in needed_probeset_ids]
         dataframe = dataframe[dataframe['rest'].str.startswith(tuple(needed_probeset_ids))]
 
         split_data = dataframe['rest'].str.split("\\t", expand=True)
@@ -268,7 +265,8 @@ class Transform:
             self.dataframe.rename(columns={'variable': 'sample_id', 'value': 'genotype'}, inplace=True)
 
         def add_gene_names(self):
-            get_gene_name = lambda id: self.probeset_ids.get(id, 'NotPresent')
+            flattened_dict = {ids[0]: gene for gene, ids in self.probeset_ids.items()}
+            get_gene_name = lambda id: flattened_dict.get(id, 'NotPresent')
             new_column = self.dataframe['probeset_id'].map(get_gene_name)
             self.dataframe['gene'] = new_column
 
