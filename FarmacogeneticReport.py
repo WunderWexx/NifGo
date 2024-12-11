@@ -80,24 +80,24 @@ class FarmacoGeneticReport(wd):
        def uitslag_table(self):
               # Makes a sub dataframe containing only the genes to be reported in the farmacogenetic report
               report_genes = [
-                     "ABCG2",
-                     "COMT",
-                     "CYP1A2",
-                     "CYP2B6",
-                     "CYP2C9",
-                     "CYP2C19",
-                     "CYP2D6",
-                     "CYP3A4",
-                     "CYP3A5",
-                     "DPYD",
-                     "G6PD",
-                     "HLA-B*1502",
-                     "MTHFR677",
-                     "NUDT15",
-                     "SLCO1B1",
-                     "TPMT",
-                     "UGT1A1",
-                     "VKORC1"
+                     "ABCG2", #Present
+                     "COMT", #Missing from data
+                     "CYP1A2", #Missing from mapping
+                     "CYP2B6", #Missing from mapping
+                     "CYP2C9", #Missing from mapping
+                     "CYP2C19", #Missing from mapping
+                     "CYP2D6", #Missing from mapping
+                     "CYP3A4", #Missing from mapping
+                     "CYP3A5", #Missing from mapping
+                     "DPYD", #Missing from mapping
+                     "G6PD", #Missing from mapping
+                     "HLA-B*1502", #Missing from mapping
+                     "MTHFR677", #Present
+                     "NUDT15", #Missing from mapping
+                     "SLCO1B1", #Present
+                     "TPMT", #Missing from mapping
+                     "UGT1A1", #Missing from mapping
+                     "VKORC1" #Present
                      ]
               df = self.dataframe[self.dataframe['sample_id'] == self.sample_id]
               df = df[df['gene'].isin(report_genes)]

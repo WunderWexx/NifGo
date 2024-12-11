@@ -11,23 +11,36 @@ import numpy as np
 ThermoFisher_determined_genes = [
     "CACNA1S",
     "CFTR",
-    "CYP1A1",
-    "CYP1B1",
+    "CYP1A1", #mist uit phenotype.rpt
+    "CYP1B1", #mist uit phenotype.rpt
     "CYP2A6",
     "CYP2C8",
     "CYP2E1",
     "CYP2F1",
-    "CYP4F2",
+    "CYP4F2", #mist uit phenotype.rpt
     "GSTM1",
-    "GSTT1",
+    "GSTT1", #mist uit phenotype.rpt
     "MTRNR1",
     "NAT1",
     "NAT2",
-    "RYR1"
+    "RYR1",
+    "CYP1A2",
+    "CYP2B6",
+    "CYP2C9",
+    "CYP2C19",
+    "CYP2D6",
+    "CYP3A4",
+    "CYP3A5",
+    "DPYD",
+    "G6PD",
+    "HLA-B*1502", #mist uit phenotype.rpt
+    "NUDT15",
+    "TPMT",
+    "UGT1A1"
 ]
 
 probeset_id_dict = {
-    'ABCB1': ['AX-112253889'],
+    'ABCB1': ['AX-112253889'], #Mist uit genotype.txt
     'ABCG2': ['AX-11376848'],
     'ACE': ['AX-40214457'],
     'ADIPOQ': ['AX-41185381'],
@@ -35,14 +48,14 @@ probeset_id_dict = {
     'ALDH2': ['AX-11579885'],
     'AMDHD1': ['AX-17082373'],
     'BCO1': ['AX-82997505'],
-    'BChE': ['AX-165880871 ', 'AX-106714502', 'AX-82936684', 'AX-82919237'],
+    'BChE': ['AX-165880871', 'AX-106714502', 'AX-82936684', 'AX-82919237'],
     'BDNF-AS; BDNF': ['AX-11561914'],
     'COMT': ['AX-112185476'],
     'CYP17A': ['AX-38703715'],
     'CYP24A1': ['AX-11314597'],
     'CYP2R1': ['AX-39007361', 'AX-92804126'],
     'DHCR7': ['AX-39157579'],
-    'DRD2': ['AX-165872577'],
+    'DRD2': ['AX-165872577'], #Mist uit genotype.txt
     'F2': ['AX-11344567'],
     'F5': ['AX-51294184'],
     'FTO': ['AX-11151648'],
@@ -229,7 +242,7 @@ class Transform:
 
         def drop_columns_after_last_sample(self):
             """
-            Drops all columns after the last sample. Samples are assumed to always start with D.
+            Drops all columns after the last sample. Samples are assumed to always start with a letter.
             :return: DataFrame with columns dropped
             """
             for column in self.dataframe.columns:
@@ -269,7 +282,6 @@ class Transform:
             get_gene_name = lambda id: flattened_dict.get(id, 'NotPresent')
             new_column = self.dataframe['probeset_id'].map(get_gene_name)
             self.dataframe['gene'] = new_column
-
 
 class DataPreparation:
     def __init__(self, geno_df, pheno_df):

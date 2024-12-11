@@ -167,7 +167,7 @@ class PhenotypeChanges:
 
     def CYP3A5(self):
         CYP3A5_dict = {
-            "PM": "non-expressor",
+            "PM": "non-expresser",
             "IM": "heterozygoot",
             "NM": "homozygoot"
         }

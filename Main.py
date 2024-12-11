@@ -244,5 +244,6 @@ if __name__ == "__main__":
     ask_open_reports = sg.popup_yes_no("Wilt u de gegenereerde rapporten openen?\nLET OP! Dit opent ALLE rapporten")
     if ask_open_reports == 'Yes':
         util.open_all_reports()
-"""
+
     print('\nPROGRAM EXECUTED SUCCESSFULLY')
+"""
