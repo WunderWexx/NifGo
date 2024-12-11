@@ -39,7 +39,7 @@ Alle teksten in de rapporten staan in het .py bestand van het desbetreffende rap
 - Ensure customer data works with headers instead of column indices.
 
 ### For Myself
-- The version will increase by one full point with the release of this branch.
+- The version will increase by one full point with the release of this branch.✅
 - Gradually replace all standard input files with code or CSV files.
 - Add a UI / Make it possible to choose what parts of the program to execute
 - Create a batch file for automatic updates.
