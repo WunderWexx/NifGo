@@ -40,7 +40,7 @@ ThermoFisher_determined_genes = [
 ]
 
 probeset_id_dict = {
-    'ABCB1': ['AX-112253889'], #Mist uit genotype.txt
+    'ABCB1': ['AX-112253889'], #Mist uit genotype.txt maar staat er nu in
     'ABCG2': ['AX-11376848'],
     'ACE': ['AX-40214457'],
     'ADIPOQ': ['AX-41185381'],
@@ -50,12 +50,12 @@ probeset_id_dict = {
     'BCO1': ['AX-82997505'],
     'BChE': ['AX-165880871', 'AX-106714502', 'AX-82936684', 'AX-82919237'],
     'BDNF-AS; BDNF': ['AX-11561914'],
-    'COMT': ['AX-112185476'],
+    'COMT': ['AX-112185476'], #Mist uit genotype.txt maar staat er nu in
     'CYP17A': ['AX-38703715'],
     'CYP24A1': ['AX-11314597'],
     'CYP2R1': ['AX-39007361', 'AX-92804126'],
     'DHCR7': ['AX-39157579'],
-    'DRD2': ['AX-165872577'], #Mist uit genotype.txt
+    'DRD2': ['AX-165872577'], #Mist uit genotype.txt maar staat er nu in
     'F2': ['AX-11344567'],
     'F5': ['AX-51294184'],
     'FTO': ['AX-11151648'],
