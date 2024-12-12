@@ -485,7 +485,7 @@ class MedicationReport(wd):
                 'CYP1A2: NM; verhoogde induceerbaarheid. Maar ook niet genetische factoren spelen een rol. Bijvoorbeeld caffeine remt de werking van CYP1A2. Inductie (stimulering) van CYP1A2 wordt veroorzaakt door roken, het eten van geroosterd voedsel en koolsoorten. Rokers hebben bijvoorbeeld 1½ keer meer  Olanzapine nodig voor een therapeutische bloedspiegel in vergelijking met niet-rokers.'],
             "medList_CYP3A5_heterozygoot": ['Tacrolimus'],
             "effectList_CYP3A5_heterozygoot": [
-                'CYP3A5-IM;  (heterozygoot expressor) Personen met dit genotype lopen de kans dat Tacrolimus niet werkt bij standaarddosering. Ook metabolisme via CYP3A4. Doseringsadvies in Kennisbank KNMP aanwezig.'],
+                'CYP3A5-IM;  (heterozygoot expresser) Personen met dit genotype lopen de kans dat Tacrolimus niet werkt bij standaarddosering. Ook metabolisme via CYP3A4. Doseringsadvies in Kennisbank KNMP aanwezig.'],
             "medList_COMT_PM": ['Amfetamine', 'Dexmethylfenidate', 'Dextroamfetamine', 'Lisdexamfetamine',
                                 'Methylfenidate',
                                 'Noradrenaline', 'Pijnstillers'],

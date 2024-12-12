@@ -167,7 +167,7 @@ class PhenotypeChanges:
 
     def CYP3A5(self):
         CYP3A5_dict = {
-            "PM": "non-expressor",
+            "PM": "non-expresser",
             "IM": "heterozygoot",
             "NM": "homozygoot"
         }
@@ -180,6 +180,17 @@ class PhenotypeChanges:
 class GenotypeChanges:
     def __init__(self, dataframe):
         self.dataframe = dataframe
+
+    def ABCG2(self):
+        ABCG2_dict = {
+            'rs2231142G/rs2231142G': 'G/G',
+            'rs2231142G/rs2231142T': 'G/T',
+            'rs2231142T/rs2231142T': 'T/T'
+        }
+        mask = self.dataframe['gene'] == 'ABCG2'
+        condition = self.dataframe.loc[mask, 'genotype'].isin(ABCG2_dict.keys()) #This is also a mask
+        if_true = self.dataframe.loc[mask,'genotype'].map(ABCG2_dict)
+        self.dataframe.loc[mask,'genotype'] = np.where(condition, if_true, 'ERROR')
 
     def COMT(self):
         """

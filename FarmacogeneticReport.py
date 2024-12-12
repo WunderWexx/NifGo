@@ -121,7 +121,7 @@ class FarmacoGeneticReport(wd):
 
               # Checks if a phenotype is normal for that gene. Is later used in the code to turn text in the table
               # red for non-normal phenotypes
-              normal_phenotypes = ["NM", "NF", "RA", "negatief", "non-expressor"]
+              normal_phenotypes = ["NM", "NF", "RA", "negatief", "non-expressor","non-expresser"]
               pm_normal_genes = ["F2", "F5"]
               def pm_normal_check(location):
                      phenotype_PM_check = "PM" in list(df.iloc[location])

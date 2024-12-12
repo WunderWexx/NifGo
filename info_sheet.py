@@ -114,7 +114,7 @@ class InfoSheet(wd):
             counter += 1
         """
 
-        normal_phenotypes = ["NM", "NF", "non-expressor", "negatief"]
+        normal_phenotypes = ["NM", "NF", "non-expressor", "negatief","non-expresser"]
         for phenotype, counter in zip(df['Fenotype/functie'], range(len(df))):
             if phenotype not in normal_phenotypes:
                 self.change_table_row(t.rows[counter+1], font_color="FF0000") #The +1 is because of the header row

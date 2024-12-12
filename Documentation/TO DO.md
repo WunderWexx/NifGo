@@ -18,12 +18,13 @@
 19. Missende klantdata diagnostiseren / klantdata automatisch checken.
 20. Klantdata met koppen laten werken, niet met kolomindex.
 ## Voor mij
-1. Unknowns herkennen en verwerken ABCB2 in card.xlsx
-2. Sommige dingen werken op globals/probeset_id_dict, andere werken direct uit nutri_markers.xlsx
-3. UI moet toegevoegd worden
-4. Multicore✅
-5. Diagnostics moet afgemaakt worden
-6. Alles naar het Engels vertalen
-7. Exceptions inbouwen voor dingen zoals een leeg vakje in de aanpassingen.xlsx
-8. F2 en F5 risico fenotype heeft wellicht effect op medicatiematch enzo
-9. medicatiematch dict in verschillende dicts opsplitsen medmatch opschonen
+1. MHS fenotype voor RYR1 herkennen
+3. Unknowns herkennen en verwerken ABCB2 in card.xlsx
+4. UI moet toegevoegd worden
+5. Multicore✅
+6. Diagnostics moet afgemaakt worden
+7. Sommige dingen werken op globals/probeset_id_dict, andere werken direct uit nutri_markers.xlsx
+8. Alles naar het Engels vertalen
+9. Exceptions inbouwen voor dingen zoals een leeg vakje in de aanpassingen.xlsx
+10. F2 en F5 risico fenotype heeft wellicht effect op medicatiematch enzo
+11. medicatiematch dict in verschillende dicts opsplitsen medmatch opschonen

@@ -72,7 +72,7 @@ class Diagnostics:
             'NM_phenotype_genes': ['UM', 'RM', 'NM', 'IM', 'PM'],
             'NA_phenotype_genes': ['RA', 'NA', 'IA', 'SA'],
             'NF_phenotype_genes': ['IF', 'NF', 'DF', 'PF'],
-            'expressor_phenotype_genes': ['non-expressor', 'homozygoot', 'heterozygoot'],
+            'expressor_phenotype_genes': ['non-expressor', 'homozygoot', 'heterozygoot',"non-expresser"],
             'pos_neg_phenotype_genes': ['positief', 'negatief', 'risico'],
             'PM_risico_phenotype_genes': ['PM', 'risico']
         }

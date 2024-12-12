@@ -26,7 +26,8 @@ ThermoFisher_determined_genes = [
     'RYR1',
     'TPMT',
     'UGT1A1',
-    'OPLMR1'
+    'OPLMR1',
+    'NUDT15'
 ]
 probeset_id_dict = {
     "AX-11340068": "MC4R",
