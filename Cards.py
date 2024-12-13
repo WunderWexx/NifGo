@@ -59,8 +59,8 @@ def add_filled_column(geno_or_pheno, left_or_right):
 # Call the function for different combinations of geno_or_pheno and left_or_right
 add_filled_column('genotype', 'left')
 add_filled_column('phenotype', 'left')
-add_filled_column('phenotype', 'right')
 add_filled_column('genotype', 'right')
+add_filled_column('phenotype', 'right')
 
 # Tweede kolom vullen met geboortedata uit het klantbestand. Als die niet beschikbaar is lege string toevoegen.
 def customer_data_IA():
