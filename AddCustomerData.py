@@ -50,8 +50,18 @@ class CustomerData:
                             cell.text = ''
                             paragraph = cell.paragraphs[0]
                             run = paragraph.add_run(customer_data_dict[new_text])
-                            run.font.name = 'Calibri'
-                            run.font.size = Pt(12)
+                            run.font.size = Pt(10)
+                        doc.save(filepath)
+
+                    case 'NutrigenomicsReport':
+                        table = doc.tables[0]
+                        cells_to_edit = [1, 3]
+                        for cell_index, new_text in zip(cells_to_edit, list(customer_data_dict.keys())):
+                            cell = table.rows[0].cells[cell_index]
+                            cell.text = ''
+                            paragraph = cell.paragraphs[0]
+                            run = paragraph.add_run(customer_data_dict[new_text])
+                            run.font.size = Pt(10)
                         doc.save(filepath)
 
                     case 'InfoSheet':

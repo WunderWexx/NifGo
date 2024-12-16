@@ -13,7 +13,7 @@ import NifgoProprietaryChanges as changes
 import Diagnostics
 from FarmacogeneticReport import FarmacoGeneticReport
 from info_sheet import InfoSheet
-from NutrinomicsReport import NutrinomicsReport
+from NutrigenomicsReport import nutrigenomics_report
 from MedicationReport import MedicationReport
 from ELT import ThermoFisher_determined_genes, probeset_id_dict
 from HandlingUnknowns import HandlingUnknowns
@@ -41,11 +41,8 @@ def generate_infosheet(id, dataframe):
     infosheet.save()
 
 def generate_nutrinomics_report(id, dataframe):
-    nutrinomics = NutrinomicsReport(sample_id=id, dataframe=dataframe)
-    nutrinomics.logo_titel_header()
-    nutrinomics.table()
-    nutrinomics.Toelichting()
-    nutrinomics.save()
+    nutrigenomics = nutrigenomics_report(sample_id=id, dataframe=dataframe)
+    nutrigenomics.report_generation()
 
 def generate_medication_report(id, dataframe):
     medrep = MedicationReport(sample_id=id, dataframe=dataframe)

@@ -7,6 +7,13 @@ from os import listdir, remove
 from os.path import isfile, join
 import subprocess
 from time import sleep
+import docx as dx
+from docx.shared import RGBColor,Pt, Cm
+from docx.enum.style import WD_STYLE_TYPE
+from docx.oxml import parse_xml
+from docx.oxml.ns import qn,nsdecls
+from docx.oxml.shared import OxmlElement
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 def printEntire(dataframe):
     """
@@ -124,3 +131,47 @@ def find_missing_items_in_list(suspect_list, reference_list):
         if item not in reference_list:
             missing_items.append(item)
     return missing_items
+
+def change_table_cell(cell, background_color=None, font_color=None, font_size=None, bold=None,
+                      italic=None, change_text: str = None, horizontal_alignment='left',
+                      vertical_alignment='center'):
+    if change_text:
+        cell.text = change_text
+
+    paragraph = cell.paragraphs[0]
+    horizontal_alignment_dict = {
+        'left': WD_PARAGRAPH_ALIGNMENT.LEFT,
+        'right': WD_PARAGRAPH_ALIGNMENT.RIGHT,
+        'centre': WD_PARAGRAPH_ALIGNMENT.CENTER
+    }
+    paragraph.alignment = horizontal_alignment_dict[f'{horizontal_alignment}']
+
+    tc = cell._tc
+    tcPr = tc.get_or_add_tcPr()
+    vAlign = OxmlElement('w:vAlign')
+    vAlign.set(qn('w:val'), vertical_alignment)
+    tcPr.append(vAlign)
+
+    if background_color:
+        shading_elm = parse_xml(r'<w:shd {} w:fill="{}"/>'.format(nsdecls('w'), background_color))
+        cell._tc.get_or_add_tcPr().append(shading_elm)
+
+    if font_color:
+        for p in cell.paragraphs:
+            for r in p.runs:
+                r.font.color.rgb = dx.shared.RGBColor.from_string(font_color)
+
+    if font_size:
+        for p in cell.paragraphs:
+            for r in p.runs:
+                r.font.size = dx.shared.Pt(font_size)
+
+    if bold:
+        for p in cell.paragraphs:
+            for r in p.runs:
+                r.bold = bold
+
+    if italic:
+        for p in cell.paragraphs:
+            for r in p.runs:
+                r.italic = italic
