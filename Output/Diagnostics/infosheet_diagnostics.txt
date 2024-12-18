@@ -1,0 +1,2 @@
+Infosheet diagnostics
+Sample	Gene	Issue
