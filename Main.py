@@ -2,6 +2,11 @@
 
 # Could be rewritten to be clearer.
 
+"""
+PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  dataframe[header] = split_data[idx]
+"""
+
 # imports
 from timeit import default_timer as timer
 import ELT
