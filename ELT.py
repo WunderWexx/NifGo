@@ -33,12 +33,11 @@ ThermoFisher_determined_genes = [
     "CYP3A5",
     "DPYD",
     "G6PD",
-    "HLA-B*1502", #mist uit phenotype.rpt
+    "HLA-B*1502",
     "NUDT15",
     "TPMT",
     "UGT1A1"
 ]
-
 probeset_id_dict = {
     'ABCB1': ['AX-112253889'], #Mist uit genotype.txt maar staat er nu in
     'ABCG2': ['AX-11376848'],
@@ -62,6 +61,7 @@ probeset_id_dict = {
     'GC': ['AX-41517991'],
     'GCK, YKT6': ['AX-15693373', 'AX-15693373'],
     'GSTP1': ['AX-112060198', 'AX-75179239', 'AX-38703715'],
+    'HLA-B*1502': ['AX-83207592'],
     'HLA-B*3101': ['AX-112211962'],
     'IFNL3/IL28B': ['AX-112063628'],
     'IGF1': ['AX-11469525'],

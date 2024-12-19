@@ -11,7 +11,7 @@ from os.path import join
 import PySimpleGUI as sg
 import NifgoProprietaryChanges as changes
 import Diagnostics
-from FarmacogeneticReport import FarmacoGeneticReport
+from FarmacogeneticReport import farmacogenetic_report
 from info_sheet import InfoSheet
 from NutrigenomicsReport import nutrigenomics_report
 from MedicationReport import MedicationReport
@@ -23,16 +23,8 @@ from functools import partial
 from docx2pdf import convert
 
 def generate_farmacogenetic_report(id, dataframe):
-    farmaco = FarmacoGeneticReport(sample_id=id, dataframe=dataframe)
-    farmaco.inleiding()
-    farmaco.id_table()
-    farmaco.inhoudsopgave()
-    farmaco.table_heading()
-    farmaco.uitslag_table()
-    farmaco.verklaring_fenotype()
-    farmaco.toelichting()
-    farmaco.variaties_waarop_is_getest()
-    farmaco.save()
+    farmaco = farmacogenetic_report(sample_id=id, dataframe=dataframe)
+    farmaco.report_generation()
 
 def generate_infosheet(id, dataframe):
     infosheet = InfoSheet(sample_id=id, dataframe=dataframe)

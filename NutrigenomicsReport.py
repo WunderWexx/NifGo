@@ -1,3 +1,5 @@
+"""This is where the nutrigenomics report is generated from a template"""
+
 from docx import Document
 import Utilities as util
 from pathlib import Path
