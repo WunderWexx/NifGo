@@ -40,10 +40,10 @@ Alle teksten in de rapporten staan in het .py bestand van het desbetreffende rap
 
 ### For Myself
 - The version will increase by one full point with the release of this branch.✅
-- Gradually replace all standard input files with code or CSV files.
+- Gradually replace all standard input files with code or CSV files.✅
 - Add a UI / Make it possible to choose what parts of the program to execute
-- Create a batch file for automatic updates.
 - Finalize diagnostics.
+- Optimise code like updating unknowns.
 - Translate everything into English.
 - Provide every report-generating class with an AI assistant.
 - Add exceptions for issues like empty cells in `aanpassingen.xlsx`.
