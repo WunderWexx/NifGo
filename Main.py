@@ -245,9 +245,4 @@ if __name__ == "__main__":
     Diagnostics.NutrinomicsDiagnostics().nutrinomics_diagnostics()
     print('Generating diagnostic reports [DONE]')
 
-    # Open all Word files
-    ask_open_reports = sg.popup_yes_no("Wilt u de gegenereerde rapporten openen?\nLET OP! Dit opent ALLE rapporten")
-    if ask_open_reports == 'Yes':
-        util.open_all_reports()
-
     print('\nPROGRAM EXECUTED SUCCESSFULLY')
