@@ -1,0 +1,384 @@
+ABCB1 frequencies:
+phenotype
+IM    0.546512
+NM    0.290698
+PM    0.162791
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+ABCG2 frequencies:
+phenotype
+NF    0.848837
+DF    0.127907
+PF    0.023256
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+ACE frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+ADIPOQ frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+ADRA2A frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+ALDH2 frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+BCO1 frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+BDNF-AS;BDNF frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+CACNA1S frequencies:
+phenotype
+NF    1.0
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 0.0%
+CFTR frequencies:
+phenotype
+NF    0.965116
+DF    0.034884
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 3.488372093023256%
+COMT frequencies:
+phenotype
+IM    0.593023
+PM    0.232558
+NM    0.174419
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+CYP1A2 frequencies:
+phenotype
+IM    0.848837
+UM    0.151163
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 100.0%
+CYP2A6 frequencies:
+phenotype
+NM    0.709302
+IM    0.290698
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 29.069767441860467%
+CYP2B6 frequencies:
+phenotype
+NM    0.441860
+IM    0.441860
+PM    0.069767
+RM    0.046512
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 50.0%
+CYP2C8 frequencies:
+phenotype
+NM    0.709302
+IM    0.290698
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 29.069767441860467%
+CYP2C9 frequencies:
+phenotype
+NM    0.534884
+IM    0.395349
+PM    0.069767
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 42.5%
+CYP2C19 frequencies:
+phenotype
+NM    0.593023
+IM    0.302326
+UM    0.058140
+PM    0.046512
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 33.76623376623377%
+CYP2D6 frequencies:
+phenotype
+NM    0.523256
+IM    0.395349
+PM    0.081395
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 43.037974683544306%
+CYP2E1 frequencies:
+phenotype
+NM    0.965116
+IM    0.034884
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 3.488372093023256%
+CYP3A4 frequencies:
+phenotype
+NM    0.883721
+IM    0.116279
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 11.627906976744185%
+CYP3A5 frequencies:
+phenotype
+non-expresser    0.906977
+heterozygoot     0.093023
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 100.0%
+CYP4F2 frequencies:
+phenotype
+NM    0.534884
+IM    0.372093
+PM    0.081395
+RM    0.011628
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 41.02564102564102%
+DPYD frequencies:
+phenotype
+NM    0.965116
+IM    0.034884
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 3.488372093023256%
+DRD2 frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+F2 frequencies:
+phenotype
+PM        0.953488
+risico    0.046512
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 4.651162790697675%
+F5 frequencies:
+phenotype
+PM        0.94186
+risico    0.05814
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 5.813953488372093%
+FTO frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+G6PD frequencies:
+phenotype
+NM           0.965116
+Deficient    0.034884
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 3.488372093023256%
+GC frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+GCK,YKT6 frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+GSTP1 frequencies:
+phenotype
+IM    0.697674
+NM    0.302326
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 69.76744186046511%
+HLA-B*1502 frequencies:
+phenotype
+negatief    0.918605
+risico      0.081395
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 8.13953488372093%
+IFNL3 frequencies:
+phenotype
+NM    0.523256
+IM    0.406977
+PM    0.069767
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 43.75%
+IGF1 frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+LDLR frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+LOC105447645;FUT2 frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+MAO-B frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+MC4R frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+MTHFR677 frequencies:
+phenotype
+IM    0.476744
+NM    0.406977
+PM    0.116279
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 53.94736842105263%
+MTHFR1298 frequencies:
+phenotype
+NM    0.546512
+IM    0.383721
+PM    0.069767
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 41.25%
+MTNR1B frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+MTRNR1 frequencies:
+phenotype
+NF    1.0
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 0.0%
+NADSYN1 frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+NAT1 frequencies:
+phenotype
+RA    0.918605
+IA    0.081395
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 100.0%
+NAT2 frequencies:
+phenotype
+IA    0.686047
+SA    0.255814
+RA    0.058140
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 100.0%
+NBPF3 frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+NUDT15 frequencies:
+phenotype
+NM    0.976744
+IM    0.023256
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+OPRM1 frequencies:
+phenotype
+NM    0.744186
+IM    0.244186
+PM    0.011628
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 24.705882352941178%
+RYR1 frequencies:
+phenotype
+NM     0.883721
+MHS    0.116279
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 11.627906976744185%
+SLCO1B1 frequencies:
+phenotype
+NF    0.755814
+DF    0.232558
+PF    0.011628
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 23.52941176470588%
+Sult1A1 frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+Sult1E1 frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+TCF7L2 frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+TMEM165;CLOCK frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+TNFa frequencies:
+phenotype
+Not_Determined    1.0
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+TPMT frequencies:
+phenotype
+NM    0.837209
+IM    0.151163
+PM    0.011628
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 15.294117647058824%
+UCP2 frequencies:
+phenotype
+Not_Determined    0.988372
+IM                0.011628
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+UGT1A1 frequencies:
+phenotype
+NM    0.511628
+IM    0.372093
+PM    0.116279
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 42.10526315789473%
+VDR frequencies:
+phenotype
+Not_Determined    0.988372
+IM                0.011628
+Name: proportion, dtype: float64
+Phenotype did not have to be determined
+
+VKORC1 frequencies:
+phenotype
+IM    0.476744
+NM    0.360465
+PM    0.162791
+Name: proportion, dtype: float64
+Percentage deviant phenotypes: 56.94444444444444%

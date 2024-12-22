@@ -1,0 +1,11 @@
+Metadata:
+Version 1.2.0
+
+Farmacogenetics generated in 10.5 seconds.
+Infosheets generated in 5.5 seconds.
+Nutrinomics generated in 6.3 seconds.
+Total time: 22.3 seconds
+
+Number of samples: 86
+Number of reports: 258
+Number of batches to bill: 4

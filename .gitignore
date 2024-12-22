@@ -20,6 +20,9 @@ Input/NifgoFiles
 # Miscellaneous
 Miscellaneous/
 
+# Diagnostics
+Diagnostics/*.txt
+
 #Notes
 test*.py
 

@@ -1,0 +1,16 @@
+FarmacogeneticReport diagnostics
+Sample	Gene	Issue
+Sample: G001040678.docx	Gene: RYR1	Issue: Implausible phenotype
+Sample: G001040691.docx	Gene: G6PD	Issue: Implausible phenotype
+Sample: G001040691.docx	Gene: RYR1	Issue: Implausible phenotype
+Sample: G001040698.docx	Gene: RYR1	Issue: Implausible phenotype
+Sample: G001121707.docx	Gene: RYR1	Issue: Implausible phenotype
+Sample: G001121753.docx	Gene: G6PD	Issue: Implausible phenotype
+Sample: G001121763.docx	Gene: RYR1	Issue: Implausible phenotype
+Sample: G001121764.docx	Gene: RYR1	Issue: Implausible phenotype
+Sample: G001121768.docx	Gene: RYR1	Issue: Implausible phenotype
+Sample: G001121776.docx	Gene: G6PD	Issue: Implausible phenotype
+Sample: G001121776.docx	Gene: RYR1	Issue: Implausible phenotype
+Sample: G001121780.docx	Gene: RYR1	Issue: Implausible phenotype
+Sample: G001121785.docx	Gene: RYR1	Issue: Implausible phenotype
+Sample: G001121798.docx	Gene: CFTR	Issue: Implausible genotype
