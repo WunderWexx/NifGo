@@ -39,6 +39,7 @@ Alle teksten in de rapporten staan in het .py bestand van het desbetreffende rap
 - Ensure customer data works with headers instead of column indices.
 
 ### For Myself
+- Filling customer data has to be optimised, if possible
 - The version will increase by one full point with the release of this branch.✅
 - Gradually replace all standard input files with code or CSV files.✅
 - Add a UI / Make it possible to choose what parts of the program to execute
@@ -52,6 +53,7 @@ Alle teksten in de rapporten staan in het .py bestand van het desbetreffende rap
 ## Changelog
 ### V2.0.0
 Now using the new array!
+Now with significantly longer wait times!
 The info in `Globals.py` was moved to `ELT.py`.
 `CheckMissingProbesetID.py` was removes, because it is deprecated with the new array.
 dbSNP is no longer reported in the Nutrinomics report.

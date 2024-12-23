@@ -1,4 +1,4 @@
-# The ELT process
+"""The Extract Load, and Transform process"""
 
 # Imports
 import pandas as pd
@@ -33,11 +33,11 @@ ThermoFisher_determined_genes = [
     "CYP3A5",
     "DPYD",
     "G6PD",
-    "HLA-B*1502",
     "NUDT15",
     "TPMT",
     "UGT1A1"
 ]
+
 probeset_id_dict = {
     'ABCB1': ['AX-112253889'], #Mist uit genotype.txt maar staat er nu in
     'ABCG2': ['AX-11376848'],
@@ -69,7 +69,7 @@ probeset_id_dict = {
     'LOC105447645; FUT2': ['AX-11536589'],
     'MAO-B': ['AX-112075557'],
     'MC4R': ['AX-11340068'],
-    'MTHFR 1298A>C': ['AX-165872626'],
+    'MTHFR1298': ['AX-165872626'],
     'MTHFRC677T': ['AX-51283185'],
     'MTNR1B': ['AX-16761721'],
     'MnSOD': ['AX-41896949'],
@@ -344,7 +344,8 @@ class DataPreparation:
             "ABCB1": {"G/G": "NM", "A/A": "PM", "G/A": "IM", "A/G": "IM"},
             "COMT": {"A/A": "PM", "A/G": "IM", "G/G": "NM"},
             "SLCO1B1": {"T/T": "NF", "T/C": "DF", "C/C": "PF"},
-            "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"}
+            "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"},
+            "ABCG2":{"rs2231142G/rs2231142G":"NF", "rs2231142G/rs2231142T":"DF", "rs2231142T/rs2231142T":"PF"}
         }
 
         def change_gen(gene, gene_map):

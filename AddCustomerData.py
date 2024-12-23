@@ -73,15 +73,13 @@ class CustomerData:
                         run.font.size = Pt(12)
                         run.bold = True
                         run.underline = True
+                        doc.save(filepath)
 
                     case _:
                         pass
 
             else:
                 print(f'{file} heeft geen geassocieerde klantdata')
-
-            doc.save(filepath)
-            doc.save(filepath)
 
         for sample in customerdata_df['sample_id']:
             if sample not in reported_file_ids:

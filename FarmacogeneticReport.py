@@ -11,11 +11,11 @@ class farmacogenetic_report:
 
     def report_generation(self):
         # Load the Word document
-        doc = Document('Input/Templates/Farmacogenetisch-2024-12.docx')
+        doc = Document('Input/Templates/Farmacogenetisch-2024-12-20.docx')
 
         #Fill customer data table with sample code
         sample_code_cell = doc.tables[0].rows[0].cells[5]
-        util.change_table_cell(sample_code_cell, bold=True, change_text=f'{self.sample_id}', font_size=10)
+        util.change_table_cell(sample_code_cell, change_text=f'{self.sample_id}', font_size=10)
 
         #Fill results table 1
         table1 = doc.tables[1]
@@ -32,6 +32,6 @@ class farmacogenetic_report:
 
         #Save the document
         document_name = 'FarmacogeneticReport' + "_" + self.sample_id + ".docx"
-        path = Path("Output/Test/")
+        path = Path("Output/Reports/")
         path.mkdir(parents=True, exist_ok=True)
-        doc.save(f"Output\\Test\\{document_name}")
+        doc.save(f"Output\\Reports\\{document_name}")

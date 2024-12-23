@@ -15,7 +15,7 @@ class nutrigenomics_report:
 
         #Fill customer data table with sample code
         sample_code_cell = doc.tables[0].rows[0].cells[5]
-        util.change_table_cell(sample_code_cell, bold=True, change_text=f'{self.sample_id}', font_size=10)
+        util.change_table_cell(sample_code_cell, change_text=f'{self.sample_id}', font_size=10)
 
         #Fill results table 1
         table1 = doc.tables[1]
@@ -37,6 +37,6 @@ class nutrigenomics_report:
 
         #Save the document
         document_name = 'NutrigenomicsReport' + "_" + self.sample_id + ".docx"
-        path = Path("Output/Test/")
+        path = Path("Output/Reports/")
         path.mkdir(parents=True, exist_ok=True)
-        doc.save(f"Output\\Test\\{document_name}")
+        doc.save(f"Output\\Reports\\{document_name}")
