@@ -5,16 +5,34 @@ import Utilities as util
 from pathlib import Path
 
 class farmacogenetic_report:
-    def __init__(self, sample_id, dataframe):
+    def __init__(self, sample_id, dataframe, customer_data=None):
         self.sample_id = sample_id
         self.farmacogenetic_df = dataframe[dataframe['sample_id'] == sample_id]
+        if customer_data is not None:
+            customer_row = customer_data.loc[customer_data['sample_id'] == sample_id]
+            if not customer_row.empty:
+                initials = customer_row['initials'].iloc[0] or ''
+                lastname = customer_row['lastname'].iloc[0]  # Last name should always be filled
+                fullname = f'{initials} {lastname}'.strip()
+                birthdate = customer_row['birthdate'].iloc[0]
+                birthdate = '' if birthdate == '20237-01-01' else (birthdate or '')
+            else:
+                fullname = ''
+                birthdate = ''
+
+            self.fullname = fullname
+            self.birthdate = birthdate
 
     def report_generation(self):
         # Load the Word document
         doc = Document('Input/Templates/Farmacogenetisch-2024-12-20.docx')
 
-        #Fill customer data table with sample code
+        #Fill customer data table
+        name_cell = doc.tables[0].rows[0].cells[1]
+        bdate_cell = doc.tables[0].rows[0].cells[3]
         sample_code_cell = doc.tables[0].rows[0].cells[5]
+        util.change_table_cell(name_cell, change_text=f'{self.fullname}', font_size=10)
+        util.change_table_cell(bdate_cell, change_text=f'{self.birthdate}', font_size=10)
         util.change_table_cell(sample_code_cell, change_text=f'{self.sample_id}', font_size=10)
 
         #Fill results table 1

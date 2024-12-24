@@ -194,6 +194,20 @@ class Transform:
     """
     The data is transformed so that it is readable and compatible with each other.
     """
+    class customer_data:
+        def columns_and_dates(self, customerdata_df):
+            customerdata_df = customerdata_df
+            customerdata_df = customerdata_df.rename(
+                columns={0: 'sample_id', 1: 'initials', 2: 'lastname', 3: 'birthdate', 4: 'status'})
+            customerdata_df = customerdata_df.fillna('')
+            customerdata_df = customerdata_df.apply(
+                lambda col: col.map(lambda x: x.strip() if isinstance(x, str) else x))
+            customerdata_df['birthdate'] = customerdata_df['birthdate'].dt.strftime('%Y-%m-%d')
+            customerdata_df['birthdate'] = customerdata_df['birthdate'].fillna('20237-01-01')
+            customerdata_df.sort_values(by='sample_id', ascending=True, inplace=True)
+            customerdata_df.reset_index(inplace=True, drop=True)
+            return customerdata_df
+
     class phenotype_rpt:
         """
         Transforms the phenotype_rpt dataframe.

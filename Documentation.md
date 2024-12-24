@@ -58,5 +58,6 @@ The info in `Globals.py` was moved to `ELT.py`.
 `CheckMissingProbesetID.py` was removes, because it is deprecated with the new array.
 dbSNP is no longer reported in the Nutrinomics report.
 Document building is now based on templates.
+Moved unused code to the archive.
 
 ## Template based report building

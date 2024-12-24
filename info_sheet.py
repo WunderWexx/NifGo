@@ -6,13 +6,28 @@ from WordDocument import WordEditing as wd
 import ELT
 
 class InfoSheet(wd):
-    def __init__(self, sample_id, dataframe):
+    def __init__(self, sample_id, dataframe, customer_data=None):
         super().__init__(sample_id, dataframe)
         self.pharmacy_data = ELT.Extract().pharmacydata()
+        if customer_data is not None:
+            customer_row = customer_data.loc[customer_data['sample_id'] == sample_id]
+            if not customer_row.empty:
+                initials = customer_row['initials'].iloc[0] or ''
+                lastname = customer_row['lastname'].iloc[0]  # Last name should always be filled
+                fullname = f'{initials} {lastname}'.strip()
+                birthdate = customer_row['birthdate'].iloc[0]
+                birthdate = '' if birthdate == '20237-01-01' else (birthdate or '')
+            else:
+                fullname = ''
+                birthdate = ''
+
+            self.fullname = fullname
+            self.birthdate = birthdate
 
     def standard_text(self):
         self.heading("Apotheker informatieblad", chosen_size=16, lined=True, colour=(0,0,0), is_bold=False)
-        run = self.document.add_paragraph().add_run("Naam :\nGeboortedatum :")
+        run = self.document.add_paragraph().add_run(f"Naam : {self.fullname}"
+                                                    f"\nGeboortedatum : {self.birthdate}")
         self.styled_run(run, font_size=12, is_bold=True, is_underlined=True)
         run = self.document.add_paragraph().add_run(
             "\nApothekers registreren in hun informatiesysteem de farmacogenetische resultaten van een DNA test. Doel is dat het informatiesysteem automatisch een melding geeft als er sprake is van een contra indicatie bij het klaarmaken van medicijnen."
