@@ -35,7 +35,8 @@ ThermoFisher_determined_genes = [
     "G6PD",
     "NUDT15",
     "TPMT",
-    "UGT1A1"
+    "UGT1A1",
+    "GSTP1"
 ]
 
 probeset_id_dict = {
@@ -47,22 +48,20 @@ probeset_id_dict = {
     'ALDH2': ['AX-11579885'],
     'AMDHD1': ['AX-17082373'],
     'BCO1': ['AX-82997505'],
-    'BChE': ['AX-165880871', 'AX-106714502', 'AX-82936684', 'AX-82919237'],
+    'BChE': ['MULTIPLE_SNP'],
     'BDNF-AS; BDNF': ['AX-11561914'],
     'COMT': ['AX-112185476'], #Mist uit genotype.txt maar staat er nu in
     'CYP17A': ['AX-38703715'],
     'CYP24A1': ['AX-11314597'],
-    'CYP2R1': ['AX-39007361', 'AX-92804126'],
+    'CYP2R1': ['MULTIPLE_SNP'], # MULTIPLE_SNP represents that determining the genotype is dependent on multiple SNP's and will be handled via HandlingUnknowns.py
     'DHCR7': ['AX-39157579'],
     'DRD2': ['AX-165872577'], #Mist uit genotype.txt maar staat er nu in
     'F2': ['AX-11344567'],
     'F5': ['AX-51294184'],
     'FTO': ['AX-11151648'],
     'GC': ['AX-41517991'],
-    'GCK, YKT6': ['AX-15693373', 'AX-15693373'],
-    'GSTP1': ['AX-112060198', 'AX-75179239', 'AX-38703715'],
-    'HLA-B*1502': ['AX-83207592'],
-    'HLA-B*3101': ['AX-112211962'],
+    'GCK, YKT6': ['MULTIPLE_SNP'],
+    'HLA-B*3101': ['MULTIPLE_SNP'],
     'IFNL3/IL28B': ['AX-112063628'],
     'IGF1': ['AX-11469525'],
     'LDLR': ['AX-11569288'],
@@ -79,13 +78,13 @@ probeset_id_dict = {
     'OPRM1': ['AX-11344570'],
     'PON1': ['AX-11575218'],
     'SLCO1B1': ['AX-165873829'],
-    'Sult1A1': ['AX-112166099', 'AX-165874947'],
+    'Sult1A1': ['MULTIPLE_SNP'],
     'Sult1E1': ['AX-112067905'],
     'TCF7L2': ['AX-11652775'],
     'TMEM165; CLOCK': ['AX-165873266'],
     'TNFa': ['AX-41953347'],
     'UCP2': ['AX-83275492'],
-    'VDR': ['AX-11620565', 'AX-112158761', 'AX-165873135', 'AX-96113594'],
+    'VDR': ['AX-11620565'],
     'VKORC1': ['AX-122936861']
 }
 
@@ -359,7 +358,7 @@ class DataPreparation:
             "COMT": {"A/A": "PM", "A/G": "IM", "G/G": "NM"},
             "SLCO1B1": {"T/T": "NF", "T/C": "DF", "C/C": "PF"},
             "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"},
-            "ABCG2":{"rs2231142G/rs2231142G":"NF", "rs2231142G/rs2231142T":"DF", "rs2231142T/rs2231142T":"PF"}
+            "ABCG2":{"rs2231142G/rs2231142G":"NF", "rs2231142G/rs2231142T":"DF","rs2231142T/rs2231142G":"DF", "rs2231142T/rs2231142T":"PF"}
         }
 
         def change_gen(gene, gene_map):
