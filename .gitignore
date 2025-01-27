@@ -1,0 +1,28 @@
+# Ignore virtual environments
+.venv/
+
+# Ignore IDE files
+.idea/
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore outputs and reports
+Output/Reports/PDF/
+Output/Reports/*.docx
+
+# Ignore input files
+Input/Nifgo-files/
+Input/NifgoFiles
+
+# Miscellaneous
+Miscellaneous/
+
+#Notes
+*test*.py
+
+# OS-generated files
+.DS_Store
+Thumbs.db
