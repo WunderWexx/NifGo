@@ -1,7 +1,5 @@
 # Where everything comes together
 
-# Could be rewritten to be clearer.
-
 # imports
 from timeit import default_timer as timer
 import ELT
