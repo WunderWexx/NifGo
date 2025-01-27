@@ -9,7 +9,6 @@ import subprocess
 from time import sleep
 import docx as dx
 from docx.shared import RGBColor,Pt, Cm
-from docx.enum.style import WD_STYLE_TYPE
 from docx.oxml import parse_xml
 from docx.oxml.ns import qn,nsdecls
 from docx.oxml.shared import OxmlElement

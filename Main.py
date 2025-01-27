@@ -10,7 +10,6 @@ import pandas as pd
 from os.path import join
 import PySimpleGUI as sg
 import NifgoProprietaryChanges as changes
-import Diagnostics
 from FarmacogeneticReport import farmacogenetic_report
 from info_sheet import InfoSheet
 from NutrigenomicsReport import nutrigenomics_report
@@ -190,11 +189,6 @@ if __name__ == "__main__":
               '\nThis may take up to 15 minutes.'
               '\n!!! You CANNOT open Word.docx documents during this time. !!!')
         reports = util.get_reports()
-        '''
-        print(f'Generating {len(reports)} PDF\'s')
-        with Pool(cpu_count()) as pool:
-            pool.map(convert_to_pdf, reports)
-        '''
         try:
             convert('Output/Reports/','Output/Reports/PDF')
         except:
@@ -203,7 +197,7 @@ if __name__ == "__main__":
                 pass
             else:
                 missed_conversions = []
-                print('ERROR ENCOUNTERED\n{} out of {} reports converted.\nMissed conversions:')
+                print(f'ERROR ENCOUNTERED\n{len(pdf_reports)} out of {len(reports)} reports converted.\nMissed conversions:')
                 for pdf in pdf_reports:
                     pdf_report = pdf.replace('pdf','docx')
                     if pdf_report not in reports:
@@ -211,22 +205,3 @@ if __name__ == "__main__":
                 for report in missed_conversions:
                     print(report)
         print('Exporting to PDF [DONE]')
-"""
-    # Diagnostics
-    print('Generating diagnostic reports [...]')
-    generation_times = [farmacogenetics_generation_time, infosheets_generation_time,
-                            nutrinomics_generation_time] #, medication_generation_time
-    Diagnostics.GeneralDiagnostics().metadata(generation_times, unique_sample_id_list)
-    Diagnostics.GeneralDiagnostics().sample_data(complete_dataframe)
-    Diagnostics.PharmacoDiagnostics().pharmaco_reports_diagnostics()
-    Diagnostics.InfosheetDiagnostics().infosheet_diagnostics()
-    Diagnostics.NutrinomicsDiagnostics().nutrinomics_diagnostics()
-    print('Generating diagnostic reports [DONE]')
-
-    # Open all Word files
-    ask_open_reports = sg.popup_yes_no("Wilt u de gegenereerde rapporten openen?\nLET OP! Dit opent ALLE rapporten")
-    if ask_open_reports == 'Yes':
-        util.open_all_reports()
-
-    print('\nPROGRAM EXECUTED SUCCESSFULLY')
-"""
