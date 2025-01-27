@@ -20,11 +20,8 @@ Input/NifgoFiles
 # Miscellaneous
 Miscellaneous/
 
-# Diagnostics
-Diagnostics/*.txt
-
 #Notes
-test*.py
+*test*.py
 
 # OS-generated files
 .DS_Store

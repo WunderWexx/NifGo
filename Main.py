@@ -2,11 +2,6 @@
 
 # Could be rewritten to be clearer.
 
-"""
-PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  dataframe[header] = split_data[idx]
-"""
-
 # imports
 from timeit import default_timer as timer
 import ELT
@@ -16,47 +11,27 @@ from os.path import join
 import PySimpleGUI as sg
 import NifgoProprietaryChanges as changes
 import Diagnostics
-from FarmacogeneticReport import FarmacoGeneticReport
+from FarmacogeneticReport import farmacogenetic_report
 from info_sheet import InfoSheet
-from NutrinomicsReport import NutrinomicsReport
-from MedicationReport import MedicationReport
-from Globals import ThermoFisher_determined_genes, probeset_id_dict
+from NutrigenomicsReport import nutrigenomics_report
+from ELT import ThermoFisher_determined_genes, probeset_id_dict
 from HandlingUnknowns import HandlingUnknowns
-from AddCustomerData import CustomerData
 from multiprocessing import Pool, cpu_count
 from functools import partial
 from docx2pdf import convert
 
-def generate_farmacogenetic_report(id, dataframe):
-    farmaco = FarmacoGeneticReport(sample_id=id, dataframe=dataframe)
-    farmaco.inleiding()
-    farmaco.id_table()
-    farmaco.inhoudsopgave()
-    farmaco.table_heading()
-    farmaco.uitslag_table()
-    farmaco.verklaring_fenotype()
-    farmaco.toelichting()
-    farmaco.variaties_waarop_is_getest()
-    farmaco.save()
+# Functie voor multi-processing
+def generate_farmacogenetic_report(id, dataframe, customer_data):
+    farmaco = farmacogenetic_report(sample_id=id, dataframe=dataframe, customer_data=customer_data)
+    farmaco.report_generation()
 
-def generate_infosheet(id, dataframe):
-    infosheet = InfoSheet(sample_id=id, dataframe=dataframe)
-    infosheet.standard_text()
-    infosheet.table()
-    infosheet.save()
+def generate_infosheet(id, dataframe, customer_data):
+    infosheet = InfoSheet(sample_id=id, dataframe=dataframe, customer_data=customer_data)
+    infosheet.report_generation()
 
-def generate_nutrinomics_report(id, dataframe):
-    nutrinomics = NutrinomicsReport(sample_id=id, dataframe=dataframe)
-    nutrinomics.logo_titel_header()
-    nutrinomics.table()
-    nutrinomics.Toelichting()
-    nutrinomics.save()
-
-def generate_medication_report(id, dataframe):
-    medrep = MedicationReport(sample_id=id, dataframe=dataframe)
-    medrep.medrep_intro_text()
-    medrep.medrep_core_exec()
-    medrep.save()
+def generate_nutrinomics_report(id, dataframe, customer_data):
+    nutrigenomics = nutrigenomics_report(sample_id=id, dataframe=dataframe, customer_data=customer_data)
+    nutrigenomics.report_generation()
 
 def convert_to_pdf(report):
     attempts = 5
@@ -85,7 +60,7 @@ if __name__ == "__main__":
         util.empty_folder('Output/Reports')
         util.empty_folder('Output/Reports/PDF')
 
-    # Data preparation
+    # Phenotypes.rpt ingestion and transformation
     phenotypes_df = ELT.Extract().phenotype_rpt()
     phenotypes_df = ELT.Load().phenotype_rpt(phenotypes_df)
     print('phenotype import DONE')
@@ -99,11 +74,12 @@ if __name__ == "__main__":
     util.store_dataframe(phenotypes_df, 'phenotypes')
     print('phenotype transformation DONE')
 
+    # Genotypes.txt ingestion and transformation
     print('genotype import [...]',end='\r')
     genotypes_df = ELT.Extract().genotype_txt()
-    genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.keys())
+    genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.values())             #HIER
     print('genotype import DONE')
-    genotypes_transformation = ELT.Transform().genotype_txt(genotypes_df, probeset_id_dict)
+    genotypes_transformation = ELT.Transform().genotype_txt(genotypes_df, probeset_id_dict)     #HIER
     genotypes_transformation.drop_columns_after_last_sample()
     genotypes_transformation.drop_cel_call_code_suffix()
     genotypes_transformation.unpivot_dataframe()
@@ -114,16 +90,19 @@ if __name__ == "__main__":
     util.store_dataframe(genotypes_df, 'genotypes')
     print('genotype transformation DONE')
 
+    # Data preparation
     data_preparation = ELT.DataPreparation(genotypes_df, phenotypes_df)
     data_preparation.merge_geno_and_phenotype_dataframes()
     data_preparation.determine_phenotype()
     data_preparation.move_MTHFR1298_and_CYP2C19()
+    data_preparation.merge_VDR()
     data_preparation.keep_only_batch_relevant_data()
 
     complete_dataframe = data_preparation.complete_dataframe
     util.store_dataframe(complete_dataframe, 'complete')
     print('complete dataframe creation DONE')
 
+    # Implementing Nifgo changes
     general_changes = changes.GeneralChanges(complete_dataframe)
     util.execute_all_methods(general_changes)
     complete_dataframe = general_changes.dataframe
@@ -146,22 +125,33 @@ if __name__ == "__main__":
     util.store_dataframe(complete_dataframe, 'complete')
     print('Implementing NifGo changes DONE')
 
-    #Handling unknowns
+    # Handling unknowns
     print('Handling unknowns [...]')
     handler = HandlingUnknowns(complete_dataframe)
-    handler.detect_unknowns()
     handler.correct_unknowns()
+    handler.detect_unknowns()
     complete_dataframe = handler.dataframe
     util.store_dataframe(complete_dataframe, 'complete')
     handler.detect_unknowns()
     print('Handling unknowns DONE')
 
+    # Import customer data
+    customerdata_present = sg.popup_yes_no("Heeft u het bestand met de klantdata?")
+    if customerdata_present == 'Yes':
+        customerdata_df = ELT.Extract().customer_data()
+        customerdata_df = ELT.Transform.customer_data().columns_and_dates(customerdata_df)
+    else:
+        customerdata_df = None
+
+    # Define unique list of sample_id's for report generation
     unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
 
     # Farmacogenetic Reports generation
     print('Generating farmacogenetic reports [...]')
     timer_start = timer()
-    partial_generate_farmacogenetic_report = partial(generate_farmacogenetic_report, dataframe=complete_dataframe)
+    partial_generate_farmacogenetic_report = partial(generate_farmacogenetic_report,
+                                                     dataframe=complete_dataframe,
+                                                     customer_data=customerdata_df)
     with Pool(cpu_count()) as pool:
         pool.map(partial_generate_farmacogenetic_report, unique_sample_id_list)
     timer_end = timer()
@@ -171,7 +161,9 @@ if __name__ == "__main__":
     # Infosheet generation
     print('Generating info sheets [...]')
     timer_start = timer()
-    partial_generate_infosheet = partial(generate_infosheet, dataframe=complete_dataframe)
+    partial_generate_infosheet = partial(generate_infosheet,
+                                         dataframe=complete_dataframe,
+                                         customer_data=customerdata_df)
     with Pool(cpu_count()) as pool:
         pool.map(partial_generate_infosheet, unique_sample_id_list)
     timer_end = timer()
@@ -181,7 +173,9 @@ if __name__ == "__main__":
     # Nutrinomics Reports generation
     print('Generating nutrinomics reports [...]')
     timer_start = timer()
-    partial_generate_nutrinomics_report = partial(generate_nutrinomics_report, dataframe=complete_dataframe)
+    partial_generate_nutrinomics_report = partial(generate_nutrinomics_report,
+                                                  dataframe=complete_dataframe,
+                                                  customer_data=customerdata_df)
     with Pool(cpu_count()) as pool:
         pool.map(partial_generate_nutrinomics_report, unique_sample_id_list)
         # ValueError: Length of values (26) does not match length of index (23) betekent dat er genen missen uit het source bestand
@@ -189,28 +183,12 @@ if __name__ == "__main__":
     nutrinomics_generation_time = timer_end - timer_start
     print('Generating nutrinomics reports [DONE]')
 
-    """
-    # Medication report generation
-    print('Generating medication reports [...]')
-    timer_start = timer()
-    partial_generate_medication_report = partial(generate_medication_report, dataframe=complete_dataframe)
-    with Pool(cpu_count()) as pool:
-        pool.map(partial_generate_medication_report, unique_sample_id_list)
-    timer_end = timer()
-    medication_generation_time = timer_end - timer_start
-    print('Generating medication reports [DONE]')
-    """
-    # Filling in customer data
-    file_is_present = sg.popup_yes_no("Heeft u het bestand met de klantdata?")
-    if file_is_present == 'Yes':
-        print('Filling in customer data [...]')
-        CustomerData().fill_customer_data()
-        print('Filling in customer data [DONE]')
-
     # Export to PDF
     ask_pdf_generation = sg.popup_yes_no("Wilt u de PDF bestanden aanmaken?")
     if ask_pdf_generation == 'Yes':
-        print('Exporting to PDF [...]')
+        print('Exporting to PDF [...]'
+              '\nThis may take up to 15 minutes.'
+              '\n!!! You CANNOT open Word.docx documents during this time. !!!')
         reports = util.get_reports()
         '''
         print(f'Generating {len(reports)} PDF\'s')
@@ -233,7 +211,7 @@ if __name__ == "__main__":
                 for report in missed_conversions:
                     print(report)
         print('Exporting to PDF [DONE]')
-
+"""
     # Diagnostics
     print('Generating diagnostic reports [...]')
     generation_times = [farmacogenetics_generation_time, infosheets_generation_time,
@@ -245,4 +223,10 @@ if __name__ == "__main__":
     Diagnostics.NutrinomicsDiagnostics().nutrinomics_diagnostics()
     print('Generating diagnostic reports [DONE]')
 
+    # Open all Word files
+    ask_open_reports = sg.popup_yes_no("Wilt u de gegenereerde rapporten openen?\nLET OP! Dit opent ALLE rapporten")
+    if ask_open_reports == 'Yes':
+        util.open_all_reports()
+
     print('\nPROGRAM EXECUTED SUCCESSFULLY')
+"""

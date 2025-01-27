@@ -6,6 +6,7 @@ from docx.enum.style import WD_STYLE_TYPE
 from docx.oxml import parse_xml
 from docx.oxml.ns import qn,nsdecls
 from docx.oxml.shared import OxmlElement
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 class WordEditing:
     def __init__(self, sample_id, dataframe = None):
@@ -98,17 +99,25 @@ class WordEditing:
         run.underline = is_underlined
 
     def change_table_cell(self, cell, background_color=None, font_color=None, font_size=None, bold=None,
-                          italic=None):
-        """ changes the background_color or font_color or font style (bold, italic) of this cell.
-        Leave the params as 'None' if you do not want to change them.
-        params:
-            cell: the cell to manipulate
-            background_color: name for the color, e.g. "red" or "ff0000"
-            font_color:
-            font_size: size in pt (e.g. 10)
-            bold:   requested font style. True or False, or None if it shall remain unchanged
-            italic: requested font style. True or False, or None if it shall remain unchanged
-        background_color: the color of cells background"""
+                          italic=None, change_text: str = None, horizontal_alignment='left',
+                          vertical_alignment='center'):
+        if change_text:
+            cell.text = change_text
+
+        paragraph = cell.paragraphs[0]
+        horizontal_alignment_dict = {
+            'left': WD_PARAGRAPH_ALIGNMENT.LEFT,
+            'right': WD_PARAGRAPH_ALIGNMENT.RIGHT,
+            'centre': WD_PARAGRAPH_ALIGNMENT.CENTER
+        }
+        paragraph.alignment = horizontal_alignment_dict[f'{horizontal_alignment}']
+
+        tc = cell._tc
+        tcPr = tc.get_or_add_tcPr()
+        vAlign = OxmlElement('w:vAlign')
+        vAlign.set(qn('w:val'), vertical_alignment)
+        tcPr.append(vAlign)
+
         if background_color:
             shading_elm = parse_xml(r'<w:shd {} w:fill="{}"/>'.format(nsdecls('w'), background_color))
             cell._tc.get_or_add_tcPr().append(shading_elm)
@@ -123,12 +132,12 @@ class WordEditing:
                 for r in p.runs:
                     r.font.size = dx.shared.Pt(font_size)
 
-        if bold is not None:
+        if bold:
             for p in cell.paragraphs:
                 for r in p.runs:
                     r.bold = bold
 
-        if italic is not None:
+        if italic:
             for p in cell.paragraphs:
                 for r in p.runs:
                     r.italic = italic

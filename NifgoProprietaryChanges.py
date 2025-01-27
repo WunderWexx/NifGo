@@ -55,16 +55,6 @@ class PhenotypeChanges:
                                                          'NF', # If indeed WT/WT
                                                          'DF') # If not WT/WT
 
-    def RYR1(self):
-        """
-        The Indeterminate phenotype is changed to NM.
-        """
-        mask = self.dataframe['gene'] == 'RYR1'
-        no_change = self.dataframe.loc[mask, 'phenotype']
-        self.dataframe.loc[mask, 'phenotype'] = np.where(self.dataframe.loc[mask, 'phenotype'] == 'Indeterminate',
-                                                         'NM',
-                                                         no_change)
-
     def G6DP(self):
         """
         The Indeterminate phenotype is changed to NM.
@@ -156,8 +146,12 @@ class PhenotypeChanges:
     def TPMT(self):
         mask = self.dataframe['gene'] == 'TPMT'
         no_change = self.dataframe.loc[mask, 'phenotype']
-        self.dataframe.loc[mask, 'phenotype'] = np.where(self.dataframe.loc[mask, 'genotype'] == '*1/*3',
-                                                         'IM', no_change)
+        self.dataframe.loc[mask, 'phenotype'] = np.where(
+            self.dataframe.loc[mask, 'genotype'].str.contains(r'(?:\*1[A-Z]?)/(\*3[A-Z]?)',
+                                                              regex=True),
+            'IM',
+            no_change
+        )
 
     def CFTR(self):
         mask = self.dataframe['gene'] == 'CFTR'
@@ -168,7 +162,7 @@ class PhenotypeChanges:
     def CYP3A5(self):
         CYP3A5_dict = {
             "PM": "non-expresser",
-            "IM": "heterozygoot",
+            "IM": "intermediate-expresser",
             "NM": "homozygoot"
         }
         mask = self.dataframe['gene'] == 'CYP3A5'
@@ -183,14 +177,14 @@ class GenotypeChanges:
 
     def ABCG2(self):
         ABCG2_dict = {
-            'rs2231142G/rs2231142G': 'G/G',
-            'rs2231142G/rs2231142T': 'G/T',
-            'rs2231142T/rs2231142T': 'T/T'
+            "rs2231142G/rs2231142G": "G/G",
+            "rs2231142G/rs2231142T": "G/T",
+            "rs2231142T/rs2231142T": "T/T",
         }
         mask = self.dataframe['gene'] == 'ABCG2'
-        condition = self.dataframe.loc[mask, 'genotype'].isin(ABCG2_dict.keys()) #This is also a mask
-        if_true = self.dataframe.loc[mask,'genotype'].map(ABCG2_dict)
-        self.dataframe.loc[mask,'genotype'] = np.where(condition, if_true, 'ERROR')
+        condition = self.dataframe.loc[mask, 'genotype'].isin(ABCG2_dict.keys())
+        if_true = self.dataframe.loc[mask, 'genotype'].map(ABCG2_dict)
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
 
     def COMT(self):
         """
@@ -231,7 +225,7 @@ class GenotypeChanges:
     def SLCO1B1(self):
         SLCO1B1_dict = {
             "NF": "521TT",
-            "PF": "521util",
+            "PF": "521CC",
             "DF": "521TC"
         }
         mask = self.dataframe['gene'] == 'SLCO1B1'

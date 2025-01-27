@@ -1,4 +1,5 @@
-# The ELT process
+"""The Extract Load, and Transform process"""
+import re
 
 # Imports
 import pandas as pd
@@ -6,6 +7,92 @@ import PySimpleGUI as sg
 import math
 import csv
 import numpy as np
+
+# Lists necessary for importing data
+ThermoFisher_determined_genes = [
+    "CACNA1S",
+    "CFTR",
+    "CYP1B1", #Wordt geleverd door Tahar
+    "CYP2A6",
+    "CYP2C8",
+    "CYP2E1",
+    "CYP2F1",
+    "CYP4F2",
+    "GSTM1",
+    "GSTT1", #Wordt geleverd door Tahar
+    "MTRNR1",
+    "NAT1",
+    "NAT2",
+    "RYR1",
+    "CYP1A2",
+    "CYP2B6",
+    "CYP2C9",
+    "CYP2C19",
+    "CYP2D6",
+    "CYP3A4",
+    "CYP3A5",
+    "DPYD",
+    "G6PD",
+    "NUDT15",
+    "TPMT",
+    "UGT1A1",
+    "GSTP1",
+    "ABCG2"
+]
+
+# MULTIPLE_SNP represents that determining the genotype is dependent on multiple SNP's and will be handled via HandlingUnknowns.py
+probeset_id_dict = {
+    'ABCB1': ['AX-112253889'],
+    'ACE': ['AX-40214457'],
+    'ADIPOQ': ['AX-41185381'],
+    'ADRA2A': ['AX-14792713'],
+    'ALDH2': ['AX-11579885'],
+    'AMDHD1': ['AX-17082373'],
+    'BCO1': ['AX-82997505'],
+    'BChE': ['MULTIPLE_SNP'],
+    'BDNF': ['AX-11561914'],
+    'COMT': ['AX-112185476'],
+    'CYP1A1': ['AX-173402723'],
+    'CYP17A1': ['AX-38703715'],
+    'CYP24A1': ['AX-11314597'],
+    'CYP2R1': ['AX-39007361'],
+    'DHCR7 / NADSYN1': ['AX-39157579'],
+    'DRD2': ['AX-165872577'],
+    'F2': ['AX-11344567'],
+    'F5': ['AX-51294184'],
+    'FTO': ['AX-11151648'],
+    'GC': ['AX-41517991'],
+    'GCK, YKT6': ['MULTIPLE_SNP'],
+    'HLA-B*1502': ['UNKNOWN'], # HLA-B*5701, en HLA-B*1502 moeten nog ingevuld worden.
+    'HLA-B*5701': ['UNKNOWN'], # HLA-B*5701, en HLA-B*1502 moeten nog ingevuld worden.
+    'HLA-A*3101': ['MULTIPLE_SNP'],
+    'IFNL3/IL28B': ['AX-112063628'],
+    'IGF1': ['AX-11469525'],
+    'LDLR': ['AX-11569288'],
+    'LOC105447645; FUT2': ['AX-11536589'],
+    'MAO-B': ['AX-112075557'],
+    'MC4R': ['AX-11340068'],
+    'MTHFR1298': ['AX-165872626'],
+    'MTHFRC677T': ['AX-51283185'],
+    'MTNR1B': ['AX-16761721'],
+    'MnSOD': ['AX-41896949'],
+    'NBPF3': ['AX-11515438'],
+    'NQ01': ['AX-11344636'],
+    'OPRM1': ['AX-11344570'],
+    'PON1': ['AX-11575218'],
+    'SLCO1B1': ['AX-165873829'],
+    'Sult1A1': ['MULTIPLE_SNP'],
+    'Sult1E1': ['AX-112067905'],
+    'TCF7L2': ['AX-11652775'],
+    'TMEM165; CLOCK': ['AX-165873266'],
+    'TNFa': ['AX-41953347'],
+    'UCP2': ['AX-83275492'],
+    'VDR_1': ['AX-11620565'],
+    'VDR_2': ['AX-96113594'],
+    'VDR_3': ['AX-112158761'],
+    'VDR_4': ['AX-165873135'],
+    'VKORC1': ['AX-122936861']
+}
 
 class Extract:
     """
@@ -18,6 +105,7 @@ class Extract:
         """
         csv.field_size_limit(1000000000)
 
+
     @staticmethod
     def extract_user_specified_file(filename):
         filepath = sg.popup_get_file(f"Please select the {filename} file",
@@ -28,10 +116,6 @@ class Extract:
     @staticmethod
     def pharmacydata():
         return pd.read_excel("Input/Dataframes/apotheekinfosysteem.xlsx")
-
-    @staticmethod
-    def nutrimarkers(): #Isn't called anywhere. Data is represented in Globals.py.
-        return pd.read_excel("Input/Dataframes/nutri_markers.xlsx")
 
     def phenotype_rpt(self):
         return self.extract_user_specified_file('phenotype.rpt')
@@ -87,7 +171,7 @@ class Load:
         all columns get their names.
         :param dataframe: the genotype_txt dataframe
         :param needed_probeset_ids: the probeset_id's of the genes that need their phenotype determined by their
-        rs designation.
+        rs designation. .
         :return: The genotype.txt file but as a dataframe with headers and containing only the specified genes.
         """
         dataframe.columns = ['rest']
@@ -97,6 +181,7 @@ class Load:
         start_row = dataframe[dataframe['rest'].str.startswith("AX-")].index[0]
         dataframe = dataframe.iloc[start_row:]
 
+        needed_probeset_ids = [id_list[0] for id_list in needed_probeset_ids]
         dataframe = dataframe[dataframe['rest'].str.startswith(tuple(needed_probeset_ids))]
 
         split_data = dataframe['rest'].str.split("\\t", expand=True)
@@ -114,6 +199,20 @@ class Transform:
     """
     The data is transformed so that it is readable and compatible with each other.
     """
+    class customer_data:
+        def columns_and_dates(self, customerdata_df):
+            customerdata_df = customerdata_df
+            customerdata_df = customerdata_df.rename(
+                columns={0: 'sample_id', 1: 'initials', 2: 'lastname', 3: 'birthdate', 4: 'status'})
+            customerdata_df = customerdata_df.fillna('')
+            customerdata_df = customerdata_df.apply(
+                lambda col: col.map(lambda x: x.strip() if isinstance(x, str) else x))
+            customerdata_df['birthdate'] = customerdata_df['birthdate'].dt.strftime('%Y-%m-%d')
+            customerdata_df['birthdate'] = customerdata_df['birthdate'].fillna('20237-01-01')
+            customerdata_df.sort_values(by='sample_id', ascending=True, inplace=True)
+            customerdata_df.reset_index(inplace=True, drop=True)
+            return customerdata_df
+
     class phenotype_rpt:
         """
         Transforms the phenotype_rpt dataframe.
@@ -162,7 +261,7 @@ class Transform:
 
         def drop_columns_after_last_sample(self):
             """
-            Drops all columns after the last sample. Samples are assumed to always start with D.
+            Drops all columns after the last sample. Samples are assumed to always start with a letter.
             :return: DataFrame with columns dropped
             """
             for column in self.dataframe.columns:
@@ -198,10 +297,10 @@ class Transform:
             self.dataframe.rename(columns={'variable': 'sample_id', 'value': 'genotype'}, inplace=True)
 
         def add_gene_names(self):
-            get_gene_name = lambda id: self.probeset_ids.get(id, 'NotPresent')
+            flattened_dict = {ids[0]: gene for gene, ids in self.probeset_ids.items()}
+            get_gene_name = lambda id: flattened_dict.get(id, 'NotPresent')
             new_column = self.dataframe['probeset_id'].map(get_gene_name)
             self.dataframe['gene'] = new_column
-
 
 class DataPreparation:
     def __init__(self, geno_df, pheno_df):
@@ -264,7 +363,9 @@ class DataPreparation:
             "ABCB1": {"G/G": "NM", "A/A": "PM", "G/A": "IM", "A/G": "IM"},
             "COMT": {"A/A": "PM", "A/G": "IM", "G/G": "NM"},
             "SLCO1B1": {"T/T": "NF", "T/C": "DF", "C/C": "PF"},
-            "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"}
+            "VKORC1": {"T/T": "PM", "T/C": "IM", "C/C": "NM"},
+            "ABCG2":{"rs2231142G/rs2231142G":"NF", "rs2231142G/rs2231142T":"DF","rs2231142T/rs2231142G":"DF", "rs2231142T/rs2231142T":"PF"},
+            "CYP1A1":{"T/T":"NM", "T/C":"IM", "C/C":"PM"}
         }
 
         def change_gen(gene, gene_map):
@@ -276,6 +377,43 @@ class DataPreparation:
 
         for gene in phenotype_map.keys():
             change_gen(gene, phenotype_map[gene])
+
+    def merge_VDR(self):
+        unique_samples = self.complete_dataframe['sample_id'].unique().tolist()
+        for sample in unique_samples:
+            divergent_count = 0
+            sample_id_mask = self.complete_dataframe['sample_id'] == sample
+            VDR_1_mask = sample_id_mask & (self.complete_dataframe['gene'] == 'VDR_1')
+            VDR_1 = self.complete_dataframe.loc[VDR_1_mask, 'genotype'].values
+            if len(VDR_1) > 0 and 'G' in VDR_1[0]:
+                divergent_count += 1
+            VDR_2_mask = sample_id_mask & (self.complete_dataframe['gene'] == 'VDR_2')
+            VDR_2 = self.complete_dataframe.loc[VDR_2_mask, 'genotype'].values
+            if len(VDR_2) > 0 and 'A' in VDR_2[0]:
+                divergent_count += 1
+            VDR_3_mask = sample_id_mask & (self.complete_dataframe['gene'] == 'VDR_3')
+            VDR_3 = self.complete_dataframe.loc[VDR_3_mask, 'genotype'].values
+            if len(VDR_3) > 0 and 'T' in VDR_3[0]:
+                divergent_count += 1
+            VDR_4_mask = sample_id_mask & (self.complete_dataframe['gene'] == 'VDR_4')
+            VDR_4 = self.complete_dataframe.loc[VDR_4_mask, 'genotype'].values
+            print(VDR_4)
+            if len(VDR_4) > 0 and 'C' in VDR_4[0]:
+                divergent_count += 1
+            print(divergent_count)
+            if divergent_count >= 2:
+                VDR_row = {'sample_id': sample, 'gene': 'VDR', 'phenotype': 'PF', 'genotype': 'MT/MT'}
+                self.complete_dataframe = pd.concat([self.complete_dataframe, pd.DataFrame([VDR_row])], ignore_index=True)
+            if divergent_count == 1:
+                VDR_row = {'sample_id': sample, 'gene': 'VDR', 'phenotype': 'IF', 'genotype': 'WT/MT'}
+                self.complete_dataframe = pd.concat([self.complete_dataframe, pd.DataFrame([VDR_row])], ignore_index=True)
+            if divergent_count == 0:
+                VDR_row = {'sample_id': sample, 'gene': 'VDR', 'phenotype': 'NF', 'genotype': 'WT/WT'}
+                self.complete_dataframe = pd.concat([self.complete_dataframe, pd.DataFrame([VDR_row])], ignore_index=True)
+
+        self.complete_dataframe = self.complete_dataframe[
+            ~self.complete_dataframe['gene'].str.match(r'VDR_\d+', na=False)]
+
 
     def keep_only_batch_relevant_data(self):
         relevant_samples = self.pheno_df['sample_id'].unique().tolist()

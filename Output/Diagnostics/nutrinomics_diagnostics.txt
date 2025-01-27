@@ -1,2 +1,9 @@
 Nutrinomics diagnostics
 Sample	Gene	Issue
+Sample: BFX0034312.docx	 Issue: Not all genes present
+	ABCB1
+	BDNF-AS;BDNF
+	DRD2
+	GCK,YKT6
+	LOC105447645;FUT2
+	TMEM165;CLOCK

@@ -1,39 +1,13 @@
-# After the program has run, the output needs to be checked for mistakes both human and software. This process should be automated as much as possible.
-
-# Voor de farmacogenetische rapporten:
-# Zijn de fenotypes plausibel? [DONE]
-# Zijn de genotypes plausibel? [DONE]
-# Zijn alle genen present? [DONE]
-
-# Voor de info sheets:
-# Zijn de apothekercodes plausibel?
-# Zijn de fenotypes plausibel? [DONE]
-# Zijn de genotypes plausibel? [DONE]
-# Zijn alle genen present? [DONE]
-
-# Voor de nutrinomics:
-# Kloppen de dbSNP nummers? [DONE]
-# Zijn de genotypes plausibel? [DONE]
-# Zijn alle genen present? [DONE]
-
-# Algemeen:
-# Frequentie van allellen (moeilijk / tijdrovend) [PENDING]
-# Afwijking van de norm [DONE]
-# Frequentie van fenotypes [DONE]
-
-# Metadata:
-# Software versie [DONE]
-# rapporten gegenereerd in X seconden [DONE]
-# Aantal rapporten [DONE]
-# Aantal samples [DONE]
-# Zodoende aantal batches [DONE]
+"""
+After the program has run, the output needs to be checked for mistakes both human and software. This process should be automated as much as possible
+"""
 
 import re
 import Utilities as util
 from docx import Document
 from math import ceil
 
-class Diagnostics:
+class ExternalDiagnostics:
     def __init__(self):
         self.path = 'Output\Reports'
         self.reports = util.get_reports()
@@ -46,7 +20,7 @@ class Diagnostics:
             ],
             'NA_phenotype_genes': ['NAT1', 'NAT2'],
             'NF_phenotype_genes': ['CACNA1S', 'CFTR', 'SLCO1B1','MTRNR1'],
-            'expressor_phenotype_genes': ['CYP3A5'],
+            'expresser_phenotype_genes': ['CYP3A5'],
             'pos_neg_phenotype_genes': ['HLA-B*1502'],
             'PM_risico_phenotype_genes': ['F2','F5']
         }
@@ -72,7 +46,7 @@ class Diagnostics:
             'NM_phenotype_genes': ['UM', 'RM', 'NM', 'IM', 'PM'],
             'NA_phenotype_genes': ['RA', 'NA', 'IA', 'SA'],
             'NF_phenotype_genes': ['IF', 'NF', 'DF', 'PF'],
-            'expressor_phenotype_genes': ['non-expressor', 'homozygoot', 'heterozygoot',"non-expresser"],
+            'expresser_phenotype_genes': ['non-expresser', 'homozygoot', 'heterozygoot'],
             'pos_neg_phenotype_genes': ['positief', 'negatief', 'risico'],
             'PM_risico_phenotype_genes': ['PM', 'risico']
         }
@@ -80,7 +54,7 @@ class Diagnostics:
             'NM_phenotype_genes': 'NM',
             'NA_phenotype_genes': 'NA',
             'NF_phenotype_genes': 'NF',
-            'expressor_phenotype_genes': 'non-expressor',
+            'expresser_phenotype_genes': 'non-expresser',
             'pos_neg_phenotype_genes': 'negatief',
             'PM_risico_phenotype_genes': 'PM'
         }
@@ -246,7 +220,7 @@ class Diagnostics:
                 genes_to_check.append(gene)
         return genes_to_check
 
-class PharmacoDiagnostics(Diagnostics):
+class PharmacoDiagnostics(ExternalDiagnostics):
     def pharmaco_reports_diagnostics(self):
         diag_file = open('Output/Diagnostics/pharmaco_reports_diagnostics.txt','w')
         diag_file.write('FarmacogeneticReport diagnostics\n')
@@ -278,7 +252,7 @@ class PharmacoDiagnostics(Diagnostics):
         diag_file.close()
 
 
-class InfosheetDiagnostics(Diagnostics):
+class InfosheetDiagnostics(ExternalDiagnostics):
     def infosheet_diagnostics(self):
         diag_file = open('Output/Diagnostics/infosheet_diagnostics.txt', 'w')
         diag_file.write('Infosheet diagnostics\n')
@@ -315,7 +289,7 @@ class InfosheetDiagnostics(Diagnostics):
 
         diag_file.close()
 
-class NutrinomicsDiagnostics(Diagnostics):
+class NutrinomicsDiagnostics(ExternalDiagnostics):
     def nutrinomics_diagnostics(self):
         diag_file = open('Output/Diagnostics/nutrinomics_diagnostics.txt', 'w')
         diag_file.write('Nutrinomics diagnostics\n')
@@ -349,11 +323,11 @@ class CustomerDataDiagnostics(Diagnostics):
             sample_id = document_path.split('_')[1]
 """
 
-class GeneralDiagnostics(Diagnostics):
+class GeneralDiagnostics(ExternalDiagnostics):
     def metadata(self, generation_times, unique_samples_list):
         diag_file = open('Output/Diagnostics/metadata.txt', 'w')
         diag_file.write('Metadata:\n')
-        diag_file.write('Version 1.2.0\n\n') # 3.0.0 voor release met UI. 2.0.0 voor release nieuwe vorm. 1.2.0 omdat we een beetje achterliepen
+        diag_file.write('Version 2.0.0\n\n') # 1.0.0 voor release met UI.
 
         for report, time in zip(['Farmacogenetics','Infosheets','Nutrinomics','Medication'], generation_times):
             diag_file.write(f'{report} generated in {time:.1f} seconds.\n')
@@ -364,7 +338,7 @@ class GeneralDiagnostics(Diagnostics):
         number_of_reports = len(self.reports)
         diag_file.write(f'Number of reports: {number_of_reports}\n')
         if number_of_reports != 3 * number_of_samples:
-            diag_file.write(f'UNEXPECTED AMOUNT OF REPORTS \nEXPECTED {number_of_samples*3}, GOT {number_of_reports}')
+            diag_file.write(f'UNEXPECTED AMOUNT OF REPORTS \nEXPECTED {number_of_samples*4}, GOT {number_of_reports}')
         diag_file.write(f'Number of batches to bill: {ceil((number_of_samples / 24))}')
         diag_file.close()
 
@@ -401,3 +375,105 @@ class GeneralDiagnostics(Diagnostics):
                 continue
 
         diag_file.close()
+
+class InlineDiagnostics:
+    def __init__(self):
+        self.genes_by_phenotype_pattern = {
+            r'^[U,R,N,I,P]M$': [
+                ['COMT', 'CYP1A2', 'CYP2B6', 'CYP2C9', 'CYP2C19', 'CYP2D6', 'CYP3A4', 'DPYD', 'G6PD', 'MTHFR677',
+                 'NUDT15', 'TPMT', 'UGT1A1', 'VKORC1'], 'NM'], # Zoals NM
+            r'^[I,N,D,P]F$': [['ABCG2', 'SLCO1B1', 'ABCB1'], 'NF'], # Zoals NF
+            r'^[a-z]{1,12}$|^non-expresser$': [['CYP3A5'], 'non-expresser'], # Zoals een string tot max 12 kleine letters
+            r'^negatief$|^risico$': [['HLA-B*1502', 'HLA-B*5701', 'HLA-A*3101'], 'negatief'], # negatief of risico
+            r'^[U,R,N,I,P]M$|^Deficient$': [['G6PD'], 'NM'] # Zoals NM of Deficient
+        }
+
+        self.genes_by_genotype_pattern = {
+            r'\D\D/\D\D' : ['CACNA1S', 'CFTR','RYR1',"VDR"], # Zoals WT/WT
+            r'\d\d\d\D\D' : ['SLCO1B1'], # Zoals 521TC
+            r'\d\d\d\d\D\D' : ['VKORC1'], # Zoals 1639GG
+            r'^AS: ' : ['DPYD'], # Zoals AS: 2 of AS: 1.5
+            r'\D\D\D/\D\D\D' : ['COMT'], # Zoals Met/Met
+            r'(Null/Present)/(Null/Present)' : ['GSTM1'], # Zoals Null/Present
+            r'(\D\.=|Null)/(\D\.=|Null)' : ['MTRNR1'], # Zoals m.=/Null
+            r'(Null|\D|Val)/(Null|\D|Val)' : ["ABCB1", "ABCG2", "ACE", "ADIPOQ", "ADRA2A", "ALDH2", "AMDHD1", "BChE", "BCO1",
+                                      "BDNF", "CYP1A1", "CYP1A2", "CYP2R1", "CYP17A1", "CYP24A1",
+                                      'DHCR7 / NADSYN1', "DRD2", "F2", "F5", "FTO", "G6PD", "GC", "GCK, YKT6", "GSTP1",
+                                      "IFNL3/IL28B", "IGF1", "LDLR", "LOC105447645; FUT2", "MAO-B", "MC4R", "MnSOD",
+                                      "MTHFR1298", "MTHFR677", "MTNR1B",  "NBPF3", "NQ01", "NUDT15", "OPRM1", "PON1",
+                                      "Sult1E1", "TCF7L2", "TMEM165; CLOCK", "TNFa",
+                                      "TPMT", "UCP2", "UGT1A1"], # Zoals A/A of Null/A of Null/Val
+            r'(Null|\*\D)/(Null|\*\D)' : ['GSPT1', 'GSTT1'],# Zoals *A/*A of Null/*A
+            r'^negatief$|^positief$': ['HLA-A*3101', 'HLA-B*1502', 'HLA-B*5702'], # negatief of positief
+            r'(\*.*|Null)/(\*.*|Null)' : ['other'], # Zoals *1/*1 of zelfs *4.001/*7A+1B, en ook *1/Null
+        }
+
+        # AANPASSEN! HET IS NU EEN DICT OF LISTS
+        self.genes_by_normal_genotype = {
+            'ABCB1': 'T/T',
+            'ACE': 'A/A',
+            'ADIPOQ': 'G/G',
+            'ADRA2A': 'G/G',
+            'ALDH2': 'G/G',
+            'AMDHD1': 'C/C',
+            'BChE': r'U/U|K/U',
+            'BCO1': 'A/A',
+            'BDNF': r'C/C|Val/Val',
+            'CACNA1S': 'WT/WT',
+            'CFTR': 'WT/WT',
+            'CYP1A1': 'T/T',
+            'CYP1B1': r'\*1/\*1',
+            'CYP2A6': r'(\*1[A-K]|\*(1|6|11|13|14|22|30|31|38|44|50|2|9|17|23|25|26|28|41))/(\*1[A-K]|\*(1|6|11|13|14|22|30|31|38|44|50|2|9|17|23|25|26|28|41))',
+            'CYP2C8': r'\*1[A-C]/\*1[A-C]',
+            'CYP2E1': r'^(?!.*\*5B).*',
+            'CYP2F1': r'\*1/\*1',
+            'CYP2R1': r'A/A',
+            'CYP4F2': r'\*1/\*1',
+            'CYP17A1': 'A/A',
+            'CYP24A1': 'T/T',
+            'DHCR7 / NADSYN1': 'G/G',
+            'DRD2': 'C/C',
+            'F2': 'G/G',
+            'F5': 'C/C',
+            'FTO': 'G/G',
+            'GC': 'T/T',
+            'GCK, YKT6': 'G/G',
+            'GSTP1': r'\*A/\*A',
+            'GSTT1': r'Null/\*A|\*A/\*A|\*A/Null',
+            'GSTM1': r'Null/Present|Present/Null|Present/Present',
+            'HLA-B*3101': 'WT/WT',
+            'IFNL3/IL28B': 'C/C',
+            'IGF1': 'G/G',
+            'LDLR': 'G/G',
+            'LOC105447645; FUT2': 'A/A',
+            'MAO-B': 'T/T|T',
+            'MC4R': 'T/T',
+            'MnSOD': r'A/A|Val/Val',
+            'MTHFR1298': 'A/A',
+            'MTRNR1': r'm.=/Null|m.=/m.=|Null/m.=',
+            'MTNR1B': 'C/C',
+            'NAT1': r'\*(4|18|20|21|23|24|25|27|29)/\*(4|18|20|21|23|24|25|27|29)',
+            'NAT2': r'\*(4|18)/\*(4|18)',
+            'NBPF3': 'T/T',
+            'NQ01': 'G/G',
+            'OPRM1': 'A/A',
+            'PON1': 'T/T',
+            'RYR1': 'WT/WT',
+            'Sult1A1': r'\*1/\*1',
+            'Sult1E1': 'C/C',
+            'TCF7L2': 'C/C',
+            'TMEM165; CLOCK': 'A/A',
+            'TNFa': 'G/G',
+            'UCP2': 'G/G',
+            'VDR': 'WT/WT'
+        }
+
+    def is_fenotype_deviation(self, phenotype, gene):
+        for pattern in self.genes_by_phenotype_pattern.keys():
+            if re.fullmatch(pattern, phenotype):
+                if gene in self.genes_by_phenotype_pattern[pattern][0]:
+                    return not phenotype == self.genes_by_phenotype_pattern[pattern][1]
+
+    def is_genotype_deviation(self, genotype, gene_to_check):
+        regex_pattern = self.genes_by_normal_genotype[gene_to_check]
+        return not re.fullmatch(regex_pattern, genotype)
