@@ -397,10 +397,8 @@ class DataPreparation:
                 divergent_count += 1
             VDR_4_mask = sample_id_mask & (self.complete_dataframe['gene'] == 'VDR_4')
             VDR_4 = self.complete_dataframe.loc[VDR_4_mask, 'genotype'].values
-            print(VDR_4)
             if len(VDR_4) > 0 and 'C' in VDR_4[0]:
                 divergent_count += 1
-            print(divergent_count)
             if divergent_count >= 2:
                 VDR_row = {'sample_id': sample, 'gene': 'VDR', 'phenotype': 'PF', 'genotype': 'MT/MT'}
                 self.complete_dataframe = pd.concat([self.complete_dataframe, pd.DataFrame([VDR_row])], ignore_index=True)
