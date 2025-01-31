@@ -428,7 +428,7 @@ class InlineDiagnostics:
             'CYP2E1': r'^(?!.*\*5B).*',
             'CYP2F1': r'\*1/\*1',
             'CYP2R1': r'A/A',
-            'CYP4F2': r'\*1/\*1',
+            'CYP4F2': r'^(?!.*\*3).*$',
             'CYP17A1': 'A/A',
             'CYP24A1': 'T/T',
             'DHCR7 / NADSYN1': 'G/G',
