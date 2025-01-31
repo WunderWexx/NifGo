@@ -29,20 +29,15 @@ class InfoSheet():
 
     def report_generation(self):
         # Load the Word document
-        doc = Document('Input/Templates/InfoSheet-2024-12-31.docx')
+        doc = Document('Input/Templates/InfoSheet-2025-01-31.docx')
 
-        #Fill customer data
-        for paragraph in doc.paragraphs:
-            if "Naam :" in paragraph.text:
-                paragraph.text = paragraph.text.replace("Naam :", f"Naam : {self.fullname}")
-                for run in paragraph.runs:
-                    if f"Naam : {self.fullname}" in run.text:
-                        util.styled_run(run, font_size=12, is_bold=True, is_underlined=True)
-            if "Geboortedatum :" in paragraph.text:
-                paragraph.text = paragraph.text.replace("Geboortedatum :", f"Geboortedatum : {self.birthdate}")
-                for run in paragraph.runs:
-                    if f"Geboortedatum : {self.birthdate}" in run.text:
-                        util.styled_run(run, font_size=12, is_bold=True, is_underlined=True)
+        # Fill customer data table
+        name_cell = doc.tables[0].rows[0].cells[1]
+        bdate_cell = doc.tables[0].rows[0].cells[3]
+        sample_code_cell = doc.tables[0].rows[0].cells[5]
+        util.change_table_cell(name_cell, change_text=f'{self.fullname}', font_size=10)
+        util.change_table_cell(bdate_cell, change_text=f'{self.birthdate}', font_size=10)
+        util.change_table_cell(sample_code_cell, change_text=f'{self.sample_id}', font_size=10)
 
         #Fill results table
         table1 = doc.tables[0]
