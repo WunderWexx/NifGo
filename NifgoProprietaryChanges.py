@@ -5,6 +5,7 @@
 import numpy as np
 import Utilities as util
 from ELT import Extract
+import re
 
 class GeneralChanges:
     def __init__(self, dataframe):
@@ -175,6 +176,18 @@ class GenotypeChanges:
     def __init__(self, dataframe):
         self.dataframe = dataframe
 
+    def ABCB1(self):
+        ABCB1_dict = {
+            "A/A": "T/T",
+            "G/G": "C/C",
+            "A/G": "T/C",
+            "G/A": "T/C"
+        }
+        mask = self.dataframe['gene'] == 'ABCB1'
+        condition = self.dataframe.loc[mask, 'genotype'].isin(ABCB1_dict.keys())
+        if_true = self.dataframe.loc[mask, 'genotype'].map(ABCB1_dict)
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
+
     def ABCG2(self):
         ABCG2_dict = {
             "rs2231142G/rs2231142G": "G/G",
@@ -286,17 +299,22 @@ class GenotypeChanges:
         if_true = self.dataframe.loc[mask, 'genotype'].map(MTHFR1298_dict)
         self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
 
-    def ABCB1(self):
-        ABCB1_dict = {
-            "A/A": "T/T",
-            "G/G": "C/C",
-            "A/G": "T/C",
-            "G/A": "T/C"
+    def RYR1(self):
+        RYR1_dict = {
+            r"^(?!WT/).+/WT$": "MT/WT",
+            r"^(?!WT/).+/(?!WT).+$": "MT/MT",
+            r"^WT/WT$": "WT/WT"
         }
-        mask = self.dataframe['gene'] == 'ABCB1'
-        condition = self.dataframe.loc[mask, 'genotype'].isin(ABCB1_dict.keys())
-        if_true = self.dataframe.loc[mask, 'genotype'].map(ABCB1_dict)
-        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
+
+        mask = self.dataframe['gene'] == 'RYR1'
+
+        def classify_genotype(genotype):
+            for pattern, replacement in RYR1_dict.items():
+                if re.match(pattern, genotype):  # Check if genotype matches any pattern
+                    return replacement
+            return "ERROR"  # Default if no pattern matches
+
+        self.dataframe.loc[mask, 'genotype'] = self.dataframe.loc[mask, 'genotype'].apply(classify_genotype)
 
 
 class CombinedChanges:
