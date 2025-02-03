@@ -26,7 +26,7 @@ class nutrigenomics_report:
 
     def report_generation(self):
         # Load the Word document
-        doc = Document('Input/Templates/Nutrigenomics-2025-01-24.docx')
+        doc = Document('Input/Templates/Nutrigenomics-2025-02-03.docx')
 
         #Fill customer data table
         name_cell = doc.tables[0].rows[0].cells[1]
