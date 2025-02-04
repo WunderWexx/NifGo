@@ -41,7 +41,7 @@ class InfoSheet():
         util.change_table_cell(sample_code_cell, change_text=f'{self.sample_id}', font_size=10)
 
         #Fill results table
-        table1 = doc.tables[0]
+        table1 = doc.tables[1]
         for row in table1.rows[1:]:
             gene = row.cells[0].paragraphs[0].text
             phenotype_cell = row.cells[1]
