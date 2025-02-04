@@ -114,7 +114,8 @@ class HandlingUnknowns:
         unknowns_df = pd.concat([unknowns_df, missing_df], ignore_index=True)
 
         # Delete all rows from the dataframe where the phenotype does not have to be determined, but causes unknown
-        doc = Document('Input/Templates/Nutrigenomics-2025-01-24.docx')
+        most_recent_template = util.get_most_recent_template('Nutrigenomics')
+        doc = Document(f'Input/Templates/{most_recent_template}')
         non_phenotype_genes = []
         for table_number in range(1,3):
             table = doc.tables[table_number]

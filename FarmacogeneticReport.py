@@ -28,7 +28,8 @@ class farmacogenetic_report:
 
     def report_generation(self):
         # Load the Word document
-        doc = Document('Input/Templates/Farmacogenetisch-2025-02-03.docx')
+        most_recent_template = util.get_most_recent_template('Farmacogenetisch')
+        doc = Document(f'Input/Templates/{most_recent_template}')
 
         #Fill customer data table
         name_cell = doc.tables[0].rows[0].cells[1]

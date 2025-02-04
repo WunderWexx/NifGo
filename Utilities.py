@@ -13,6 +13,7 @@ from docx.oxml import parse_xml
 from docx.oxml.ns import qn,nsdecls
 from docx.oxml.shared import OxmlElement
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from datetime import datetime
 
 def printEntire(dataframe):
     """
@@ -189,3 +190,35 @@ def styled_run(run, font_name="Calibri", font_size=11, is_bold=False, is_italic=
     run.bold = is_bold
     run.italic = is_italic
     run.underline = is_underlined
+
+
+
+
+
+def get_most_recent_template(type):
+    """
+    Gets the most recent template of the chosen type
+    """
+    most_recent_file = None
+    most_recent_date = None
+
+    # Iterate over all files in the folder
+    for file_name in listdir('Input/Templates'):
+        if type in file_name:
+            date_str = file_name.split('-')[-3:]
+            date_str = '-'.join(date_str).replace('.docx','')
+            date = datetime.strptime(date_str,'%Y-%m-%d')
+            if most_recent_date:
+                if date > most_recent_date:
+                    most_recent_date = date
+                    most_recent_file = file_name
+            else:
+                most_recent_date = date
+                most_recent_file = file_name
+
+    return most_recent_file
+
+
+# Example usage:
+most_recent = get_most_recent_template('Nutrigenomics')
+print(f"The most recent template for '{'Nutrigenomics'}' is: {most_recent}")
