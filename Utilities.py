@@ -217,8 +217,3 @@ def get_most_recent_template(type):
                 most_recent_file = file_name
 
     return most_recent_file
-
-
-# Example usage:
-most_recent = get_most_recent_template('Nutrigenomics')
-print(f"The most recent template for '{'Nutrigenomics'}' is: {most_recent}")
