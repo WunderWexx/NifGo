@@ -191,10 +191,6 @@ def styled_run(run, font_name="Calibri", font_size=11, is_bold=False, is_italic=
     run.italic = is_italic
     run.underline = is_underlined
 
-
-
-
-
 def get_most_recent_template(type):
     """
     Gets the most recent template of the chosen type

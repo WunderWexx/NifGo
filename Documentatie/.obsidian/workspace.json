@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Aanpassingen doorvoeren.md",
+                "file": "TO DO.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Aanpassingen doorvoeren"
+              "title": "TO DO"
             }
           }
         ],
@@ -83,7 +83,8 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
+                "sortOrder": "alphabetical",
+                "autoReveal": false
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -207,9 +208,9 @@
   },
   "active": "0615e1e6fd49756c",
   "lastOpenFiles": [
+    "Aanpassingen doorvoeren.md",
     "Algemeen.md",
     "Changelog.md",
-    "Aanpassingen doorvoeren.md",
     "TO DO.md"
   ]
 }
