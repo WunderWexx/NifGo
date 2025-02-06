@@ -214,6 +214,28 @@ class GenotypeChanges:
         if_true = self.dataframe.loc[mask, 'phenotype'].map(COMT_dict)
         self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
 
+    def CFTR(self):
+        # First rule for CFTR
+        mask = self.dataframe['gene'] == 'CFTR'
+        no_change = self.dataframe.loc[mask, 'genotype']
+        self.dataframe.loc[mask, 'genotype'] = np.where(self.dataframe.loc[mask, 'phenotype'] == 'NF',
+                                                        'WT/WT', no_change)
+        # Second rule for CFTR
+        CFTR_dict = {
+            r"^(?!WT/).+/WT$": "MT/WT",
+            r"^(?!WT/).+/(?!WT).+$": "MT/MT",
+            r"^WT/WT$": "WT/WT"
+        }
+
+        mask = self.dataframe['gene'] == 'CFTR'
+
+        def classify_genotype(genotype):
+            for pattern, replacement in CFTR_dict.items():
+                if re.match(pattern, genotype):  # Check if genotype matches any pattern
+                    return replacement
+            return "ERROR"  # Default if no pattern matches
+
+        self.dataframe.loc[mask, 'genotype'] = self.dataframe.loc[mask, 'genotype'].apply(classify_genotype)
 
     def IFNL3(self):
         mask = self.dataframe['gene'] == 'IFNL3'
@@ -251,12 +273,6 @@ class GenotypeChanges:
         no_change = self.dataframe.loc[mask, 'genotype']
         self.dataframe.loc[mask, 'genotype'] = np.where(self.dataframe.loc[mask, 'phenotype'] == 'NM',
                                                          '*1/*1', no_change)
-
-    def CFTR(self):
-        mask = self.dataframe['gene'] == 'CFTR'
-        no_change = self.dataframe.loc[mask, 'genotype']
-        self.dataframe.loc[mask, 'genotype'] = np.where(self.dataframe.loc[mask, 'phenotype'] == 'NF',
-                                                         'WT/WT', no_change)
 
     def UGT1A1(self):
         def take_first_stars(known_call):

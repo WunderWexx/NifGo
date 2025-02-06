@@ -4,6 +4,8 @@
 
 # imports
 from timeit import default_timer as timer
+
+import Diagnostics
 import ELT
 import Utilities as util
 import pandas as pd
@@ -180,7 +182,7 @@ if __name__ == "__main__":
         # ValueError: Length of values (26) does not match length of index (23) betekent dat er genen missen uit het source bestand
     timer_end = timer()
     nutrinomics_generation_time = timer_end - timer_start
-    print('Generating nutrinomics reports [DONE]')
+    print('Generating nutrinomics reports DONE')
 
     # Export to PDF
     ask_pdf_generation = sg.popup_yes_no("Wilt u de PDF bestanden aanmaken?")
@@ -204,4 +206,13 @@ if __name__ == "__main__":
                         missed_conversions.append(pdf_report)
                 for report in missed_conversions:
                     print(report)
-        print('Exporting to PDF [DONE]')
+        print('Exporting to PDF DONE')
+    else:
+        print('NO PDF EXPORT')
+
+    # Run diagnostics
+    print('Generating diagnostics [...]')
+    ext_diag = Diagnostics.ExternalDiagnostics()
+    ext_diag.check_phenotype_shape()
+    ext_diag.check_genotype_shape()
+    print('Generating diagnostics DONE')

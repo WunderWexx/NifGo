@@ -76,9 +76,12 @@ class ExternalDiagnostics:
         faulty_phenotypes = farmacogenetic_subset[farmacogenetic_subset.apply(phenotype_filter, axis='columns')]
         faulty_phenotypes = faulty_phenotypes.iloc[:,1:]
         # Write that dict to the diagnostics.txt file
-        with open('Output/Diagnostics/diagnostics.txt', 'a') as diag:
+        with open('Output/Diagnostics/diagnostics.txt','a') as diag:
             diag.write('Faulty Phenotypes:\n')
-            faulty_phenotypes.to_csv(diag, index=False,sep='\t',header=True)
+            if not faulty_phenotypes.empty:
+                faulty_phenotypes.to_csv(diag, mode='a', index=False, sep='\t', header=True)
+            else:
+                diag.write('No faulty phenotypes')
             diag.write('\n\n')
             diag.close()
 
@@ -90,9 +93,9 @@ class ExternalDiagnostics:
             r'\d\d\d\d\D\D': ['VKORC1'],  # Zoals 1639GG
             r'^AS: (\d|\d\.\d)$': ['DPYD'],  # Zoals AS: 2 of AS: 1.5
             r'\D\D\D/\D\D\D': ['COMT'],  # Zoals Met/Met
-            r'(Null/Present)/(Null/Present)': ['GSTM1'],  # Zoals Null/Present
+            r'(Null|Present)/(Null|Present)': ['GSTM1'],  # Zoals Null/Present
             r'(\D\.=|Null)/(\D\.=|Null)': ['MTRNR1'],  # Zoals m.=/Null
-            r'(Null|\D|Val)/(Null|\D|Val)': ["ABCB1", "ABCG2", "ACE", "ADIPOQ", "ADRA2A", "ALDH2", "AMDHD1", "BChE",
+            r'((Null|\D|Val)/(Null|\D|Val)|[A-Z])': ["ABCB1", "ABCG2", "ACE", "ADIPOQ", "ADRA2A", "ALDH2", "AMDHD1",
                                              "BCO1",
                                              "BDNF", "CYP1A1", "CYP2R1", "CYP17A1", "CYP24A1",
                                              'DHCR7 / NADSYN1', "DRD2", "F2", "F5", "FTO", "G6PD", "GC", "GCK, YKT6",
@@ -103,7 +106,8 @@ class ExternalDiagnostics:
                                              "PON1",
                                              "Sult1E1", "TCF7L2", "TMEM165; CLOCK", "TNFa",
                                              "UCP2"],  # Zoals A/A of Null/A of Null/Val
-            r'(Null|\*\D)/(Null|\*\D)': ['GSPT1', 'GSTT1'],  # Zoals *A/*A of Null/*A
+            r'(\D|\D\D|\D\d)/(\D|\D\D|\D\d)' : ['BChE'], # Zoals U/U of F2/F2 of Sc/Sc
+            r'(Null|\*\D)/(Null|\*\D)': ['GSTP1', 'GSTT1'],  # Zoals *A/*A of Null/*A
             r'^negatief$|^positief$': ['HLA-A*3101', 'HLA-B*1502', 'HLA-B*5701'],  # negatief of positief
             r'(\*.*|Null)/(\*.*|Null)': ['other'],  # Zoals *1/*1 of zelfs *4.001/*7A+1B, en ook *1/Null
         }
@@ -112,7 +116,6 @@ class ExternalDiagnostics:
             for gene in genes:
                 self.genotype_pattern_by_genes[gene] = regex
         # create a dict with non-matching phenotypes
-
         def genotype_filter(row):
             gene = row['gene']
             genotype = row['genotype']
@@ -125,6 +128,7 @@ class ExternalDiagnostics:
                 return not bool(re.fullmatch(pattern, genotype))
 
         faulty_genotypes = self.complete_df[self.complete_df.apply(genotype_filter, axis='columns')]
+        faulty_genotypes = faulty_genotypes.iloc[:,1:]
         faulty_phenotypes = faulty_genotypes.iloc[:, 1:]
         # Write that dict to the diagnostics.txt file
         with open('Output/Diagnostics/diagnostics.txt', 'a') as diag:
@@ -138,11 +142,12 @@ class InlineDiagnostics:
         self.genes_by_phenotype_pattern = {
             r'^[U,R,N,I,P]M$': [
                 ['COMT', 'CYP1A2', 'CYP2B6', 'CYP2C9', 'CYP2C19', 'CYP2D6', 'CYP3A4', 'DPYD', 'G6PD', 'MTHFR677',
-                 'NUDT15', 'TPMT', 'UGT1A1', 'VKORC1'], 'NM'], # Zoals NM
-            r'^[I,N,D,P]F$': [['ABCG2', 'SLCO1B1', 'ABCB1'], 'NF'], # Zoals NF
-            r'^[a-z]{1,12}$|^non-expresser$|^intermediate-expresser$': [['CYP3A5'], 'non-expresser'], # Zoals een string tot max 12 kleine letters
-            r'^negatief$|^risico$': [['HLA-B*1502', 'HLA-B*5701', 'HLA-A*3101'], 'negatief'], # negatief of risico
-            r'^[U,R,N,I,P]M$|^Deficient$': [['G6PD'], 'NM'] # Zoals NM of Deficient
+                 'NUDT15', 'TPMT', 'UGT1A1', 'VKORC1'], 'NM'],  # Zoals NM
+            r'^[I,N,D,P]F$': [['ABCG2', 'SLCO1B1', 'ABCB1'], 'NF'],  # Zoals NF
+            r'^[a-z]{1,12}$|^non-expresser$|^intermediate-expresser$': [['CYP3A5'], 'non-expresser'],
+            # Zoals een string tot max 12 kleine letters
+            r'^negatief$|^risico$': [['HLA-B*1502', 'HLA-B*5701', 'HLA-A*3101'], 'negatief'],  # negatief of risico
+            r'^[U,R,N,I,P]M$|^Deficient$': [['G6PD'], 'NM']  # Zoals NM of Deficient
         }
 
         self.genes_by_genotype_pattern = {
@@ -151,20 +156,23 @@ class InlineDiagnostics:
             r'\d\d\d\d\D\D': ['VKORC1'],  # Zoals 1639GG
             r'^AS: (\d|\d\.\d)$': ['DPYD'],  # Zoals AS: 2 of AS: 1.5
             r'\D\D\D/\D\D\D': ['COMT'],  # Zoals Met/Met
-            r'(Null/Present)/(Null/Present)': ['GSTM1'],  # Zoals Null/Present
+            r'(Null|Present)/(Null|Present)': ['GSTM1'],  # Zoals Null/Present
             r'(\D\.=|Null)/(\D\.=|Null)': ['MTRNR1'],  # Zoals m.=/Null
-            r'(Null|\D|Val)/(Null|\D|Val)': ["ABCB1", "ABCG2", "ACE", "ADIPOQ", "ADRA2A", "ALDH2", "AMDHD1", "BChE",
-                                             "BCO1",
-                                             "BDNF", "CYP1A1", "CYP2R1", "CYP17A1", "CYP24A1",
-                                             'DHCR7 / NADSYN1', "DRD2", "F2", "F5", "FTO", "G6PD", "GC", "GCK, YKT6",
-                                             "GSTP1",
-                                             "IFNL3/IL28B", "IGF1", "LDLR", "LOC105447645; FUT2", "MAO-B", "MC4R",
-                                             "MnSOD",
-                                             "MTHFR1298", "MTHFR677", "MTNR1B", "NBPF3", "NQ01", "OPRM1",
-                                             "PON1",
-                                             "Sult1E1", "TCF7L2", "TMEM165; CLOCK", "TNFa",
-                                             "UCP2"],  # Zoals A/A of Null/A of Null/Val
-            r'(Null|\*\D)/(Null|\*\D)': ['GSPT1', 'GSTT1'],  # Zoals *A/*A of Null/*A
+            r'((Null|\D|Val)/(Null|\D|Val)|[A-Z])': ["ABCB1", "ABCG2", "ACE", "ADIPOQ", "ADRA2A", "ALDH2", "AMDHD1",
+                                                     "BCO1",
+                                                     "BDNF", "CYP1A1", "CYP2R1", "CYP17A1", "CYP24A1",
+                                                     'DHCR7 / NADSYN1', "DRD2", "F2", "F5", "FTO", "G6PD", "GC",
+                                                     "GCK, YKT6",
+                                                     "GSTP1",
+                                                     "IFNL3/IL28B", "IGF1", "LDLR", "LOC105447645; FUT2", "MAO-B",
+                                                     "MC4R",
+                                                     "MnSOD",
+                                                     "MTHFR1298", "MTHFR677", "MTNR1B", "NBPF3", "NQ01", "OPRM1",
+                                                     "PON1",
+                                                     "Sult1E1", "TCF7L2", "TMEM165; CLOCK", "TNFa",
+                                                     "UCP2"],  # Zoals A/A of Null/A of Null/Val
+            r'(\D|\D\D|\D\d)/(\D|\D\D|\D\d)': ['BChE'],  # Zoals U/U of F2/F2 of Sc/Sc
+            r'(Null|\*\D)/(Null|\*\D)': ['GSTP1', 'GSTT1'],  # Zoals *A/*A of Null/*A
             r'^negatief$|^positief$': ['HLA-A*3101', 'HLA-B*1502', 'HLA-B*5701'],  # negatief of positief
             r'(\*.*|Null)/(\*.*|Null)': ['other'],  # Zoals *1/*1 of zelfs *4.001/*7A+1B, en ook *1/Null
         }
@@ -238,5 +246,6 @@ class InlineDiagnostics:
         regex_pattern = self.genes_by_normal_genotype[gene_to_check]
         return not re.fullmatch(regex_pattern, genotype)
 
-ExternalDiagnostics().check_phenotype_shape()
-ExternalDiagnostics().check_genotype_shape()
+# ed = ExternalDiagnostics()
+# ed.check_phenotype_shape()
+# ed.check_genotype_shape()

@@ -1,7 +1,7 @@
 ### Voor NifGo  
 - Update `Diagnostics.py` for the new array
-	- Fenotype moet juiste vorm hebben
-	- Genotype moet juiste vorm hebben
+	- Fenotype moet juiste vorm hebben ✅
+	- Genotype moet juiste vorm hebben ✅
 	- Missende genen moet bepaald worden. Dynamisch uit laatste template voor alle soorten rapporten
 	- Zijn voor alle rapporten klantgegevens aanwezig?
 	- Hoeveel rapporten zijn er gegenereerd, en hoeveel batches is dat?

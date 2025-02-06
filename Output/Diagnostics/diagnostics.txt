@@ -1,2 +1,21 @@
 Diagnostics:
 
+Faulty Phenotypes:
+No faulty phenotypes
+
+Faulty Genotypes:
+sample_id	gene	phenotype	genotype
+G001040591	G6PD	Deficient	Kalyan-Kerala/Null
+G001040591	GSTM1	unknown	Present
+G001121581	G6PD	IM	B/Serres
+G001121584	G6PD	NM	B/Serres
+G001121594	MTRNR1	DF	m.827A>G/Null
+G001121703	G6PD	IM	B/Serres
+G001121504	Sult1A1		(*1/*2)xN
+G001121508	Sult1A1		(*1/*2)xN
+G001121510	Sult1A1		(*1/*3)xN
+G001121526	Sult1A1		(*1/*2)xN
+G001121555	Sult1A1		(*1/*2)xN
+G001121567	Sult1A1		(*1/*2)xN
+
+
