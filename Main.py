@@ -216,4 +216,5 @@ if __name__ == "__main__":
     ext_diag.check_genotype_shape()
     if customerdata_df is not None:
         ext_diag.check_customerdata_available(customerdata_df)
+    ext_diag.check_batch_size()
     print('Generating diagnostics DONE')

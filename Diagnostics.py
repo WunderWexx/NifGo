@@ -135,7 +135,7 @@ class ExternalDiagnostics:
         with open('Output/Diagnostics/diagnostics.txt', 'a') as diag:
             diag.write('Faulty Genotypes:\n')
             faulty_genotypes.to_csv(diag, mode='a', index=False, sep='\t', header=True)
-            diag.write('\n\n')
+            diag.write('\n')
             diag.close()
 
     def check_customerdata_available(self, customerdata_df):
