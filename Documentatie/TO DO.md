@@ -11,7 +11,7 @@
 - Update recognition of columns in `genotype.txt` since the structure is inconsistent.  
 - Ensure customer data works with headers instead of column indices.  
 ### Voor mezelf  
-- Inladen van data optimaliseren.  
+- Inladen van data optimaliseren.
 - Regex error verwijderen.✅
-- Een UI toevoegen / Het mogelijk maken om te kiezen welke delen van het programma worden uitgevoerd.  
+- Een UI toevoegen / Het mogelijk maken om te kiezen welke delen van het programma worden uitgevoerd.  ⚙️
 - Code optimaliseren  
