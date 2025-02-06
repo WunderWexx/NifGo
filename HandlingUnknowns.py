@@ -11,83 +11,28 @@ class HandlingUnknowns:
         self.dataframe = dataframe
         self.unknown_signs = ['ERROR', 'MISSING', 'Not_PM', 'Not_NM', 'Not_IM', 'Not_RM', 'Not_Determined',
                               'Not_UM', 'EM', 'unknown', '---', '']
-        # List updated 2025-01-24
-        self.complete_genes = ['HLA-B*5701',
-                                'MTRNR1',
-                                'UGT1A1',
-                                'CYP1B1',
-                                'CYP2C19',
-                                'DRD2',
-                                'GSTT1',
-                                'BCO1',
-                                'IGF1',
-                                'TCF7L2',
-                                'MAO-B',
-                                'IFNL3/IL28B',
-                                'G6PD',
-                                'CYP1A1',
-                                'CYP2A6',
-                                'LOC105447645; FUT2',
-                                'NUDT15',
-                                'CYP3A5',
-                                'TPMT',
-                                'VDR',
-                                'MnSOD',
-                                'DHCR7 / NADSYN1',
-                                'Sult1A1',
-                                'NBPF3',
-                                'CYP2D6',
-                                'FTO',
-                                'BDNF',
-                                'GC',
-                                'F5',
-                                'TNFa',
-                                'UCP2',
-                                'AMDHD1',
-                                'MTNR1B',
-                                'HLA-B*1502',
-                                'LDLR',
-                                'PON1',
-                                'SLCO1B1',
-                                'ADRA2A',
-                                'CACNA1S',
-                                'CYP2R1',
-                                'CYP17A1',
-                                'VKORC1',
-                                'CYP2F1',
-                                'CFTR',
-                                'MC4R',
-                                'NAT1',
-                                'NAT2',
-                                'CYP2C8',
-                                'GSTP1',
-                                'CYP4F2',
-                                'ADIPOQ',
-                                'ALDH2',
-                                'CYP3A4',
-                                'ACE',
-                                'OPRM1',
-                                'TMEM165; CLOCK',
-                                'DPYD',
-                                'GCK, YKT6',
-                                'CYP1A2',
-                                'MTHFR1298',
-                                'GSTM1',
-                                'ABCG2',
-                                'COMT',
-                                'ABCB1',
-                                'BChE',
-                                'RYR1',
-                                'HLA-A*3101',
-                                'F2',
-                                'Sult1E1',
-                                'CYP2E1',
-                                'CYP2B6',
-                                'NQ01',
-                                'MTHFR677',
-                                'CYP24A1',
-                                'CYP2C9'
-                                ]
+        # Get list of all genes to be reported
+        self.farmacogenetic_genes = []
+        most_recent_farmacogenetisch = util.get_most_recent_template('Farmacogenetisch')
+        doc = Document(f'Input/Templates/{most_recent_farmacogenetisch}')
+        table1 = doc.tables[1]
+        for row in table1.rows[1:]:
+            gene = row.cells[0].paragraphs[0].text
+            self.farmacogenetic_genes.append(gene)
+
+        self.nutrigenomic_genes = []
+        most_recent_nutrigenomics = util.get_most_recent_template('Nutrigenomics')
+        doc = Document(f'Input/Templates/{most_recent_nutrigenomics}')
+        table1 = doc.tables[1]
+        for row in table1.rows[1:]:
+            gene = row.cells[0].paragraphs[0].text
+            self.nutrigenomic_genes.append(gene)
+        table2 = doc.tables[2]
+        for row in table2.rows[1:]:
+            gene = row.cells[0].paragraphs[0].text
+            self.nutrigenomic_genes.append(gene)
+
+        self.complete_genes = self.farmacogenetic_genes + self.nutrigenomic_genes
 
     def detect_unknowns(self):
         # Detect unknown phenotypes and genotypes

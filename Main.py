@@ -215,4 +215,6 @@ if __name__ == "__main__":
     ext_diag = Diagnostics.ExternalDiagnostics()
     ext_diag.check_phenotype_shape()
     ext_diag.check_genotype_shape()
+    if customerdata_df is not None:
+        ext_diag.check_customerdata_available(customerdata_df)
     print('Generating diagnostics DONE')

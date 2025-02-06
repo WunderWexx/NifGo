@@ -14,6 +14,7 @@ class nutrigenomics_report:
         self.birthdate = ''
 
         if customer_data is not None:
+            self.customer_data_presence = True
             customer_row = customer_data.loc[customer_data['sample_id'] == sample_id]
 
             if not customer_row.empty:
@@ -36,6 +37,9 @@ class nutrigenomics_report:
         util.change_table_cell(name_cell, change_text=f'{self.fullname}', font_size=10)
         util.change_table_cell(bdate_cell, change_text=f'{self.birthdate}', font_size=10)
         util.change_table_cell(sample_code_cell, change_text=f'{self.sample_id}', font_size=10)
+        if self.customer_data_presence:
+            if not InlineDiagnostics().is_customer_data_present(doc.tables[0].rows[0]):
+                print(f'WARNING: {self.sample_id} is missing customer data!')
 
         #Fill results table 1
         table1 = doc.tables[1]

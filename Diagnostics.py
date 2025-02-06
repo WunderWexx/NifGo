@@ -8,6 +8,7 @@ import pandas as pd
 import re
 import Utilities as util
 from docx import Document
+from math import ceil
 
 class ExternalDiagnostics:
     def __init__(self):
@@ -137,6 +138,39 @@ class ExternalDiagnostics:
             diag.write('\n\n')
             diag.close()
 
+    def check_customerdata_available(self, customerdata_df):
+        samples_missing_data = []
+        customerdata_samples =  customerdata_df.iloc[:, 0].tolist()
+        for sample_id in self.unique_sample_ids:
+            if sample_id not in customerdata_samples:
+                samples_missing_data.append(sample_id)
+        with open('Output/Diagnostics/diagnostics.txt', 'a') as diag:
+            diag.write('Samples missing customer data:\n')
+            if samples_missing_data:
+                for sample in samples_missing_data:
+                    diag.write(sample)
+            else:
+                diag.write('All samples have customer data available.')
+            diag.write('\n\n')
+            diag.close()
+
+    def check_batch_size(self):
+        sample_amount = len(self.unique_sample_ids)
+        reports_amount = len(util.get_reports())
+        reports_per_sample = 3
+        expected_reports_amount = sample_amount * reports_per_sample
+        batch_size = 24
+        billable_batches = ceil(sample_amount / batch_size)
+        with open('Output/Diagnostics/diagnostics.txt', 'a') as diag:
+            diag.write('Batch data:\n')
+            diag.write(f'From {sample_amount} samples, {reports_amount} reports were produced.\n'
+                       f'With a batch size of 24, this comes to {billable_batches} billable batches.\n')
+            if reports_amount != expected_reports_amount:
+                diag.write(f'WARNING!\n'
+                           f'{reports_amount} reports have been generated out of the {expected_reports_amount} reports expected!')
+            diag.write('\n\n')
+            diag.close()
+
 class InlineDiagnostics:
     def __init__(self):
         self.genes_by_phenotype_pattern = {
@@ -246,6 +280,9 @@ class InlineDiagnostics:
         regex_pattern = self.genes_by_normal_genotype[gene_to_check]
         return not re.fullmatch(regex_pattern, genotype)
 
-# ed = ExternalDiagnostics()
-# ed.check_phenotype_shape()
-# ed.check_genotype_shape()
+    def is_customer_data_present(self,document_table_row):
+        for cell_number in [1,3,5]:
+            customer_data = document_table_row.cells[cell_number]
+            if customer_data == '':
+                return False
+        return True
