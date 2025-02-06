@@ -148,7 +148,7 @@ class PhenotypeChanges:
         mask = self.dataframe['gene'] == 'TPMT'
         no_change = self.dataframe.loc[mask, 'phenotype']
         self.dataframe.loc[mask, 'phenotype'] = np.where(
-            self.dataframe.loc[mask, 'genotype'].str.contains(r'(?:\*1[A-Z]?)/(\*3[A-Z]?)',
+            self.dataframe.loc[mask, 'genotype'].str.contains(r'(?:\*1[A-Z]?)/(?:\*3[A-Z]?)',
                                                               regex=True),
             'IM',
             no_change

@@ -4,9 +4,9 @@
 
 # imports
 from timeit import default_timer as timer
-
 import Diagnostics
 import ELT
+from ELT import ThermoFisher_determined_genes, probeset_id_dict
 import Utilities as util
 import pandas as pd
 from os.path import join
@@ -15,7 +15,6 @@ import NifgoProprietaryChanges as changes
 from FarmacogeneticReport import farmacogenetic_report
 from info_sheet import InfoSheet
 from NutrigenomicsReport import nutrigenomics_report
-from ELT import ThermoFisher_determined_genes, probeset_id_dict
 from HandlingUnknowns import HandlingUnknowns
 from multiprocessing import Pool, cpu_count
 from functools import partial

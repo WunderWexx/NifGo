@@ -12,6 +12,6 @@
 - Ensure customer data works with headers instead of column indices.  
 ### Voor mezelf  
 - Inladen van data optimaliseren.  
-- Regex error verwijderen.
+- Regex error verwijderen.✅
 - Een UI toevoegen / Het mogelijk maken om te kiezen welke delen van het programma worden uitgevoerd.  
 - Code optimaliseren  
