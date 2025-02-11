@@ -67,17 +67,6 @@ class PhenotypeChanges:
             'NM',
             no_change)
 
-    def CYP1A2(self):
-        """
-        Doesn't seem to have been carried out in the previous program. Changes basically everything to IM because
-        normal/normal does not fit the notation standard of CYP1A2.
-        :return:
-        """
-        mask = self.dataframe['gene'] == 'CYP1A2'
-        self.dataframe.loc[mask, 'phenotype'] = np.where(self.dataframe.loc[mask, 'genotype'] == 'normal/normal',
-                                                         'NM',
-                                                         'IM')
-
     def CYP2C19(self):
         """
         Changes phenotype to NM if genotype *1/*17
