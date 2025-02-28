@@ -326,11 +326,11 @@ class CombinedChanges:
         mask = self.dataframe['gene'] == 'ABCG2'
         condition = self.dataframe.loc[mask, 'genotype'].isin(ABCG2_dict.keys())
         # Map the genotype
-        if_true = self.dataframe.loc[mask, 'genotype'].map(lambda x: ABCG2_dict[x][0])
-        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
-        # Map the phenotype
         if_true = self.dataframe.loc[mask, 'genotype'].map(lambda x: ABCG2_dict[x][1])
         self.dataframe.loc[mask, 'phenotype'] = np.where(condition, if_true, 'ERROR')
+        # Map the phenotype
+        if_true = self.dataframe.loc[mask, 'genotype'].map(lambda x: ABCG2_dict[x][0])
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
 
     def DPYD_genotype(self):
         def DPYD_get_activity(known_call):
