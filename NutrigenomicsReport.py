@@ -13,6 +13,7 @@ class nutrigenomics_report:
         self.fullname = ''
         self.birthdate = ''
 
+        self.customer_data_presence = False
         if customer_data is not None:
             self.customer_data_presence = True
             customer_row = customer_data.loc[customer_data['sample_id'] == sample_id]
