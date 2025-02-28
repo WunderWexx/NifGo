@@ -90,13 +90,13 @@ class ExternalDiagnostics:
         self.genotype_pattern_by_genes = {}
         self.genes_by_genotype_pattern = {
             r'\D\D/\D\D': ['CACNA1S', 'CFTR', 'RYR1', "VDR"],  # Zoals WT/WT
-            r'\d\d\d\D\D': ['SLCO1B1'],  # Zoals 521TC
+            r'\d\d\d\D\D': ['SLCO1B1',"ABCG2"],  # Zoals 521TC
             r'\d\d\d\d\D\D': ['VKORC1'],  # Zoals 1639GG
             r'^AS: (\d|\d\.\d)$': ['DPYD'],  # Zoals AS: 2 of AS: 1.5
             r'\D\D\D/\D\D\D': ['COMT'],  # Zoals Met/Met
             r'(Null|Present)/(Null|Present)': ['GSTM1'],  # Zoals Null/Present
             r'(\D\.=|Null)/(\D\.=|Null)': ['MTRNR1'],  # Zoals m.=/Null
-            r'((Null|\D|Val)/(Null|\D|Val)|[A-Z])': ["ABCB1", "ABCG2", "ACE", "ADIPOQ", "ADRA2A", "ALDH2", "AMDHD1",
+            r'((Null|\D|Val)/(Null|\D|Val)|[A-Z])': ["ABCB1", "ACE", "ADIPOQ", "ADRA2A", "ALDH2", "AMDHD1",
                                              "BCO1",
                                              "BDNF", "CYP1A1", "CYP2R1", "CYP17A1", "CYP24A1",
                                              'DHCR7 / NADSYN1', "DRD2", "F2", "F5", "FTO", "G6PD", "GC", "GCK, YKT6",
@@ -148,7 +148,7 @@ class ExternalDiagnostics:
             diag.write('Samples missing customer data:\n')
             if samples_missing_data:
                 for sample in samples_missing_data:
-                    diag.write(sample)
+                    diag.write(f"{sample}\n")
             else:
                 diag.write('All samples have customer data available.')
             diag.write('\n\n')
@@ -186,13 +186,13 @@ class InlineDiagnostics:
 
         self.genes_by_genotype_pattern = {
             r'\D\D/\D\D': ['CACNA1S', 'CFTR', 'RYR1', "VDR"],  # Zoals WT/WT
-            r'\d\d\d\D\D': ['SLCO1B1'],  # Zoals 521TC
+            r'\d\d\d\D\D': ['SLCO1B1', "ABCG2"],  # Zoals 521TC
             r'\d\d\d\d\D\D': ['VKORC1'],  # Zoals 1639GG
             r'^AS: (\d|\d\.\d)$': ['DPYD'],  # Zoals AS: 2 of AS: 1.5
             r'\D\D\D/\D\D\D': ['COMT'],  # Zoals Met/Met
             r'(Null|Present)/(Null|Present)': ['GSTM1'],  # Zoals Null/Present
             r'(\D\.=|Null)/(\D\.=|Null)': ['MTRNR1'],  # Zoals m.=/Null
-            r'((Null|\D|Val)/(Null|\D|Val)|[A-Z])': ["ABCB1", "ABCG2", "ACE", "ADIPOQ", "ADRA2A", "ALDH2", "AMDHD1",
+            r'((Null|\D|Val)/(Null|\D|Val)|[A-Z])': ["ABCB1", "ACE", "ADIPOQ", "ADRA2A", "ALDH2", "AMDHD1",
                                                      "BCO1",
                                                      "BDNF", "CYP1A1", "CYP2R1", "CYP17A1", "CYP24A1",
                                                      'DHCR7 / NADSYN1', "DRD2", "F2", "F5", "FTO", "G6PD", "GC",
