@@ -154,7 +154,7 @@ class PhenotypeChanges:
         CYP3A5_dict = {
             "PM": "non-expresser",
             "IM": "intermediate-expresser",
-            "NM": "homozygoot"
+            "NM": "expresser"
         }
         mask = self.dataframe['gene'] == 'CYP3A5'
         condition = self.dataframe.loc[mask, 'phenotype'].isin(CYP3A5_dict.keys())  # This is also a mask
@@ -176,17 +176,6 @@ class GenotypeChanges:
         mask = self.dataframe['gene'] == 'ABCB1'
         condition = self.dataframe.loc[mask, 'genotype'].isin(ABCB1_dict.keys())
         if_true = self.dataframe.loc[mask, 'genotype'].map(ABCB1_dict)
-        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
-
-    def ABCG2(self):
-        ABCG2_dict = {
-            "rs2231142G/rs2231142G": "G/G",
-            "rs2231142G/rs2231142T": "G/T",
-            "rs2231142T/rs2231142T": "T/T",
-        }
-        mask = self.dataframe['gene'] == 'ABCG2'
-        condition = self.dataframe.loc[mask, 'genotype'].isin(ABCG2_dict.keys())
-        if_true = self.dataframe.loc[mask, 'genotype'].map(ABCG2_dict)
         self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
 
     def CFTR(self):
@@ -314,7 +303,7 @@ class GenotypeChanges:
     def VKORC1(self):
         VKORC1_dict = {
             'NM': '1639GG',
-            'IM': '1639AG',
+            'IM': '1639GA',
             'PM': '1639AA'
         }
         mask = self.dataframe['gene'] == 'VKORC1'
@@ -327,6 +316,21 @@ class GenotypeChanges:
 class CombinedChanges:
     def __init__(self, dataframe):
         self.dataframe = dataframe
+
+    def ABCG2(self):
+        ABCG2_dict = {
+            "rs2231142G/rs2231142G": ["G/G", '141KK'],
+            "rs2231142G/rs2231142T": ["G/T", '141QK'],
+            "rs2231142T/rs2231142T": ["T/T", '141QQ']
+        }
+        mask = self.dataframe['gene'] == 'ABCG2'
+        condition = self.dataframe.loc[mask, 'genotype'].isin(ABCG2_dict.keys())
+        # Map the genotype
+        if_true = self.dataframe.loc[mask, 'genotype'].map(lambda x: ABCG2_dict[x][0])
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
+        # Map the phenotype
+        if_true = self.dataframe.loc[mask, 'genotype'].map(lambda x: ABCG2_dict[x][1])
+        self.dataframe.loc[mask, 'phenotype'] = np.where(condition, if_true, 'ERROR')
 
     def DPYD_genotype(self):
         def DPYD_get_activity(known_call):
