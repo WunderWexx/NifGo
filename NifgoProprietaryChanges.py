@@ -178,6 +178,17 @@ class GenotypeChanges:
         if_true = self.dataframe.loc[mask, 'genotype'].map(ABCB1_dict)
         self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
 
+    def ABCG2(self):
+        ABCG2_dict = {
+            "rs2231142G/rs2231142G": '141KK',
+            "rs2231142G/rs2231142T": '141QK',
+            "rs2231142T/rs2231142T": '141QQ'
+        }
+        mask = self.dataframe['gene'] == 'ABCG2'
+        condition = self.dataframe.loc[mask, 'genotype'].isin(ABCG2_dict.keys())
+        if_true = self.dataframe.loc[mask, 'genotype'].map(ABCG2_dict)
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
+
     def CFTR(self):
         # First rule for CFTR
         mask = self.dataframe['gene'] == 'CFTR'
@@ -316,21 +327,6 @@ class GenotypeChanges:
 class CombinedChanges:
     def __init__(self, dataframe):
         self.dataframe = dataframe
-
-    def ABCG2(self):
-        ABCG2_dict = {
-            "rs2231142G/rs2231142G": ["G/G", '141KK'],
-            "rs2231142G/rs2231142T": ["G/T", '141QK'],
-            "rs2231142T/rs2231142T": ["T/T", '141QQ']
-        }
-        mask = self.dataframe['gene'] == 'ABCG2'
-        condition = self.dataframe.loc[mask, 'genotype'].isin(ABCG2_dict.keys())
-        # Map the genotype
-        if_true = self.dataframe.loc[mask, 'genotype'].map(lambda x: ABCG2_dict[x][1])
-        self.dataframe.loc[mask, 'phenotype'] = np.where(condition, if_true, 'ERROR')
-        # Map the phenotype
-        if_true = self.dataframe.loc[mask, 'genotype'].map(lambda x: ABCG2_dict[x][0])
-        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
 
     def DPYD_genotype(self):
         def DPYD_get_activity(known_call):

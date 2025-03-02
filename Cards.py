@@ -10,11 +10,15 @@ from ELT import Extract
 
 # Define the genes
 genes = [
-    "ABCG2", "COMT", "CYP1A2", "CYP2B6", "CYP2C9", "CYP2C19", "CYP2D6", "CYP3A4", "CYP3A5",
-    "DPYD", "G6PD", "HLA-B*1502", "MTHFR677", "NUDT15", "SLCO1B1", "TPMT", "UGT1A1", "VKORC1"
-]
-genes_left = ["ABCG2", "COMT", "CYP1A2", "CYP2B6", "CYP2C9", "CYP2C19", "CYP2D6", "CYP3A4", "CYP3A5"]
-genes_right = ["DPYD", "G6PD", "HLA-B*1502", "MTHFR677", "NUDT15", "SLCO1B1", "TPMT", "UGT1A1", "VKORC1"]
+    "ABCG2", "COMT", "CYP1A2", "CYP2B6", "CYP2C9", "CYP2C19", "CYP2D6",
+    "CYP3A4", "CYP3A5", "DPYD", "G6PD", "HLA-B*1502", "HLA-B*1511",
+    "HLA-A*3101", "MTHFR677", "NUDT15", "SLCO1B1", "TPMT", "UGT1A1", "VKORC1"]
+genes_left = [
+    "ABCG2", "COMT", "CYP1A2", "CYP2B6", "CYP2C9", "CYP2C19", "CYP2D6",
+    "CYP3A4", "CYP3A5", "DPYD"]
+genes_right = [
+    "G6PD", "HLA-B*1502", "HLA-B*1511", "HLA-A*3101", "MTHFR677", "NUDT15",
+    "SLCO1B1", "TPMT", "UGT1A1", "VKORC1"]
 
 # Load the complete data
 complete_filtered = pd.read_excel('Output/Dataframes/complete.xlsx')
@@ -23,8 +27,22 @@ complete_filtered = pd.read_excel('Output/Dataframes/complete.xlsx')
 complete_filtered = complete_filtered[complete_filtered['gene'].isin(genes)]
 util.printEntire(complete_filtered)
 
+# Load customer data
+def customer_data_IA():
+    customerdata_df = Extract().customer_data()
+    customerdata_df = customerdata_df.rename(
+        columns={0: 'sample_id', 1: 'initials', 2: 'lastname', 3: 'birthdate', 4: 'status'})
+    customerdata_df = customerdata_df.fillna('')
+    customerdata_df = customerdata_df.apply(lambda col: col.map(lambda x: x.strip() if isinstance(x, str) else x))
+    customerdata_df['birthdate'] = customerdata_df['birthdate'].dt.strftime('%d-%m-%Y')
+    customerdata_df['birthdate'] = customerdata_df['birthdate'].fillna('20237-01-01')
+    customerdata_df.sort_values(by='sample_id', ascending=True, inplace=True)
+    customerdata_df.reset_index(inplace=True, drop=True)
+    return customerdata_df
+customer_data = customer_data_IA()
+
 # Extract unique customer codes
-customer_codes = list(complete_filtered['sample_id'].unique())
+customer_codes = list(customer_data['sample_id'].unique())
 
 # Create the card DataFrame
 card = pd.DataFrame()
@@ -63,20 +81,6 @@ add_filled_column('genotype', 'right')
 add_filled_column('phenotype', 'right')
 
 # Tweede kolom vullen met geboortedata uit het klantbestand. Als die niet beschikbaar is lege string toevoegen.
-def customer_data_IA():
-    customerdata_df = Extract().customer_data()
-    customerdata_df = customerdata_df.rename(
-        columns={0: 'sample_id', 1: 'initials', 2: 'lastname', 3: 'birthdate', 4: 'status'})
-    customerdata_df = customerdata_df.fillna('')
-    customerdata_df = customerdata_df.apply(lambda col: col.map(lambda x: x.strip() if isinstance(x, str) else x))
-    customerdata_df['birthdate'] = customerdata_df['birthdate'].dt.strftime('%d-%m-%Y')
-    customerdata_df['birthdate'] = customerdata_df['birthdate'].fillna('20237-01-01')
-    customerdata_df.sort_values(by='sample_id', ascending=True, inplace=True)
-    customerdata_df.reset_index(inplace=True, drop=True)
-    return customerdata_df
-
-customer_data = customer_data_IA()
-
 birthdates = []
 for sample_id in card['NAAM']:
     birthdate = customer_data.loc[customer_data['sample_id'] == sample_id, 'birthdate'].values[0]
