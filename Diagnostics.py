@@ -138,7 +138,10 @@ class ExternalDiagnostics:
             diag.write('\n')
             diag.close()
 
-    def check_customerdata_available(self, customerdata_df):
+    def check_customerdata_available_to_reports(self, customerdata_df):
+        """
+        Checks if all reports have customer data available to themin the customer data file.
+        """
         samples_missing_data = []
         customerdata_samples =  customerdata_df.iloc[:, 0].tolist()
         for sample_id in self.unique_sample_ids:
@@ -151,6 +154,25 @@ class ExternalDiagnostics:
                     diag.write(f"{sample}\n")
             else:
                 diag.write('All samples have customer data available.')
+            diag.write('\n\n')
+            diag.close()
+
+    def check_data_available_per_customerdata(self, customerdata_df):
+        """
+        Checks if all available customer data has associated data.
+        """
+        samples_missing_data = []
+        customerdata_samples = customerdata_df.iloc[:, 0].tolist()
+        for sample_id in customerdata_samples:
+            if sample_id not in self.unique_sample_ids:
+                samples_missing_data.append(sample_id)
+        with open('Output/Diagnostics/diagnostics.txt', 'a') as diag:
+            diag.write('Customer samples without associated data:\n')
+            if samples_missing_data:
+                for sample in samples_missing_data:
+                    diag.write(f"{sample}\n")
+            else:
+                diag.write('All customer samples have associated data')
             diag.write('\n\n')
             diag.close()
 
