@@ -11,13 +11,13 @@ from ELT import Extract
 # Define the genes
 genes = [
     "ABCG2", "COMT", "CYP1A2", "CYP2B6", "CYP2C9", "CYP2C19", "CYP2D6",
-    "CYP3A4", "CYP3A5", "DPYD", "G6PD", "HLA-B*1502", "HLA-B*1511",
+    "CYP3A4", "CYP3A5", "DPYD", "G6PD", "HLA-B*1502", "HLA-B*5701",
     "HLA-A*3101", "MTHFR677", "NUDT15", "SLCO1B1", "TPMT", "UGT1A1", "VKORC1"]
 genes_left = [
     "ABCG2", "COMT", "CYP1A2", "CYP2B6", "CYP2C9", "CYP2C19", "CYP2D6",
     "CYP3A4", "CYP3A5", "DPYD"]
 genes_right = [
-    "G6PD", "HLA-B*1502", "HLA-B*1511", "HLA-A*3101", "MTHFR677", "NUDT15",
+    "G6PD", "HLA-B*1502", "HLA-B*5701", "HLA-A*3101", "MTHFR677", "NUDT15",
     "SLCO1B1", "TPMT", "UGT1A1", "VKORC1"]
 
 # Load the complete data
@@ -25,7 +25,7 @@ complete_filtered = pd.read_excel('Output/Dataframes/complete.xlsx')
 
 # Filter rows for the relevant genes
 complete_filtered = complete_filtered[complete_filtered['gene'].isin(genes)]
-util.printEntire(complete_filtered)
+print('Complete.xlsx ingeladen en gefilterd')
 
 # Load customer data
 def customer_data_IA():
@@ -43,6 +43,7 @@ customer_data = customer_data_IA()
 
 # Extract unique customer codes
 customer_codes = list(customer_data['sample_id'].unique())
+print('Klantdata ingeladen')
 
 # Create the card DataFrame
 card = pd.DataFrame()
@@ -96,6 +97,9 @@ for sample_id in card['NAAM']:
     customer_name = f"{initials} {last_name}".strip()
     card.loc[card['NAAM'] == sample_id, 'NAAM'] = customer_name
 
-util.printEntire(card)
+# Rijen verwijderen waar data mist
+card = card.dropna(subset=['ACHTERZIJDE UITSLAG 1 LINKS'])
+print('Card dataframe gebouwd en gefilterd')
 
-card.to_excel(f'Output/Dataframes/cards.xlsx')
+card.to_excel(f'Output/Dataframes/cards.xlsx', index=False)
+print('Card dataframe geëxporteerd')
