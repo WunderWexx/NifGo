@@ -180,9 +180,9 @@ class GenotypeChanges:
 
     def ABCG2(self):
         ABCG2_dict = {
-            "rs2231142G/rs2231142G": '141KK',
+            "rs2231142G/rs2231142G": '141QQ',
             "rs2231142G/rs2231142T": '141QK',
-            "rs2231142T/rs2231142T": '141QQ'
+            "rs2231142T/rs2231142T": '141KK'
         }
         mask = self.dataframe['gene'] == 'ABCG2'
         condition = self.dataframe.loc[mask, 'genotype'].isin(ABCG2_dict.keys())
