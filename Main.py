@@ -8,6 +8,7 @@ import Diagnostics
 import ELT
 from ELT import ThermoFisher_determined_genes, probeset_id_dict
 import Utilities as util
+from Cards import cards
 import pandas as pd
 from os.path import join
 import PySimpleGUI as sg
@@ -19,6 +20,7 @@ from HandlingUnknowns import HandlingUnknowns
 from multiprocessing import Pool, cpu_count
 from functools import partial
 from docx2pdf import convert
+
 
 # Functie voor multi-processing
 def generate_farmacogenetic_report(id, dataframe, customer_data):
@@ -142,6 +144,14 @@ if __name__ == "__main__":
         customerdata_df = ELT.Transform.customer_data().columns_and_dates(customerdata_df)
     else:
         customerdata_df = None
+
+    # Generate cards.xlsx file
+    kaarten_jn = sg.popup_yes_no('Wilt u het kaartenbestand genereren?')
+    if kaarten_jn == 'Yes':
+        cards(complete_dataframe,customerdata_df)
+        print('Generating cards.xlsx DONE')
+    else:
+        print('No cards generated')
 
     # Define unique list of sample_id's for report generation
     unique_sample_id_list = complete_dataframe['sample_id'].unique().tolist()
