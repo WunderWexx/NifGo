@@ -1,6 +1,5 @@
 # This is where the reports are modified to include customer details
 
-import PySimpleGUI as sg
 from ELT import Extract
 from docx import Document
 from os.path import join

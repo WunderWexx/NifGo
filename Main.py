@@ -1,7 +1,5 @@
 # Where everything comes together
 
-# Could be rewritten to be clearer.
-
 # imports
 from timeit import default_timer as timer
 import Diagnostics
@@ -11,7 +9,6 @@ import Utilities as util
 from Cards import cards
 import pandas as pd
 from os.path import join
-import PySimpleGUI as sg
 import NifgoProprietaryChanges as changes
 from FarmacogeneticReport import farmacogenetic_report
 from info_sheet import InfoSheet
@@ -57,8 +54,8 @@ if __name__ == "__main__":
     pd.options.mode.chained_assignment = None  # default='warn'
 
     # Delete existing reports
-    ask_delete_reports = sg.popup_yes_no("Wilt u de bestaande rapporten verwijderen?")
-    if ask_delete_reports == 'Yes':
+    ask_delete_reports = util.popup_yes_no("Wilt u de bestaande rapporten verwijderen?")
+    if ask_delete_reports:
         util.empty_folder('Output/Reports')
         util.empty_folder('Output/Reports/PDF')
 
@@ -138,16 +135,16 @@ if __name__ == "__main__":
     print('Handling unknowns DONE')
 
     # Import customer data
-    customerdata_present = sg.popup_yes_no("Heeft u het bestand met de klantdata?")
-    if customerdata_present == 'Yes':
+    customerdata_present = util.popup_yes_no("Heeft u het bestand met de klantdata?")
+    if customerdata_present:
         customerdata_df = ELT.Extract().customer_data()
         customerdata_df = ELT.Transform.customer_data().columns_and_dates(customerdata_df)
     else:
         customerdata_df = None
 
     # Generate cards.xlsx file
-    kaarten_jn = sg.popup_yes_no('Wilt u het kaartenbestand genereren?')
-    if kaarten_jn == 'Yes':
+    kaarten_jn = util.popup_yes_no('Wilt u het kaartenbestand genereren?')
+    if kaarten_jn == 'Y':
         cards(complete_dataframe,customerdata_df)
         print('Generating cards.xlsx DONE')
     else:
@@ -194,8 +191,8 @@ if __name__ == "__main__":
     print('Generating nutrinomics reports DONE')
 
     # Export to PDF
-    ask_pdf_generation = sg.popup_yes_no("Wilt u de PDF bestanden aanmaken?")
-    if ask_pdf_generation == 'Yes':
+    ask_pdf_generation = util.popup_yes_no("Wilt u de PDF bestanden aanmaken? (Y/N)")
+    if ask_pdf_generation:
         print('Exporting to PDF [...]'
               '\nThis may take up to 15 minutes.'
               '\n!!! You CANNOT open Word.docx documents during this time. !!!')

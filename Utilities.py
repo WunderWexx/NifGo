@@ -8,12 +8,15 @@ from os.path import isfile, join
 import subprocess
 from time import sleep
 import docx as dx
-from docx.shared import RGBColor,Pt, Cm
+from docx.shared import RGBColor,Pt
 from docx.oxml import parse_xml
 from docx.oxml.ns import qn,nsdecls
 from docx.oxml.shared import OxmlElement
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from datetime import datetime
+import tkinter as tk
+from tkinter import filedialog
+from tkinter import messagebox
 
 def printEntire(dataframe):
     """
@@ -28,12 +31,7 @@ def printEntire(dataframe):
 
 def store_dataframe(dataframe, name):
     filepath = 'Output/Dataframes/' + name + '.xlsx'
-    dataframe = dataframe
-    try:
-        dataframe.to_excel(filepath)
-    except:
-        print(f"ACCESS PERMISSION ERROR\n{name}.xlsx not saved because the file could not be accessed.\n")
-        time.sleep(1)
+    dataframe.to_excel(filepath)
 
 def common_data(list1, list2):
     result = False
@@ -213,3 +211,21 @@ def get_most_recent_template(type):
                 most_recent_file = file_name
 
     return most_recent_file
+
+def popup_get_file(title="Select a file", file_types=(("All Files", "*.*"),)):
+    """Opens a file dialog and returns the selected file path."""
+    root = tk.Tk()
+    root.withdraw()
+    file_path = filedialog.askopenfilename(title=title, filetypes=file_types)
+    root.destroy()
+    return file_path
+
+def popup_yes_no(message="Do you want to continue?", title="Confirmation"):
+    """Displays a Yes/No dialog and returns True for Yes, False for No."""
+    root = tk.Tk()
+    root.withdraw()  # Hide the root window
+
+    response = messagebox.askyesno(title, message)
+
+    root.destroy()  # Clean up the root window
+    return response

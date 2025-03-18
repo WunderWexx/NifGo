@@ -1,23 +1,22 @@
 Diagnostics:
 
 Faulty Phenotypes:
-No faulty phenotypes
-
-Faulty Genotypes:
 sample_id	gene	phenotype	genotype
-G001040591	G6PD	Deficient	Kalyan-Kerala/Null
-G001121581	G6PD	IM	B/Serres
-G001121584	G6PD	IM	B/Serres
-G001121594	MTRNR1	DF	m.827A>G/Null
-G001121703	G6PD	IM	B/Serres
-G001121504	Sult1A1		(*1/*2)xN
-G001121508	Sult1A1		(*1/*2)xN
-G001121510	Sult1A1		(*1/*3)xN
-G001121526	Sult1A1		(*1/*2)xN
-G001121555	Sult1A1		(*1/*2)xN
-G001121567	Sult1A1		(*1/*2)xN
+G001040570	CYP2D6	unknown	*3.001/*117
+G001040581	CYP2D6	unknown	*4/*22
+G001121554	COMT	ERROR	ERROR
+G001121586	CYP2C9	Not_PM	*1/*58
+G001121635	CYP2C9	Not_PM	*1/*58
+G001121635	CYP2D6	unknown	
+G001135762	CYP2B6	Not_PM	*2/*15
+G001135806	DPYD	ERROR	ERROR
+G001135821	CYP2C9	unknown	
+G001135821	CYP2D6	unknown	
+G001135835	CYP2C9	Not_PM	*1/*58
+G001135835	CYP2C19	unknown	
+G001135835	CYP2D6	unknown	
+G001135840	CYP2C9	Not_PM	*1/*58
+G001135842	CYP2C9	unknown	
+G001135849	CYP2C19	unknown	
 
-
-Samples missing customer data:
-All samples have customer data available.
 

@@ -1,12 +1,10 @@
 """The Extract Load, and Transform process"""
-import re
-
 # Imports
 import pandas as pd
-import PySimpleGUI as sg
 import math
 import csv
 import numpy as np
+import Utilities as util
 
 # Lists necessary for importing data
 ThermoFisher_determined_genes = [
@@ -105,13 +103,21 @@ class Extract:
         """
         csv.field_size_limit(1000000000)
 
-
     @staticmethod
     def extract_user_specified_file(filename):
-        filepath = sg.popup_get_file(f"Please select the {filename} file",
-                                     title="File selection", keep_on_top=True)
-        df = pd.read_csv(filepath, sep="@", header=None, engine="python")
-        return df
+        """Prompts the user to select a file, then reads it into a Pandas DataFrame."""
+        filepath = util.popup_get_file(f"Please select the {filename} file")
+
+        if not filepath:  # Handle case where user cancels the file selection
+            print("No file selected.")
+            return None
+
+        try:
+            df = pd.read_csv(filepath, sep="@", header=None, engine="python")
+            return df
+        except Exception as e:
+            print(f"Error reading the file: {e}")
+            return None
 
     @staticmethod
     def pharmacydata():
@@ -122,12 +128,6 @@ class Extract:
 
     def genotype_txt(self):
         return self.extract_user_specified_file('genotype.txt')
-
-    def customer_data(self):
-        filepath = sg.popup_get_file(f'Please select the customer data file',
-                                     title='File selection', keep_on_top=True)
-        df = pd.read_excel(filepath, header=None)
-        return df
 
 
 class Load:
