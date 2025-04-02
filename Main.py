@@ -137,14 +137,14 @@ if __name__ == "__main__":
     # Import customer data
     customerdata_present = util.popup_yes_no("Heeft u het bestand met de klantdata?")
     if customerdata_present:
-        customerdata_df = ELT.Extract().customer_data()
+        customerdata_df = pd.read_excel(util.popup_get_file('customer data'), header=None)
         customerdata_df = ELT.Transform.customer_data().columns_and_dates(customerdata_df)
     else:
         customerdata_df = None
 
     # Generate cards.xlsx file
     kaarten_jn = util.popup_yes_no('Wilt u het kaartenbestand genereren?')
-    if kaarten_jn == 'Y':
+    if kaarten_jn:
         cards(complete_dataframe,customerdata_df)
         print('Generating cards.xlsx DONE')
     else:
@@ -191,7 +191,7 @@ if __name__ == "__main__":
     print('Generating nutrinomics reports DONE')
 
     # Export to PDF
-    ask_pdf_generation = util.popup_yes_no("Wilt u de PDF bestanden aanmaken? (Y/N)")
+    ask_pdf_generation = util.popup_yes_no("Wilt u de PDF bestanden aanmaken?")
     if ask_pdf_generation:
         print('Exporting to PDF [...]'
               '\nThis may take up to 15 minutes.'
