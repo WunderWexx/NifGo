@@ -126,7 +126,7 @@ class ExternalDiagnostics:
                 return not bool(re.fullmatch(pattern, genotype))
             else:
                 pattern = self.genotype_pattern_by_genes['other']
-                return not bool(re.fullmatch(pattern, genotype))
+                return not bool(re.fullmatch(pattern, genotype)) # This means there is an empty genotype cell somewhere. Maybe we should make it more robust to that...
 
         faulty_genotypes = self.complete_df[self.complete_df.apply(genotype_filter, axis='columns')]
         faulty_genotypes = faulty_genotypes.iloc[:,1:]
@@ -294,7 +294,6 @@ class InlineDiagnostics:
 
     def is_fenotype_deviation(self, phenotype, gene):
         for pattern in self.genes_by_phenotype_pattern.keys():
-            print(f'pattern: {pattern}, phenotype: {phenotype}, gene: {gene}')
             if re.fullmatch(pattern, phenotype): # Als hier een error op is, is er waarschijnlijk geen fenotype ingevuld in de unknowns
                 if gene in self.genes_by_phenotype_pattern[pattern][0]:
                     return not phenotype == self.genes_by_phenotype_pattern[pattern][1]
