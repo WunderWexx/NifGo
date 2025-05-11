@@ -9,7 +9,7 @@ class HandlingUnknowns:
     def __init__(self, dataframe):
         self.dataframe = dataframe
         self.unknown_signs = ['ERROR', 'MISSING', 'Not_PM', 'Not_NM', 'Not_IM', 'Not_RM', 'Not_Determined',
-                              'Not_UM', 'EM', 'unknown', '---', '']
+                              'Not_UM', 'EM', 'unknown', '---', '',',']
         # Get list of all genes to be reported
         self.farmacogenetic_genes = []
         most_recent_farmacogenetisch = util.get_most_recent_template('Farmacogenetisch')
