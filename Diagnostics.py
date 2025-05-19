@@ -234,7 +234,7 @@ class InlineDiagnostics:
         }
 
         self.genes_by_normal_genotype = {
-            'ABCB1': 'T/T',
+            'ABCB1': 'C/C',
             'ACE': 'A/A',
             'ADIPOQ': 'G/G',
             'ADRA2A': 'G/G',
