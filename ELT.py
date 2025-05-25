@@ -5,6 +5,7 @@ import math
 import csv
 import numpy as np
 import Utilities as util
+import warnings
 
 # Lists necessary for importing data
 ThermoFisher_determined_genes = [
@@ -380,37 +381,65 @@ class DataPreparation:
 
     def merge_VDR(self):
         unique_samples = self.complete_dataframe['sample_id'].unique().tolist()
+        missing_genes = set()
+
         for sample in unique_samples:
             divergent_count = 0
             sample_id_mask = self.complete_dataframe['sample_id'] == sample
-            VDR_1_mask = sample_id_mask & (self.complete_dataframe['gene'] == 'VDR_1')
-            VDR_1 = self.complete_dataframe.loc[VDR_1_mask, 'genotype'].values
-            if len(VDR_1) > 0 and 'G' in VDR_1[0]:
-                divergent_count += 1
-            VDR_2_mask = sample_id_mask & (self.complete_dataframe['gene'] == 'VDR_2')
-            VDR_2 = self.complete_dataframe.loc[VDR_2_mask, 'genotype'].values
-            if len(VDR_2) > 0 and 'A' in VDR_2[0]:
-                divergent_count += 1
-            VDR_3_mask = sample_id_mask & (self.complete_dataframe['gene'] == 'VDR_3')
-            VDR_3 = self.complete_dataframe.loc[VDR_3_mask, 'genotype'].values
-            if len(VDR_3) > 0 and 'T' in VDR_3[0]:
-                divergent_count += 1
-            VDR_4_mask = sample_id_mask & (self.complete_dataframe['gene'] == 'VDR_4')
-            VDR_4 = self.complete_dataframe.loc[VDR_4_mask, 'genotype'].values
-            if len(VDR_4) > 0 and 'C' in VDR_4[0]:
-                divergent_count += 1
-            if divergent_count >= 2:
-                VDR_row = {'sample_id': sample, 'gene': 'VDR', 'phenotype': 'PF', 'genotype': 'MT/MT'}
-                self.complete_dataframe = pd.concat([self.complete_dataframe, pd.DataFrame([VDR_row])], ignore_index=True)
-            if divergent_count == 1:
-                VDR_row = {'sample_id': sample, 'gene': 'VDR', 'phenotype': 'IF', 'genotype': 'WT/MT'}
-                self.complete_dataframe = pd.concat([self.complete_dataframe, pd.DataFrame([VDR_row])], ignore_index=True)
-            if divergent_count == 0:
-                VDR_row = {'sample_id': sample, 'gene': 'VDR', 'phenotype': 'NF', 'genotype': 'WT/WT'}
-                self.complete_dataframe = pd.concat([self.complete_dataframe, pd.DataFrame([VDR_row])], ignore_index=True)
 
+            # Check each VDR sub-gene and count divergences, track missing genes
+            for gene, expected_base in [
+                ('VDR_1', 'G'),
+                ('VDR_2', 'A'),
+                ('VDR_3', 'T'),
+                ('VDR_4', 'C')
+            ]:
+                mask = sample_id_mask & (self.complete_dataframe['gene'] == gene)
+                values = self.complete_dataframe.loc[mask, 'genotype'].values
+
+                if len(values) == 0:
+                    missing_genes.add(gene)
+                else:
+                    if expected_base in values[0]:
+                        divergent_count += 1
+
+            # Determine phenotype and genotype
+            if divergent_count >= 2:
+                phenotype, combined_genotype = 'PF', 'MT/MT'
+            elif divergent_count == 1:
+                phenotype, combined_genotype = 'IF', 'WT/MT'
+            else:
+                phenotype, combined_genotype = 'NF', 'WT/WT'
+
+            # Append combined VDR row
+            VDR_row = {
+                'sample_id': sample,
+                'gene': 'VDR',
+                'phenotype': phenotype,
+                'genotype': combined_genotype
+            }
+            self.complete_dataframe = pd.concat(
+                [self.complete_dataframe, pd.DataFrame([VDR_row])],
+                ignore_index=True
+            )
+
+        # After processing all samples, emit one warning if any genes missing
+        if missing_genes:
+            # Format each entry with its SNP probe IDs
+            gene_snp_list = []
+            for gene in sorted(missing_genes):
+                snps = probeset_id_dict.get(gene, ['UNKNOWN'])
+                gene_snp_list.append(f"{gene} ({', '.join(snps)})")
+            missing_str = ", ".join(gene_snp_list)
+            warnings.warn(
+                f"WARNING: VDR results cannot be trusted because the following SNPs are missing: {missing_str}.",
+                UserWarning
+            )
+
+        # Remove individual VDR_* rows
         self.complete_dataframe = self.complete_dataframe[
-            ~self.complete_dataframe['gene'].str.match(r'VDR_\d+', na=False)]
+            ~self.complete_dataframe['gene'].str.match(r'VDR_\d+', na=False)
+        ]
 
 
     def keep_only_batch_relevant_data(self):
