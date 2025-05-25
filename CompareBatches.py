@@ -107,6 +107,8 @@ def main():
     print("\n=== In neither file ===")
     print(none_at_all['name'].to_string(index=False))
 
+    print('\nComparing reports...\n')
+
     # Compare reports
     out_path = Path('Output/Diagnostics/differences.txt')
     with open(out_path, 'w', encoding='utf-8') as fout:
