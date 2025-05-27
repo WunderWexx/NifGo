@@ -76,9 +76,9 @@ if __name__ == "__main__":
     # Genotypes.txt ingestion and transformation
     print('genotype import [...]',end='\r')
     genotypes_df = ELT.Extract().genotype_txt()
-    genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.values())             #HIER
+    genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.values())
     print('genotype import DONE')
-    genotypes_transformation = ELT.Transform().genotype_txt(genotypes_df, probeset_id_dict)     #HIER
+    genotypes_transformation = ELT.Transform().genotype_txt(genotypes_df, probeset_id_dict)
     genotypes_transformation.drop_columns_after_last_sample()
     genotypes_transformation.drop_cel_call_code_suffix()
     genotypes_transformation.unpivot_dataframe()
