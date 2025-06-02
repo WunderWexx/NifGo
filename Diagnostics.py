@@ -282,7 +282,7 @@ class InlineDiagnostics:
             'NQ01': 'G/G',
             'OPRM1': 'A/A',
             'PON1': 'T/T',
-            'RYR1': 'WT/WT',
+            'RYR1': r'^(?!.*\u200B).*$',
             'Sult1A1': r'\*1/\*1',
             'Sult1E1': 'C/C',
             'TCF7L2': 'C/C',

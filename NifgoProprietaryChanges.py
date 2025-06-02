@@ -267,21 +267,11 @@ class GenotypeChanges:
         self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
 
     def RYR1(self):
-        RYR1_dict = {
-            r"^(?!WT/).+/WT$": "WT/MT",
-            r"^(?!WT/).+/(?!WT).+$": "MT/MT",
-            r"^WT/WT$": "WT/WT"
-        }
-
         mask = self.dataframe['gene'] == 'RYR1'
-
-        def classify_genotype(genotype):
-            for pattern, replacement in RYR1_dict.items():
-                if re.match(pattern, genotype):  # Check if genotype matches any pattern
-                    return replacement
-            return "ERROR"  # Default if no pattern matches
-
-        self.dataframe.loc[mask, 'genotype'] = self.dataframe.loc[mask, 'genotype'].apply(classify_genotype)
+        condition = self.dataframe.loc[mask, 'phenotype'] == 'MHS'
+        if_true = self.dataframe.loc[mask, 'genotype'].astype(str) + "\u200B"
+        no_change = self.dataframe.loc[mask, 'genotype']
+        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, no_change)
 
     def SLCO1B1(self):
         SLCO1B1_dict = {
