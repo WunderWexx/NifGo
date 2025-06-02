@@ -119,7 +119,7 @@ class PhenotypeChanges:
             self.dataframe.loc[mask, 'genotype'].isin(['*1A/*4+1C', '*1B/*3', '*1A/*3']),
             self.dataframe.loc[mask, 'genotype'] == '*3/*3',
             self.dataframe.loc[mask, 'genotype'] == 'unknown',
-            self.dataframe.loc[mask, 'genotype'].str.count('\*3') == 1
+            self.dataframe.loc[mask, 'genotype'].str.count(r'\*3') == 1
         ]
         no_change = self.dataframe.loc[mask, 'phenotype']
         self.dataframe.loc[mask, 'phenotype'] = np.where(condition[0], 'IM',
