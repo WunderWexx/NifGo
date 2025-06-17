@@ -22,7 +22,6 @@ ThermoFisher_determined_genes = [
     "MTRNR1",
     "NAT1",
     "NAT2",
-    "RYR1",
     "CYP1A2",
     "CYP2B6",
     "CYP2C9",
@@ -145,7 +144,7 @@ class Load:
         :param dataframe: phenotype.rpt dataframe
         :return: The cleaned phenotype.rpt dataframe
         """
-        rowcount = dataframe[dataframe[0].str.contains("0001-0014")].index.min()
+        rowcount = dataframe[dataframe[0].str.match(r'^\d+')].index.min()
         dataframe = dataframe.iloc[rowcount:]
         dataframe.reset_index(drop=True, inplace=True)
 
