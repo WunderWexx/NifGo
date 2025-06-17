@@ -266,12 +266,13 @@ class GenotypeChanges:
         if_true = self.dataframe.loc[mask, 'genotype'].map(MTHFR1298_dict)
         self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, 'ERROR')
 
-    def RYR1(self):
-        mask = self.dataframe['gene'] == 'RYR1'
-        condition = self.dataframe.loc[mask, 'phenotype'] == 'MHS'
-        if_true = self.dataframe.loc[mask, 'genotype'].astype(str) + "\u200B"
-        no_change = self.dataframe.loc[mask, 'genotype']
-        self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, no_change)
+    # def RYR1(self):
+    #     mask = self.dataframe['gene'] == 'RYR1'
+    #     condition = self.dataframe.loc[mask, 'phenotype'] == 'MHS'
+    #     if_true = self.dataframe.loc[mask, 'genotype'].astype(str) + "\u200B"
+    #     no_change = self.dataframe.loc[mask, 'genotype']
+    #     self.dataframe.loc[mask, 'genotype'] = np.where(condition, if_true, no_change)
+    # Dit was de code tot 2025-06-03
 
     def SLCO1B1(self):
         SLCO1B1_dict = {
