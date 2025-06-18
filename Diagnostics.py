@@ -54,7 +54,7 @@ class ExternalDiagnostics:
                  'NUDT15', 'TPMT', 'UGT1A1', 'VKORC1'], 'NM'],  # Zoals NM
             r'^[I,N,D,P]F$': [['ABCG2', 'SLCO1B1', 'ABCB1'], 'NF'],  # Zoals NF
             r'^[a-z]{1,12}$|^non-expresser$|^intermediate-expresser$': [['CYP3A5'], 'non-expresser'], # Zoals een string tot max 12 kleine letters
-            r'^negatief$|^risico$': [['HLA-B*1502', 'HLA-B*5701', 'HLA-A*3101'], 'negatief'],  # negatief of risico
+            r'^normaal$|^risico$': [['HLA-B*1502', 'HLA-B*5701', 'HLA-A*3101'], 'normaal'],  # normaal of risico
             r'^[U,R,N,I,P]M$|^Deficient$': [['G6PD'], 'NM']  # Zoals NM of Deficient
             }
         # create a dict with the genes as keys and the regex as the values
@@ -202,7 +202,7 @@ class InlineDiagnostics:
             r'^[I,N,D,P]F$': [['ABCG2', 'SLCO1B1', 'ABCB1'], 'NF'],  # Zoals NF
             r'^[a-z]{1,12}$|^non-expresser$|^intermediate-expresser$': [['CYP3A5'], 'non-expresser'],
             # Zoals een string tot max 12 kleine letters
-            r'^negatief$|^risico$': [['HLA-B*1502', 'HLA-B*5701', 'HLA-A*3101'], 'negatief'],  # negatief of risico
+            r'^normaal$|^risico$': [['HLA-B*1502', 'HLA-B*5701', 'HLA-A*3101'], 'normaal'],  # normaal of risico
             r'^[U,R,N,I,P]M$|^Deficient$': [['G6PD'], 'NM']  # Zoals NM of Deficient
         }
 
