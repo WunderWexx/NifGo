@@ -396,10 +396,14 @@ class DataPreparation:
                 mask = sample_id_mask & (self.complete_dataframe['gene'] == gene)
                 values = self.complete_dataframe.loc[mask, 'genotype'].values
 
-                if len(values) == 0:
+                bad_values = {'ERROR', 'MISSING', 'Not_PM', 'Not_NM', 'Not_IM', 'Not_RM',
+                              'Not_Determined', 'Not_UM', 'EM', 'unknown', '---', '', ','}
+
+                genotype = values[0].strip().upper() if values else ''
+                if not genotype or genotype in bad_values or '/' not in genotype:
                     missing_genes.add(gene)
                 else:
-                    if expected_base in values[0]:
+                    if expected_base in genotype:
                         divergent_count += 1
 
             # Determine phenotype and genotype
@@ -431,7 +435,8 @@ class DataPreparation:
                 gene_snp_list.append(f"{gene} ({', '.join(snps)})")
             missing_str = ", ".join(gene_snp_list)
             warnings.warn(
-                f"WARNING: VDR results cannot be trusted because the following SNPs are missing: {missing_str}.",
+                f"\n\n\nWARNING: VDR results cannot be trusted because the following SNPs are missing: {missing_str}.\n"
+                f"Check Output/Dataframes/genotypes for any missing VDR SNP's. Edit this data in the genotypes file.\n\n\n",
                 UserWarning
             )
 
