@@ -60,7 +60,7 @@ probeset_id_dict = {
     'F5': ['AX-51294184'],
     'FTO': ['AX-11151648'],
     'GC': ['AX-41517991'],
-    'GCK, YKT6': ['MULTIPLE_SNP'],
+    'GCK, YKT6': ['AX-15693373'],
     'HLA-B*1502': ['UNKNOWN'], # HLA-B*5701, en HLA-B*1502 moeten nog ingevuld worden.
     'HLA-B*5701': ['UNKNOWN'], # HLA-B*5701, en HLA-B*1502 moeten nog ingevuld worden.
     'HLA-A*3101': ['MULTIPLE_SNP'],
