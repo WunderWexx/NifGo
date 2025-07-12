@@ -1,12 +1,11 @@
 """The Extract Load, and Transform process"""
-import re
-
 # Imports
 import pandas as pd
-import PySimpleGUI as sg
 import math
 import csv
 import numpy as np
+import Utilities as util
+import warnings
 
 # Lists necessary for importing data
 ThermoFisher_determined_genes = [
@@ -23,7 +22,6 @@ ThermoFisher_determined_genes = [
     "MTRNR1",
     "NAT1",
     "NAT2",
-    "RYR1",
     "CYP1A2",
     "CYP2B6",
     "CYP2C9",
@@ -62,7 +60,7 @@ probeset_id_dict = {
     'F5': ['AX-51294184'],
     'FTO': ['AX-11151648'],
     'GC': ['AX-41517991'],
-    'GCK, YKT6': ['MULTIPLE_SNP'],
+    'GCK, YKT6': ['AX-15693373'],
     'HLA-B*1502': ['UNKNOWN'], # HLA-B*5701, en HLA-B*1502 moeten nog ingevuld worden.
     'HLA-B*5701': ['UNKNOWN'], # HLA-B*5701, en HLA-B*1502 moeten nog ingevuld worden.
     'HLA-A*3101': ['MULTIPLE_SNP'],
@@ -105,13 +103,21 @@ class Extract:
         """
         csv.field_size_limit(1000000000)
 
-
     @staticmethod
     def extract_user_specified_file(filename):
-        filepath = sg.popup_get_file(f"Please select the {filename} file",
-                                     title="File selection", keep_on_top=True)
-        df = pd.read_csv(filepath, sep="@", header=None, engine="python")
-        return df
+        """Prompts the user to select a file, then reads it into a Pandas DataFrame."""
+        filepath = util.popup_get_file(f"Please select the {filename} file")
+
+        if not filepath:  # Handle case where user cancels the file selection
+            print("No file selected.")
+            return None
+
+        try:
+            df = pd.read_csv(filepath, sep="@", header=None, engine="python")
+            return df
+        except Exception as e:
+            print(f"Error reading the file: {e}")
+            return None
 
     @staticmethod
     def pharmacydata():
@@ -122,12 +128,6 @@ class Extract:
 
     def genotype_txt(self):
         return self.extract_user_specified_file('genotype.txt')
-
-    def customer_data(self):
-        filepath = sg.popup_get_file(f'Please select the customer data file',
-                                     title='File selection', keep_on_top=True)
-        df = pd.read_excel(filepath, header=None)
-        return df
 
 
 class Load:
@@ -144,7 +144,7 @@ class Load:
         :param dataframe: phenotype.rpt dataframe
         :return: The cleaned phenotype.rpt dataframe
         """
-        rowcount = dataframe[dataframe[0].str.contains("0001-0014")].index.min()
+        rowcount = dataframe[dataframe[0].str.match(r'^\d+')].index.min()
         dataframe = dataframe.iloc[rowcount:]
         dataframe.reset_index(drop=True, inplace=True)
 
@@ -166,33 +166,36 @@ class Load:
     @staticmethod
     def genotype_txt(dataframe, needed_probeset_ids):
         """
-        First the headers are determined, then all the file's metadata is deleted from the dataframe, after which
-        the dataframe is filtered on the specified genes, after which the data is split into columns and
-        all columns get their names.
-        :param dataframe: the genotype_txt dataframe
-        :param needed_probeset_ids: the probeset_id's of the genes that need their phenotype determined by their
-        rs designation. .
-        :return: The genotype.txt file but as a dataframe with headers and containing only the specified genes.
+        Transforms a raw genotype DataFrame into a structured format containing only specified probeset_ids.
+
+        The function first identifies the header row, removes preceding metadata, filters for relevant genes,
+        and parses the data into a well-labeled DataFrame.
+
+        :param dataframe: Raw genotype DataFrame with one-column 'rest' format.
+        :param needed_probeset_ids: A list of probeset_id entries to retain, each wrapped in a list.
+        :return: A structured DataFrame with proper headers and filtered rows.
         """
+        # Initial preprocessing
         dataframe.columns = ['rest']
+
+        # Identify the row where headers reside
         headers_row = dataframe[dataframe['rest'].str.startswith("probeset_id")].index[0]
         headers = dataframe.iloc[headers_row]['rest'].split("\t")
 
+        # Remove metadata rows above the actual data
         start_row = dataframe[dataframe['rest'].str.startswith("AX-")].index[0]
         dataframe = dataframe.iloc[start_row:]
 
-        needed_probeset_ids = [id_list[0] for id_list in needed_probeset_ids]
-        dataframe = dataframe[dataframe['rest'].str.startswith(tuple(needed_probeset_ids))]
+        # Extract probeset_id list from nested list
+        needed_ids = [id_list[0] for id_list in needed_probeset_ids]
+        dataframe = dataframe[dataframe['rest'].str.startswith(tuple(needed_ids))]
 
-        split_data = dataframe['rest'].str.split("\\t", expand=True)
+        # Split and column assignment
+        split_data = dataframe['rest'].str.split("\t", expand=True)
+        split_data.columns = headers  # Assign headers all at once
 
-        for idx, header in enumerate(headers):
-            dataframe[header] = split_data[idx]
-
-        dataframe.drop(['rest'], axis=1, inplace=True)
-        dataframe.reset_index(drop=True, inplace=True)
-
-        return dataframe
+        split_data.reset_index(drop=True, inplace=True)
+        return split_data
 
 
 class Transform:
@@ -380,37 +383,70 @@ class DataPreparation:
 
     def merge_VDR(self):
         unique_samples = self.complete_dataframe['sample_id'].unique().tolist()
+        missing_genes = set()
+
         for sample in unique_samples:
             divergent_count = 0
             sample_id_mask = self.complete_dataframe['sample_id'] == sample
-            VDR_1_mask = sample_id_mask & (self.complete_dataframe['gene'] == 'VDR_1')
-            VDR_1 = self.complete_dataframe.loc[VDR_1_mask, 'genotype'].values
-            if len(VDR_1) > 0 and 'G' in VDR_1[0]:
-                divergent_count += 1
-            VDR_2_mask = sample_id_mask & (self.complete_dataframe['gene'] == 'VDR_2')
-            VDR_2 = self.complete_dataframe.loc[VDR_2_mask, 'genotype'].values
-            if len(VDR_2) > 0 and 'A' in VDR_2[0]:
-                divergent_count += 1
-            VDR_3_mask = sample_id_mask & (self.complete_dataframe['gene'] == 'VDR_3')
-            VDR_3 = self.complete_dataframe.loc[VDR_3_mask, 'genotype'].values
-            if len(VDR_3) > 0 and 'T' in VDR_3[0]:
-                divergent_count += 1
-            VDR_4_mask = sample_id_mask & (self.complete_dataframe['gene'] == 'VDR_4')
-            VDR_4 = self.complete_dataframe.loc[VDR_4_mask, 'genotype'].values
-            if len(VDR_4) > 0 and 'C' in VDR_4[0]:
-                divergent_count += 1
-            if divergent_count >= 2:
-                VDR_row = {'sample_id': sample, 'gene': 'VDR', 'phenotype': 'PF', 'genotype': 'MT/MT'}
-                self.complete_dataframe = pd.concat([self.complete_dataframe, pd.DataFrame([VDR_row])], ignore_index=True)
-            if divergent_count == 1:
-                VDR_row = {'sample_id': sample, 'gene': 'VDR', 'phenotype': 'IF', 'genotype': 'WT/MT'}
-                self.complete_dataframe = pd.concat([self.complete_dataframe, pd.DataFrame([VDR_row])], ignore_index=True)
-            if divergent_count == 0:
-                VDR_row = {'sample_id': sample, 'gene': 'VDR', 'phenotype': 'NF', 'genotype': 'WT/WT'}
-                self.complete_dataframe = pd.concat([self.complete_dataframe, pd.DataFrame([VDR_row])], ignore_index=True)
 
+            # Check each VDR sub-gene and count divergences, track missing genes
+            for gene, expected_base in [
+                ('VDR_1', 'G'),
+                ('VDR_2', 'A'),
+                ('VDR_3', 'T'),
+                ('VDR_4', 'C')
+            ]:
+                mask = sample_id_mask & (self.complete_dataframe['gene'] == gene)
+                values = self.complete_dataframe.loc[mask, 'genotype'].values
+
+                bad_values = {'ERROR', 'MISSING', 'Not_PM', 'Not_NM', 'Not_IM', 'Not_RM',
+                              'Not_Determined', 'Not_UM', 'EM', 'unknown', '---', '', ','}
+
+                genotype = values[0].strip().upper() if values else ''
+                if not genotype or genotype in bad_values or '/' not in genotype:
+                    missing_genes.add(gene)
+                else:
+                    if expected_base in genotype:
+                        divergent_count += 1
+
+            # Determine phenotype and genotype
+            if divergent_count >= 2:
+                phenotype, combined_genotype = 'PF', 'MT/MT'
+            elif divergent_count == 1:
+                phenotype, combined_genotype = 'IF', 'WT/MT'
+            else:
+                phenotype, combined_genotype = 'NF', 'WT/WT'
+
+            # Append combined VDR row
+            VDR_row = {
+                'sample_id': sample,
+                'gene': 'VDR',
+                'phenotype': phenotype,
+                'genotype': combined_genotype
+            }
+            self.complete_dataframe = pd.concat(
+                [self.complete_dataframe, pd.DataFrame([VDR_row])],
+                ignore_index=True
+            )
+
+        # After processing all samples, emit one warning if any genes missing
+        if missing_genes:
+            # Format each entry with its SNP probe IDs
+            gene_snp_list = []
+            for gene in sorted(missing_genes):
+                snps = probeset_id_dict.get(gene, ['UNKNOWN'])
+                gene_snp_list.append(f"{gene} ({', '.join(snps)})")
+            missing_str = ", ".join(gene_snp_list)
+            warnings.warn(
+                f"\n\n\nWARNING: VDR results cannot be trusted because the following SNPs are missing: {missing_str}.\n"
+                f"Check Output/Dataframes/genotypes for any missing VDR SNP's. Edit this data in the genotypes file.\n\n\n",
+                UserWarning
+            )
+
+        # Remove individual VDR_* rows
         self.complete_dataframe = self.complete_dataframe[
-            ~self.complete_dataframe['gene'].str.match(r'VDR_\d+', na=False)]
+            ~self.complete_dataframe['gene'].str.match(r'VDR_\d+', na=False)
+        ]
 
 
     def keep_only_batch_relevant_data(self):
