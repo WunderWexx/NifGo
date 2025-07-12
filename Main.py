@@ -175,7 +175,7 @@ if __name__ == "__main__":
         pool.map(partial_generate_infosheet, unique_sample_id_list)
     timer_end = timer()
     infosheets_generation_time = timer_end - timer_start
-    print('Generating info sheets [DONE]')
+    print('Generating info sheets DONE')
 
     # Nutrinomics Reports generation
     print('Generating nutrinomics reports [...]')
