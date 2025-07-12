@@ -166,33 +166,36 @@ class Load:
     @staticmethod
     def genotype_txt(dataframe, needed_probeset_ids):
         """
-        First the headers are determined, then all the file's metadata is deleted from the dataframe, after which
-        the dataframe is filtered on the specified genes, after which the data is split into columns and
-        all columns get their names.
-        :param dataframe: the genotype_txt dataframe
-        :param needed_probeset_ids: the probeset_id's of the genes that need their phenotype determined by their
-        rs designation. .
-        :return: The genotype.txt file but as a dataframe with headers and containing only the specified genes.
+        Transforms a raw genotype DataFrame into a structured format containing only specified probeset_ids.
+
+        The function first identifies the header row, removes preceding metadata, filters for relevant genes,
+        and parses the data into a well-labeled DataFrame.
+
+        :param dataframe: Raw genotype DataFrame with one-column 'rest' format.
+        :param needed_probeset_ids: A list of probeset_id entries to retain, each wrapped in a list.
+        :return: A structured DataFrame with proper headers and filtered rows.
         """
+        # Initial preprocessing
         dataframe.columns = ['rest']
+
+        # Identify the row where headers reside
         headers_row = dataframe[dataframe['rest'].str.startswith("probeset_id")].index[0]
         headers = dataframe.iloc[headers_row]['rest'].split("\t")
 
+        # Remove metadata rows above the actual data
         start_row = dataframe[dataframe['rest'].str.startswith("AX-")].index[0]
         dataframe = dataframe.iloc[start_row:]
 
-        needed_probeset_ids = [id_list[0] for id_list in needed_probeset_ids]
-        dataframe = dataframe[dataframe['rest'].str.startswith(tuple(needed_probeset_ids))]
+        # Extract probeset_id list from nested list
+        needed_ids = [id_list[0] for id_list in needed_probeset_ids]
+        dataframe = dataframe[dataframe['rest'].str.startswith(tuple(needed_ids))]
 
-        split_data = dataframe['rest'].str.split("\\t", expand=True)
+        # Split and column assignment
+        split_data = dataframe['rest'].str.split("\t", expand=True)
+        split_data.columns = headers  # Assign headers all at once
 
-        for idx, header in enumerate(headers):
-            dataframe[header] = split_data[idx]
-
-        dataframe.drop(['rest'], axis=1, inplace=True)
-        dataframe.reset_index(drop=True, inplace=True)
-
-        return dataframe
+        split_data.reset_index(drop=True, inplace=True)
+        return split_data
 
 
 class Transform:
