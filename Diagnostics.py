@@ -231,14 +231,54 @@ class InlineDiagnostics:
 
         return pattern
 
-    deviant_CYP2A6 = ['*2', '*9', '*17', '*23', '*25', '*26', '*28', '*41', '*4', '*12', '*27', '*34', '*47', '*53']
-    CYP2A6_pattern = generate_combination_deviant_regex(deviant_CYP2A6)
+    @staticmethod
+    def generate_double_cobination_exclusion_regex(good_list, bad_list):
+        """
+        Constructs a regex pattern that matches genotypes consisting **only**
+        of 'good' alleles and rejects any genotype that includes even a single
+        'bad' allele. Genotypes are of the form 'allele1/allele2'.
 
-    deviant_NAT1 = ['*11', '*14', '*15', '*17', '*18', '*19', '*22']
-    NAT1_pattern = generate_combination_deviant_regex(deviant_NAT1)
+        Parameters:
+        - good_list: list of SNP strings deemed acceptable
+        - bad_list: list of SNP strings deemed deviant
 
-    deviant_NAT2 = ['*5', '*6', '*7', '*10', '*12', '*14', '*17']
-    NAT2_pattern = generate_combination_deviant_regex(deviant_NAT2)
+        Returns:
+        - regex pattern string that matches valid genotypes
+        """
+        # Escape metacharacters in each allele
+        good = [re.escape(snp) for snp in good_list]
+        bad = [re.escape(snp) for snp in bad_list]
+
+        # Generate all disallowed combinations:
+        # - any pair where at least one allele is from the bad list
+        disallowed = set()
+
+        # Bad/Bad combinations
+        disallowed.update(f"{a}/{b}" for a, b in itertools.combinations_with_replacement(bad, 2))
+        disallowed.update(f"{b}/{a}" for a, b in itertools.combinations(bad, 2))  # Ensure all orders
+
+        # Good/Bad and Bad/Good combinations
+        for g in good:
+            for b in bad:
+                disallowed.add(f"{g}/{b}")
+                disallowed.add(f"{b}/{g}")
+
+        # Join disallowed into a regex alternation group
+        disallowed_regex = '|'.join(disallowed)
+
+        # Negative lookahead: only match if the entire genotype is NOT in the disallowed list
+        pattern = rf'^(?!({disallowed_regex})$).*$'
+
+        return pattern
+
+    # Any combination of two slows, or a fast and a slow should be red
+    NAT1_fast_snp = ['*4', '*18', '*20', '*21', '*23', '*24', '*25', '*27', '*29']
+    NAT1_slow_snp = ['*11', '*14', '*15', '*17', '*18', '*19', '*22']
+    NAT1_pattern = generate_double_cobination_exclusion_regex(NAT1_fast_snp, NAT1_slow_snp)
+
+    NAT2_fast_snp = ['*4', '*18']
+    NAT2_slow_snp = ['*5', '*6', '*7', '*10', '*12', '*14', '*17']
+    NAT2_pattern = generate_double_cobination_exclusion_regex(NAT2_fast_snp, NAT2_slow_snp)
 
     genes_by_normal_genotype = {
         'ABCB1': 'C/C',
