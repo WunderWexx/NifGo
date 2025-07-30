@@ -221,6 +221,7 @@ if __name__ == "__main__":
     ext_diag = Diagnostics.ExternalDiagnostics()
     ext_diag.check_phenotype_shape()
     ext_diag.check_genotype_shape()
+    ext_diag.check_deviation_percentage()
     if customerdata_df is not None:
         ext_diag.check_customerdata_available_to_reports(customerdata_df)
     ext_diag.check_batch_size()

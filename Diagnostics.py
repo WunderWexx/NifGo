@@ -10,6 +10,7 @@ import Utilities as util
 from docx import Document
 from math import ceil
 import itertools
+import os
 
 #Variables
 genes_by_phenotype_pattern = {
@@ -200,6 +201,40 @@ class ExternalDiagnostics:
                            f'{reports_amount} reports have been generated out of the {expected_reports_amount} reports expected!')
             diag.write('\n\n')
             diag.close()
+
+    def check_deviation_percentage(self):
+        import pandas as pd
+
+        # Read raw lines and filter only valid ones
+        file_path = "Output/Diagnostics/deviations.txt"
+        valid_rows = []
+        with open(file_path, 'r', encoding='utf-8') as file:
+            for line in file:
+                parts = line.strip().split('\t')
+                if len(parts) == 3 and not parts[0].endswith('_2'):
+                    valid_rows.append(parts)
+
+        # Convert to DataFrame
+        df = pd.DataFrame(valid_rows, columns=['sample_id', 'gene', 'deviation'])
+
+        # Count deviations per gene
+        gene_counts = df['gene'].value_counts().sort_values(ascending=False)
+
+        # Write results to diagnostics.txt
+        cleaned_sample_ids = [sid for sid in self.unique_sample_ids if '_2' not in sid]
+        with open('Output/Diagnostics/diagnostics.txt', 'a') as diag:
+            diag.write('Deviancy percentage per gene:\n')
+            diag.write('Gene\tNumber of deviations\tPercentage of total\n')
+            for deviant_counts_index in range(len(gene_counts)):
+                percentage_deviant = (gene_counts.iloc[deviant_counts_index] / len(cleaned_sample_ids)) * 100
+                diag.write(f'{gene_counts.iloc[deviant_counts_index]}\t{gene_counts[deviant_counts_index]}\t{percentage_deviant}%\n')
+            diag.write('\n\n')
+            diag.close()
+
+        # Remove file
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
 
 class InlineDiagnostics:
     def __init__(self):

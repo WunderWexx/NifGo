@@ -58,6 +58,8 @@ class farmacogenetic_report:
             util.change_table_cell(phenotype_cell, change_text=f' {phenotype}', font_size=9)
             if InlineDiagnostics().is_fenotype_deviation(phenotype, gene):
                 util.change_table_row(row, font_color='FF0000')
+                with open("Output/Diagnostics/deviations.txt", "a") as f:
+                    f.write(f"{self.sample_id}\t{gene}\t{phenotype}\n")
 
         #Save the document
         document_name = 'FarmacogeneticReport' + "_" + self.sample_id + ".docx"
