@@ -382,6 +382,10 @@ class InlineDiagnostics:
     def is_genotype_deviation(self, genotype, gene_to_check):
         regex_pattern = self.genes_by_normal_genotype[gene_to_check]
         return not re.fullmatch(regex_pattern, genotype)
+    """
+    Als deze functie een error geeft, is er waarschijnlijk iets verkeerds in de unknown file gezet.
+    Iets wat leeg is wat niet leeg zou moeten zijn, of een andere rare input.
+    """
 
     def is_customer_data_present(self,document_table_row):
         for cell_number in [1,3,5]:
