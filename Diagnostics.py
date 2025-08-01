@@ -227,7 +227,9 @@ class ExternalDiagnostics:
             diag.write('Gene\tNumber of deviations\tPercentage of total\n')
             for deviant_counts_index in range(len(gene_counts)):
                 percentage_deviant = (gene_counts.iloc[deviant_counts_index] / len(cleaned_sample_ids)) * 100
-                diag.write(f'{gene_counts.iloc[deviant_counts_index]}\t{gene_counts[deviant_counts_index]}\t{percentage_deviant}%\n')
+                gene = gene_counts.index[deviant_counts_index]
+                deviations_number = gene_counts.iloc[deviant_counts_index]
+                diag.write(f'{gene}\t{deviations_number}\t{percentage_deviant}%\n')
             diag.write('\n\n')
             diag.close()
 
