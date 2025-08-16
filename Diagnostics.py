@@ -229,7 +229,7 @@ class ExternalDiagnostics:
                 percentage_deviant = (gene_counts.iloc[deviant_counts_index] / len(cleaned_sample_ids)) * 100
                 gene = gene_counts.index[deviant_counts_index]
                 deviations_number = gene_counts.iloc[deviant_counts_index]
-                diag.write(f'{gene}\t{deviations_number}\t{percentage_deviant}%\n')
+                diag.write(f'{gene}\t{deviations_number}\t{percentage_deviant:.2f}%\n')
             diag.write('\n\n')
             diag.close()
 
