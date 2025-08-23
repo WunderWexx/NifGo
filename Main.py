@@ -8,7 +8,6 @@ from ELT import ThermoFisher_determined_genes, probeset_id_dict
 import Utilities as util
 from Cards import cards
 import pandas as pd
-from os.path import join
 import NifgoProprietaryChanges as changes
 from FarmacogeneticReport import farmacogenetic_report
 from info_sheet import InfoSheet
@@ -31,22 +30,6 @@ def generate_infosheet(id, dataframe, customer_data):
 def generate_nutrinomics_report(id, dataframe, customer_data):
     nutrigenomics = nutrigenomics_report(sample_id=id, dataframe=dataframe, customer_data=customer_data)
     nutrigenomics.report_generation()
-
-def convert_to_pdf(report):
-    attempts = 5
-    for attempt in range(attempts):
-        try:
-            basepath = 'Output\\Reports'
-            docxpath = join(basepath, report)
-            pdf_basepath = 'Output\\Reports\\PDF'
-            pdfpath = join(pdf_basepath, report.replace('docx','pdf'))
-            convert(docxpath, pdfpath)
-            break
-        except Exception as e:
-            if attempt < 2:
-                print(f"Attempt {attempt + 1} failed for {report}: {e}")
-            else:
-                print(f"{report} FAILED TO CONVERT WITH ERROR {e}")
 
 if __name__ == "__main__":
 
