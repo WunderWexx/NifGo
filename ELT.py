@@ -438,8 +438,8 @@ class DataPreparation:
                 gene_snp_list.append(f"{gene} ({', '.join(snps)})")
             missing_str = ", ".join(gene_snp_list)
             warnings.warn(
-                f"\n\n\nWARNING: VDR results cannot be trusted because the following SNPs are missing: {missing_str}.\n"
-                f"Check Output/Dataframes/genotypes for any missing VDR SNP's. Edit this data in the genotypes file.\n\n\n",
+                f"\n\n\nWARNING: VDR results cannot be trusted because the following SNPs are missing one or more genotypes: {missing_str}.\n"
+                f"Check Output/Dataframes/genotypes for any missing VDR SNP's. Correct this data in the genotypes.txt file.\n\n\n",
                 UserWarning
             )
 
