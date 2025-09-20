@@ -263,16 +263,12 @@ class Transform:
             self.probeset_ids = probeset_ids
 
         def drop_columns_after_last_sample(self):
-            """
-            Drops all columns after the last sample. Samples are assumed to always start with a letter.
-            :return: DataFrame with columns dropped
-            """
-            for column in self.dataframe.columns:
-                if column[0] not in ['p','D','B','G']: #Being either probeset_id or something like D402000223.CEL_call_code.
-                    drop_from_here_column = column
-                    break
-            index = self.dataframe.columns.get_loc(drop_from_here_column)
-            self.dataframe = self.dataframe.iloc[:, :index + 1]
+            cols = self.dataframe.columns
+            keep = ['probeset_id'] + [c for c in cols if c.endswith('.CEL_call_code')]
+            # If you also want to keep dbSNP_RS_ID, add:
+            # if 'dbSNP_RS_ID' in cols: keep.append('dbSNP_RS_ID')
+            self.dataframe = self.dataframe[keep]
+            util.printEntire(self.dataframe)
 
         def drop_cel_call_code_suffix(self):
             """
@@ -402,11 +398,15 @@ class DataPreparation:
                 bad_values = {'ERROR', 'MISSING', 'Not_PM', 'Not_NM', 'Not_IM', 'Not_RM',
                               'Not_Determined', 'Not_UM', 'EM', 'unknown', '---', '', ','}
 
-                genotype = values[0].strip().upper() if values else ''
+                genotype = values[0].strip().upper() if values.size > 0 else ''
                 if not genotype or genotype in bad_values or '/' not in genotype:
                     missing_genes.add(gene)
                 else:
-                    if expected_base in genotype:
+                    a1, a2, *_ = genotype.split('/')
+                    a1, a2 = a1.strip(), a2.strip()
+
+                    # Count ONE divergence for this sub-gene if it's not exactly expected/expected
+                    if not (a1 == expected_base and a2 == expected_base):
                         divergent_count += 1
 
             # Determine phenotype and genotype

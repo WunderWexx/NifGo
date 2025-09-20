@@ -199,17 +199,13 @@ if __name__ == "__main__":
     else:
         print('NO PDF EXPORT')
 
-    # Check if all genotypes in genotypes_df are filled, so diagnostics can be run on those
-    if genotypes_df['genotype'].isnull().any():
-        # Run diagnostics
-        print('Generating diagnostics [...]')
-        ext_diag = Diagnostics.ExternalDiagnostics()
-        ext_diag.check_phenotype_shape()
-        ext_diag.check_genotype_shape()
-        ext_diag.check_deviation_percentage()
-        if customerdata_df is not None:
-            ext_diag.check_customerdata_available_to_reports(customerdata_df)
-        ext_diag.check_batch_size()
-        print('Generating diagnostics DONE')
-    else:
-        print('Not all genotypes present. No diagnostics generated. Please add any missing genotypes to the corrected unknowns file.')
+    # Run diagnostics
+    print('Generating diagnostics [...]')
+    ext_diag = Diagnostics.ExternalDiagnostics()
+    ext_diag.check_phenotype_shape()
+    ext_diag.check_genotype_shape()
+    ext_diag.check_deviation_percentage()
+    if customerdata_df is not None:
+        ext_diag.check_customerdata_available_to_reports(customerdata_df)
+    ext_diag.check_batch_size()
+    print('Generating diagnostics DONE')
