@@ -206,7 +206,7 @@ class Transform:
         def columns_and_dates(self, customerdata_df):
             customerdata_df = customerdata_df
             customerdata_df = customerdata_df.rename(
-                columns={0: 'sample_id', 1: 'initials', 2: 'lastname', 3: 'birthdate', 4: 'status'})
+                columns={0: 'sample_id', 1: 'sex', 2: 'initials', 3: 'lastname', 4: 'birthdate'})
             customerdata_df = customerdata_df.fillna('')
             customerdata_df = customerdata_df.apply(
                 lambda col: col.map(lambda x: x.strip() if isinstance(x, str) else x))
