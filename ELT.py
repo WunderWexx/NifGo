@@ -268,7 +268,6 @@ class Transform:
             # If you also want to keep dbSNP_RS_ID, add:
             # if 'dbSNP_RS_ID' in cols: keep.append('dbSNP_RS_ID')
             self.dataframe = self.dataframe[keep]
-            util.printEntire(self.dataframe)
 
         def drop_cel_call_code_suffix(self):
             """
@@ -282,9 +281,7 @@ class Transform:
             Unpivots the DataFrame to match the structure of phenotypes.rpt.
             :return: Unpivoted DataFrame
             """
-            pivot_columns = list(self.dataframe.columns)
-            del pivot_columns[0]
-            del pivot_columns[-1]
+            pivot_columns = [c for c in self.dataframe.columns if c != 'probeset_id']
             self.dataframe = pd.melt(self.dataframe, id_vars='probeset_id', value_vars=pivot_columns)
 
         def reorder_and_rename_columns(self):
@@ -397,9 +394,8 @@ class DataPreparation:
 
                 bad_values = {'ERROR', 'MISSING', 'Not_PM', 'Not_NM', 'Not_IM', 'Not_RM',
                               'Not_Determined', 'Not_UM', 'EM', 'unknown', '---', '', ','}
-
                 genotype = values[0].strip().upper() if values.size > 0 else ''
-                if not genotype or genotype in bad_values or '/' not in genotype:
+                if (not genotype) or (genotype in bad_values) or ('/' not in genotype):
                     missing_genes.add(gene)
                 else:
                     a1, a2, *_ = genotype.split('/')
