@@ -126,7 +126,10 @@ if __name__ == "__main__":
         customerdata_df = None
 
     # Generate cards.xlsx file
-    kaarten_jn = util.popup_yes_no('Wilt u het kaartenbestand genereren?')
+    if customerdata_df:
+        kaarten_jn = util.popup_yes_no('Wilt u het kaartenbestand genereren?')
+    else:
+        kaarten_jn = None
     if kaarten_jn:
         cards(complete_dataframe,customerdata_df)
         print('Generating cards.xlsx DONE')
