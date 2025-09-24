@@ -77,20 +77,15 @@ class HandlingUnknowns:
         # Save unknowns to Excel
         unknowns_df.to_excel('Output/Diagnostics/unknowns.xlsx', index=False)
 
-    def ask_for_unknowns_df(self):
-        file_is_present = util.popup_yes_no("Heeft u het bestand met de gecorrigeerde unknowns?")
-        if file_is_present:
-            correcties_path = util.popup_get_file(
-                "Selecteer alstublieft het .xlsx (Excel) bestand met de unknown correcties")
-            correcties_df = pd.read_excel(correcties_path)
-            return correcties_df
+    def get_corrected_unknowns(self, corrected_unknowns_filepath):
+        if corrected_unknowns_filepath:
+            return pd.read_excel(corrected_unknowns_filepath)
         else:
             return None
 
-    def correct_unknowns(self):
+    def correct_unknowns(self, correct_unknowns_df):
         # correct_unknowns_df is the hand-corrected version of unknowns_df
         # faulty_df is the copy of complete.xlsx that is being edited
-        correct_unknowns_df = self.ask_for_unknowns_df()
 
         if isinstance(correct_unknowns_df, pd.DataFrame):
             faulty_df = self.dataframe

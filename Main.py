@@ -31,19 +31,25 @@ def generate_nutrinomics_report(id, dataframe, customer_data):
     nutrigenomics = nutrigenomics_report(sample_id=id, dataframe=dataframe, customer_data=customer_data)
     nutrigenomics.report_generation()
 
-if __name__ == "__main__":
+def generation_script(delete_reports: bool,
+                      phenotype_file: str,
+                      genotype_file: str,
+                      corrected_unknowns_file: str = None,
+                      customer_data_file: str = None,
+                      generate_cards: bool = False,
+                      generate_pdf: bool = False,
+                      ):
 
     # settings
     pd.options.mode.chained_assignment = None  # default='warn'
 
     # Delete existing reports
-    ask_delete_reports = util.popup_yes_no("Wilt u de bestaande rapporten verwijderen?")
-    if ask_delete_reports:
+    if delete_reports:
         util.empty_folder('Output/Reports')
         util.empty_folder('Output/Reports/PDF')
 
     # Phenotypes.rpt ingestion and transformation
-    phenotypes_df = ELT.Extract().phenotype_rpt()
+    phenotypes_df = pd.read_csv(phenotype_file, sep="@", header=None, engine="python")
     phenotypes_df = ELT.Load().phenotype_rpt(phenotypes_df)
     print('phenotype import DONE')
     phenotype_transformation = ELT.Transform().phenotype_rpt(phenotypes_df)
@@ -58,7 +64,7 @@ if __name__ == "__main__":
 
     # Genotypes.txt ingestion and transformation
     print('genotype import [...]',end='\r')
-    genotypes_df = ELT.Extract().genotype_txt()
+    genotypes_df = pd.read_csv(genotype_file, sep="@", header=None, engine="python")
     genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.values())
     print('genotype import DONE')
     genotypes_transformation = ELT.Transform().genotype_txt(genotypes_df, probeset_id_dict)
@@ -110,7 +116,8 @@ if __name__ == "__main__":
     # Handling unknowns
     print('Handling unknowns [...]')
     handler = HandlingUnknowns(complete_dataframe)
-    handler.correct_unknowns()
+    corrected_unknowns_df = handler.get_corrected_unknowns(corrected_unknowns_file)
+    handler.correct_unknowns(corrected_unknowns_df)
     handler.detect_unknowns()
     complete_dataframe = handler.dataframe
     util.store_dataframe(complete_dataframe, 'complete')
@@ -118,19 +125,18 @@ if __name__ == "__main__":
     print('Handling unknowns DONE')
 
     # Import customer data
-    customerdata_present = util.popup_yes_no("Heeft u het bestand met de klantdata?")
-    if customerdata_present:
-        customerdata_df = pd.read_excel(util.popup_get_file('customer data'), header=None)
+    if customer_data_file:
+        customerdata_df = pd.read_excel(customer_data_file, header=None)
         customerdata_df = ELT.Transform.customer_data().columns_and_dates(customerdata_df)
     else:
         customerdata_df = None
 
     # Generate cards.xlsx file
-    if customerdata_df:
-        kaarten_jn = util.popup_yes_no('Wilt u het kaartenbestand genereren?')
+    if customerdata_df is not None:
+        should_generate_cards = generate_cards
     else:
-        kaarten_jn = None
-    if kaarten_jn:
+        should_generate_cards = None
+    if should_generate_cards:
         cards(complete_dataframe,customerdata_df)
         print('Generating cards.xlsx DONE')
     else:
@@ -177,7 +183,7 @@ if __name__ == "__main__":
     print('Generating nutrinomics reports DONE')
 
     # Export to PDF
-    ask_pdf_generation = util.popup_yes_no("Wilt u de PDF bestanden aanmaken?")
+    ask_pdf_generation = generate_pdf
     if ask_pdf_generation:
         print('Exporting to PDF [...]'
               '\nThis may take up to 15 minutes.'
@@ -212,3 +218,5 @@ if __name__ == "__main__":
         ext_diag.check_customerdata_available_to_reports(customerdata_df)
     ext_diag.check_batch_size()
     print('Generating diagnostics DONE')
+
+    print('All tasks successfully executed. You may now close this window.')

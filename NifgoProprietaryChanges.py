@@ -4,7 +4,7 @@
 
 import numpy as np
 import Utilities as util
-from ELT import Extract
+import pandas as pd
 import re
 
 class GeneralChanges:
@@ -369,7 +369,7 @@ class CombinedChanges:
                                                         no_change)
 
     def DPYD_phenotype(self):
-        data = Extract().pharmacydata()
+        data = pd.read_excel("Input/Dataframes/apotheekinfosysteem.xlsx")
         DPYD_data = data[data['Gen'] == 'DPYD']
 
         def DPYD_get_phenotype(genotype):
