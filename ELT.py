@@ -206,7 +206,7 @@ class Transform:
         def columns_and_dates(self, customerdata_df):
             customerdata_df = customerdata_df
             customerdata_df = customerdata_df.rename(
-                columns={0: 'sample_id', 1: 'initials', 2: 'lastname', 3: 'birthdate', 4: 'status'})
+                columns={0: 'sample_id', 1: 'sex', 2: 'initials', 3: 'lastname', 4: 'birthdate'})
             customerdata_df = customerdata_df.fillna('')
             customerdata_df = customerdata_df.apply(
                 lambda col: col.map(lambda x: x.strip() if isinstance(x, str) else x))
@@ -263,16 +263,11 @@ class Transform:
             self.probeset_ids = probeset_ids
 
         def drop_columns_after_last_sample(self):
-            """
-            Drops all columns after the last sample. Samples are assumed to always start with a letter.
-            :return: DataFrame with columns dropped
-            """
-            for column in self.dataframe.columns:
-                if column[0] not in ['p','D','B','G']: #Being either probeset_id or something like D402000223.CEL_call_code.
-                    drop_from_here_column = column
-                    break
-            index = self.dataframe.columns.get_loc(drop_from_here_column)
-            self.dataframe = self.dataframe.iloc[:, :index + 1]
+            cols = self.dataframe.columns
+            keep = ['probeset_id'] + [c for c in cols if c.endswith('.CEL_call_code')]
+            # If you also want to keep dbSNP_RS_ID, add:
+            # if 'dbSNP_RS_ID' in cols: keep.append('dbSNP_RS_ID')
+            self.dataframe = self.dataframe[keep]
 
         def drop_cel_call_code_suffix(self):
             """
@@ -286,9 +281,7 @@ class Transform:
             Unpivots the DataFrame to match the structure of phenotypes.rpt.
             :return: Unpivoted DataFrame
             """
-            pivot_columns = list(self.dataframe.columns)
-            del pivot_columns[0]
-            del pivot_columns[-1]
+            pivot_columns = [c for c in self.dataframe.columns if c != 'probeset_id']
             self.dataframe = pd.melt(self.dataframe, id_vars='probeset_id', value_vars=pivot_columns)
 
         def reorder_and_rename_columns(self):
@@ -387,9 +380,10 @@ class DataPreparation:
 
         for sample in unique_samples:
             divergent_count = 0
+            has_invalid_part = False
             sample_id_mask = self.complete_dataframe['sample_id'] == sample
 
-            # Check each VDR sub-gene and count divergences, track missing genes
+            # Check each VDR sub-gene and count divergences, track missing/invalid genes
             for gene, expected_base in [
                 ('VDR_1', 'G'),
                 ('VDR_2', 'A'),
@@ -402,20 +396,29 @@ class DataPreparation:
                 bad_values = {'ERROR', 'MISSING', 'Not_PM', 'Not_NM', 'Not_IM', 'Not_RM',
                               'Not_Determined', 'Not_UM', 'EM', 'unknown', '---', '', ','}
 
-                genotype = values[0].strip().upper() if values else ''
-                if not genotype or genotype in bad_values or '/' not in genotype:
+                genotype = values[0].strip().upper() if values.size > 0 else ''
+                # invalid if empty/bad or not a diploid call (no '/')
+                if (not genotype) or (genotype in bad_values) or ('/' not in genotype):
                     missing_genes.add(gene)
-                else:
-                    if expected_base in genotype:
-                        divergent_count += 1
+                    has_invalid_part = True
+                    continue  # no divergence counting for invalid parts
+
+                a1, a2, *_ = genotype.split('/')
+                a1, a2 = a1.strip(), a2.strip()
+                # Count ONE divergence if it's not exactly expected/expected
+                if not (a1 == expected_base and a2 == expected_base):
+                    divergent_count += 1
 
             # Determine phenotype and genotype
-            if divergent_count >= 2:
-                phenotype, combined_genotype = 'PF', 'MT/MT'
-            elif divergent_count == 1:
-                phenotype, combined_genotype = 'IF', 'WT/MT'
+            if has_invalid_part:
+                phenotype, combined_genotype = '---', '---'
             else:
-                phenotype, combined_genotype = 'NF', 'WT/WT'
+                if divergent_count >= 2:
+                    phenotype, combined_genotype = 'PF', 'MT/MT'
+                elif divergent_count == 1:
+                    phenotype, combined_genotype = 'IF', 'WT/MT'
+                else:
+                    phenotype, combined_genotype = 'NF', 'WT/WT'
 
             # Append combined VDR row
             VDR_row = {
@@ -429,25 +432,10 @@ class DataPreparation:
                 ignore_index=True
             )
 
-        # After processing all samples, emit one warning if any genes missing
-        if missing_genes:
-            # Format each entry with its SNP probe IDs
-            gene_snp_list = []
-            for gene in sorted(missing_genes):
-                snps = probeset_id_dict.get(gene, ['UNKNOWN'])
-                gene_snp_list.append(f"{gene} ({', '.join(snps)})")
-            missing_str = ", ".join(gene_snp_list)
-            warnings.warn(
-                f"\n\n\nWARNING: VDR results cannot be trusted because the following SNPs are missing: {missing_str}.\n"
-                f"Check Output/Dataframes/genotypes for any missing VDR SNP's. Edit this data in the genotypes file.\n\n\n",
-                UserWarning
-            )
-
         # Remove individual VDR_* rows
         self.complete_dataframe = self.complete_dataframe[
             ~self.complete_dataframe['gene'].str.match(r'VDR_\d+', na=False)
         ]
-
 
     def keep_only_batch_relevant_data(self):
         relevant_samples = self.pheno_df['sample_id'].unique().tolist()

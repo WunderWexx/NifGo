@@ -1,5 +1,40 @@
 Diagnostics:
 
 Faulty Phenotypes:
-No faulty phenotypes
+sample_id	gene	phenotype	genotype
+Control_10	UGT1A1	Not_PM	*36/*60
+Control_13	UGT1A1	Not_PM	*36/*60
+Control_16	UGT1A1	Not_PM	*36/*60
+Control_19	UGT1A1	Not_PM	*36/*60
+Control_2	UGT1A1	Not_PM	*36/*60
+Control_4	UGT1A1	Not_PM	*36/*60
+Control_6	UGT1A1	Not_PM	*36/*60
+Control_8	UGT1A1	Not_PM	*36/*60
+G001185334	CYP2D6	unknown	
+G001185404	CYP2B6	Not_PM	*1/*15
+G001185484	CYP2C19	unknown	
+G001185485	CYP2D6	unknown	
+G001185505	CYP1A2	unknown	
+G001185505	CYP2C9	unknown	
+G001185505	CYP2D6	unknown	
+G001185509	CYP2D6	unknown	
+G001185637	NUDT15	unknown	*4/*14
+G001239764	CYP2D6	unknown	
+G001239764	DPYD	ERROR	ERROR
+G001239775	CYP2D6	unknown	
+G001239865	CYP2D6	unknown	
+G001239967	DPYD	ERROR	ERROR
+G001239967	G6PD	unknown	
+G001239974	CYP2D6	unknown	
+G001239976	CYP2D6	unknown	
+G001239988	CYP2C9	unknown	
+G001239988	CYP2D6	unknown	*4/*22
+G001239996	CYP2D6	unknown	
+G001240078	CYP2D6	Not_PM	*9/*22
+G001240078	G6PD	unknown	
+G001240081	CYP2D6	unknown	
+G001240082	CYP2D6	unknown	
+G001240097	CYP2C19	unknown	
+G001240145	CYP2D6	unknown	*4/*22
+
 

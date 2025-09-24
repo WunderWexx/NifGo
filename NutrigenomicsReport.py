@@ -53,6 +53,8 @@ class nutrigenomics_report:
             # Markeer rood die uitslagen die afwijken van de normaal in tabel 1
             if InlineDiagnostics().is_genotype_deviation(result, gene):
                 util.change_table_row(row, font_color='FF0000')
+                with open("Output/Diagnostics/deviations.txt", "a") as f:
+                    f.write(f"{self.sample_id}\t{gene}\t{result}\n")
 
         # Fill results table 2
         table1 = doc.tables[2]
@@ -65,6 +67,8 @@ class nutrigenomics_report:
             # Markeer rood die uitslagen die afwijken van de normaal in tabel 2
             if InlineDiagnostics().is_genotype_deviation(result, gene):
                 util.change_table_row(row, font_color='FF0000')
+                with open("Output/Diagnostics/deviations.txt", "a") as f:
+                    f.write(f"{self.sample_id}\t{gene}\t{result}\n")
 
         #Save the document
         document_name = 'NutrigenomicsReport' + "_" + self.sample_id + ".docx"

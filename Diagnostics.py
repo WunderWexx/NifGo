@@ -10,6 +10,7 @@ import Utilities as util
 from docx import Document
 from math import ceil
 import itertools
+import os
 
 #Variables
 genes_by_phenotype_pattern = {
@@ -201,6 +202,42 @@ class ExternalDiagnostics:
             diag.write('\n\n')
             diag.close()
 
+    def check_deviation_percentage(self):
+        import pandas as pd
+
+        # Read raw lines and filter only valid ones
+        file_path = "Output/Diagnostics/deviations.txt"
+        valid_rows = []
+        with open(file_path, 'r', encoding='utf-8') as file:
+            for line in file:
+                parts = line.strip().split('\t')
+                if len(parts) == 3 and not parts[0].endswith('_2'):
+                    valid_rows.append(parts)
+
+        # Convert to DataFrame
+        df = pd.DataFrame(valid_rows, columns=['sample_id', 'gene', 'deviation'])
+
+        # Count deviations per gene
+        gene_counts = df['gene'].value_counts().sort_values(ascending=False)
+
+        # Write results to diagnostics.txt
+        cleaned_sample_ids = [sid for sid in self.unique_sample_ids if '_2' not in sid]
+        with open('Output/Diagnostics/diagnostics.txt', 'a') as diag:
+            diag.write('Deviancy percentage per gene:\n')
+            diag.write('Gene\tNumber of deviations\tPercentage of total\n')
+            for deviant_counts_index in range(len(gene_counts)):
+                percentage_deviant = (gene_counts.iloc[deviant_counts_index] / len(cleaned_sample_ids)) * 100
+                gene = gene_counts.index[deviant_counts_index]
+                deviations_number = gene_counts.iloc[deviant_counts_index]
+                diag.write(f'{gene}\t{deviations_number}\t{percentage_deviant:.2f}%\n')
+            diag.write('\n\n')
+            diag.close()
+
+        # Remove file
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+
 class InlineDiagnostics:
     def __init__(self):
         self.genes_by_phenotype_pattern = genes_by_phenotype_pattern
@@ -231,14 +268,54 @@ class InlineDiagnostics:
 
         return pattern
 
-    deviant_CYP2A6 = ['*2', '*9', '*17', '*23', '*25', '*26', '*28', '*41', '*4', '*12', '*27', '*34', '*47', '*53']
-    CYP2A6_pattern = generate_combination_deviant_regex(deviant_CYP2A6)
+    @staticmethod
+    def generate_double_cobination_exclusion_regex(good_list, bad_list):
+        """
+        Constructs a regex pattern that matches genotypes consisting **only**
+        of 'good' alleles and rejects any genotype that includes even a single
+        'bad' allele. Genotypes are of the form 'allele1/allele2'.
 
-    deviant_NAT1 = ['*11', '*14', '*15', '*17', '*18', '*19', '*22']
-    NAT1_pattern = generate_combination_deviant_regex(deviant_NAT1)
+        Parameters:
+        - good_list: list of SNP strings deemed acceptable
+        - bad_list: list of SNP strings deemed deviant
 
-    deviant_NAT2 = ['*5', '*6', '*7', '*10', '*12', '*14', '*17']
-    NAT2_pattern = generate_combination_deviant_regex(deviant_NAT2)
+        Returns:
+        - regex pattern string that matches valid genotypes
+        """
+        # Escape metacharacters in each allele
+        good = [re.escape(snp) for snp in good_list]
+        bad = [re.escape(snp) for snp in bad_list]
+
+        # Generate all disallowed combinations:
+        # - any pair where at least one allele is from the bad list
+        disallowed = set()
+
+        # Bad/Bad combinations
+        disallowed.update(f"{a}/{b}" for a, b in itertools.combinations_with_replacement(bad, 2))
+        disallowed.update(f"{b}/{a}" for a, b in itertools.combinations(bad, 2))  # Ensure all orders
+
+        # Good/Bad and Bad/Good combinations
+        for g in good:
+            for b in bad:
+                disallowed.add(f"{g}/{b}")
+                disallowed.add(f"{b}/{g}")
+
+        # Join disallowed into a regex alternation group
+        disallowed_regex = '|'.join(disallowed)
+
+        # Negative lookahead: only match if the entire genotype is NOT in the disallowed list
+        pattern = rf'^(?!({disallowed_regex})$).*$'
+
+        return pattern
+
+    # Any combination of two slows, or a fast and a slow should be red
+    NAT1_fast_snp = ['*4', '*18', '*20', '*21', '*23', '*24', '*25', '*27', '*29']
+    NAT1_slow_snp = ['*11', '*14', '*15', '*17', '*18', '*19', '*22']
+    NAT1_pattern = generate_double_cobination_exclusion_regex(NAT1_fast_snp, NAT1_slow_snp)
+
+    NAT2_fast_snp = ['*4', '*18']
+    NAT2_slow_snp = ['*5', '*6', '*7', '*10', '*12', '*14', '*17']
+    NAT2_pattern = generate_double_cobination_exclusion_regex(NAT2_fast_snp, NAT2_slow_snp)
 
     genes_by_normal_genotype = {
         'ABCB1': 'C/C',
@@ -247,19 +324,19 @@ class InlineDiagnostics:
         'ADRA2A': 'G/G',
         'ALDH2': 'G/G',
         'AMDHD1': 'C/C',
-        'BChE': r'^(?!K/K$|A/K$|U/A$|U/F1$|U/F2$|U/H$|U/J$|U/Sc$|K/H$|K/J$|K/Sc$|A/A$|A/F1$|A/F2$|F1/F1$|F1/F2$|F2/F2$|H/H$|H/J$|H/Sc$|J/J$|J/Sc$|Sc/Sc$|K/K\+A$).*$',
+        'BChE': r'^(?!K/K$|A/K$|U/A$|U/F1$|U/F2$|U/H$|U/J$|U/Sc$|K/H$|K/J$|K/Sc$|A/A$|A/F1$|A/F2$|F1/F1$|F1/F2$|F2/F2$|H/H$|H/J$|H/Sc$|J/J$|J/Sc$|Sc/Sc$|K/F2$|K/K\+A$).*$',
         'BCO1': 'A/A',
         'BDNF': r'C/C|Val/Val',
         'CACNA1S': 'WT/WT',
         'CFTR': 'WT/WT',
         'CYP1A1': 'T/T',
-        'CYP1B1': r'^(?!.*\*2)(?!.*\*3).*$',
-        'CYP2A6': CYP2A6_pattern,
-        'CYP2C8': r'^(?!((\*1A/\*2)|(\*1A/\*3)|(\*1A/\*4)|(\*1B/\*2)|(\*1B/\*3)|(\*1B/\*4)|(\*1C/\*2)|(\*1C/\*3)|(\*1C/\*4))$).*$',
-        'CYP2E1': r'^(?!((\*1A/\*5B)|(\*1B/\*5B)|(\*5B/\*5B))$).*$',
-        'CYP2F1': r'^(?!((\*1/\*2)|(\*1/\*3)|(\*1/\*4)|(\*1/\*6)|(\*2/\*2)|(\*3/\*3)|(\*4/\*4)|(\*6/\*6))$).*$',
+        'CYP1B1': r'^(?!.*\*(2|3)).*$',
+        'CYP2A6': r'^(?!.*(?:\*4|\*12|\*27|34|\*47|\*53)).*$',
+        'CYP2C8': r'^(?!.*\*(2|3|4)).*$',
+        'CYP2E1': r'^(?!.*\*(5B)).*$',
+        'CYP2F1': r'^(?!.*\*(2|3|4|6)).*$',
         'CYP2R1': r'A/A',
-        'CYP4F2': r'^(?!((\*1/\*3)|(\*3/\*3))$).*$',
+        'CYP4F2': r'^(?!.*\*3).*$',
         'CYP17A1': 'A/A',
         'CYP24A1': 'T/T',
         'DHCR7 / NADSYN1': 'G/G',
@@ -307,6 +384,10 @@ class InlineDiagnostics:
     def is_genotype_deviation(self, genotype, gene_to_check):
         regex_pattern = self.genes_by_normal_genotype[gene_to_check]
         return not re.fullmatch(regex_pattern, genotype)
+    """
+    Als deze functie een error geeft, is er waarschijnlijk iets verkeerds in de unknown file gezet.
+    Iets wat leeg is wat niet leeg zou moeten zijn, of een andere rare input.
+    """
 
     def is_customer_data_present(self,document_table_row):
         for cell_number in [1,3,5]:

@@ -75,7 +75,7 @@ class HandlingUnknowns:
         unknowns_df = unknowns_df[~to_remove_mask]
 
         # Save unknowns to Excel
-        unknowns_df.to_excel('Output/Diagnostics/unknowns.xlsx')
+        unknowns_df.to_excel('Output/Diagnostics/unknowns.xlsx', index=False)
 
     def ask_for_unknowns_df(self):
         file_is_present = util.popup_yes_no("Heeft u het bestand met de gecorrigeerde unknowns?")
