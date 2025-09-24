@@ -380,9 +380,10 @@ class DataPreparation:
 
         for sample in unique_samples:
             divergent_count = 0
+            has_invalid_part = False
             sample_id_mask = self.complete_dataframe['sample_id'] == sample
 
-            # Check each VDR sub-gene and count divergences, track missing genes
+            # Check each VDR sub-gene and count divergences, track missing/invalid genes
             for gene, expected_base in [
                 ('VDR_1', 'G'),
                 ('VDR_2', 'A'),
@@ -394,24 +395,30 @@ class DataPreparation:
 
                 bad_values = {'ERROR', 'MISSING', 'Not_PM', 'Not_NM', 'Not_IM', 'Not_RM',
                               'Not_Determined', 'Not_UM', 'EM', 'unknown', '---', '', ','}
+
                 genotype = values[0].strip().upper() if values.size > 0 else ''
+                # invalid if empty/bad or not a diploid call (no '/')
                 if (not genotype) or (genotype in bad_values) or ('/' not in genotype):
                     missing_genes.add(gene)
-                else:
-                    a1, a2, *_ = genotype.split('/')
-                    a1, a2 = a1.strip(), a2.strip()
+                    has_invalid_part = True
+                    continue  # no divergence counting for invalid parts
 
-                    # Count ONE divergence for this sub-gene if it's not exactly expected/expected
-                    if not (a1 == expected_base and a2 == expected_base):
-                        divergent_count += 1
+                a1, a2, *_ = genotype.split('/')
+                a1, a2 = a1.strip(), a2.strip()
+                # Count ONE divergence if it's not exactly expected/expected
+                if not (a1 == expected_base and a2 == expected_base):
+                    divergent_count += 1
 
             # Determine phenotype and genotype
-            if divergent_count >= 2:
-                phenotype, combined_genotype = 'PF', 'MT/MT'
-            elif divergent_count == 1:
-                phenotype, combined_genotype = 'IF', 'WT/MT'
+            if has_invalid_part:
+                phenotype, combined_genotype = '---', '---'
             else:
-                phenotype, combined_genotype = 'NF', 'WT/WT'
+                if divergent_count >= 2:
+                    phenotype, combined_genotype = 'PF', 'MT/MT'
+                elif divergent_count == 1:
+                    phenotype, combined_genotype = 'IF', 'WT/MT'
+                else:
+                    phenotype, combined_genotype = 'NF', 'WT/WT'
 
             # Append combined VDR row
             VDR_row = {
@@ -425,9 +432,8 @@ class DataPreparation:
                 ignore_index=True
             )
 
-        # After processing all samples, emit one warning if any genes missing
+        # After processing all samples, emit a warning if any genes missing
         if missing_genes:
-            # Format each entry with its SNP probe IDs
             gene_snp_list = []
             for gene in sorted(missing_genes):
                 snps = probeset_id_dict.get(gene, ['UNKNOWN'])
@@ -443,7 +449,6 @@ class DataPreparation:
         self.complete_dataframe = self.complete_dataframe[
             ~self.complete_dataframe['gene'].str.match(r'VDR_\d+', na=False)
         ]
-
 
     def keep_only_batch_relevant_data(self):
         relevant_samples = self.pheno_df['sample_id'].unique().tolist()
