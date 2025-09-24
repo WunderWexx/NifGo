@@ -17,6 +17,8 @@ from multiprocessing import Pool, cpu_count
 from functools import partial
 from docx2pdf import convert
 
+if __name__ == '__main__':
+    print("\n\nDe functionaliteit van deze file wordt voortaan aangeroepen vanuit GUI.py.\n\n")
 
 # Functie voor multi-processing
 def generate_farmacogenetic_report(id, dataframe, customer_data):
