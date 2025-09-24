@@ -432,19 +432,6 @@ class DataPreparation:
                 ignore_index=True
             )
 
-        # After processing all samples, emit a warning if any genes missing
-        if missing_genes:
-            gene_snp_list = []
-            for gene in sorted(missing_genes):
-                snps = probeset_id_dict.get(gene, ['UNKNOWN'])
-                gene_snp_list.append(f"{gene} ({', '.join(snps)})")
-            missing_str = ", ".join(gene_snp_list)
-            warnings.warn(
-                f"\n\n\nWARNING: VDR results cannot be trusted because the following SNPs are missing one or more genotypes: {missing_str}.\n"
-                f"Check Output/Dataframes/genotypes for any missing VDR SNP's. Correct this data in the genotypes.txt file.\n\n\n",
-                UserWarning
-            )
-
         # Remove individual VDR_* rows
         self.complete_dataframe = self.complete_dataframe[
             ~self.complete_dataframe['gene'].str.match(r'VDR_\d+', na=False)
