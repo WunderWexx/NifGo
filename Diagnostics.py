@@ -368,8 +368,6 @@ class ExternalDiagnostics:
             merged["checked_sex"] != merged["indicated_sex"]
             ]
 
-        util.printEntire(discrepancies)
-
         # Note sex discrepancies
         with open('Output/Diagnostics/diagnostics.txt', 'a') as diag:
             diag.write("Sex discrepancies:\n")
