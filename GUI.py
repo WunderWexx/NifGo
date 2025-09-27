@@ -6,7 +6,7 @@ import multiprocessing as mp
 
 def launch_gui():
     OUTPUT_DIR = os.path.join(os.getcwd(), "Output")
-    CONFIG_FILE = os.path.join(OUTPUT_DIR, "last_config.json")
+    CONFIG_FILE = os.path.join(OUTPUT_DIR, "last_run_config.json")
 
     # --- Edit the help text here ---
     INFO_TEXT = (

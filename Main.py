@@ -51,26 +51,32 @@ def generation_script(delete_reports: bool,
         util.empty_folder('Output/Reports/PDF')
 
     # Phenotypes.rpt extraction and transformation
+    print("Importing phenotype data [...]")
     phenotypes_df = pd.read_csv(phenotype_file, sep="@", header=None, engine="python")
     phenotypes_df = ELT.Load().phenotype_rpt(phenotypes_df)
-    print('phenotype import DONE')
+    print('Importing phenotype data DONE')
     phenotype_transformation = ELT.Transform().phenotype_rpt(phenotypes_df)
     phenotype_transformation.remove_cel_suffix()
     phenotype_transformation.drop_gene_function()
     phenotype_transformation.filter_thermofisher_genes(ThermoFisher_determined_genes)
     phenotype_transformation.rename_known_call()
 
+    print('Transforming phenotype data [...]')
     phenotypes_df = phenotype_transformation.dataframe
     util.store_dataframe(phenotypes_df, 'phenotypes')
-    print('phenotype transformation DONE')
+    print('Transforming phenotype data DONE')
 
     # Genotypes.txt extraction
-    print('genotype import [...]',end='\r')
+    print('Importing genotype data [...]')
     genotypes_df = ELT.Extract().extract_genotype_txt(genotype_file)
+    print('Importing genotype data DONE')
 
-    # Genotype transformation
+    # Checking sex
+    sex_check_df = Diagnostics.ExternalDiagnostics.check_sex(genotypes_df)
+
+    # Genotypes.txt transformation
+    print('Transforming genotype data [...]')
     genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.values())
-    print('genotype import DONE')
     genotypes_transformation = ELT.Transform().genotype_txt(genotypes_df, probeset_id_dict)
     genotypes_transformation.drop_columns_after_last_sample()
     genotypes_transformation.drop_cel_call_code_suffix()
@@ -80,7 +86,7 @@ def generation_script(delete_reports: bool,
 
     genotypes_df = genotypes_transformation.dataframe
     util.store_dataframe(genotypes_df, 'genotypes')
-    print('genotype transformation DONE')
+    print('Transforming genotype data DONE')
 
     # Data preparation
     data_preparation = ELT.DataPreparation(genotypes_df, phenotypes_df)
@@ -221,6 +227,7 @@ def generation_script(delete_reports: bool,
     ext_diag = Diagnostics.ExternalDiagnostics()
     ext_diag.check_phenotype_shape()
     ext_diag.check_genotype_shape()
+    ext_diag.compare_sex(customerdata_df, sex_check_df)
     ext_diag.check_deviation_percentage()
     if customerdata_df is not None:
         ext_diag.check_customerdata_available_to_reports(customerdata_df)

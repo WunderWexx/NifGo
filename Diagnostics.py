@@ -237,6 +237,152 @@ class ExternalDiagnostics:
         if os.path.exists(file_path):
             os.remove(file_path)
 
+    @staticmethod
+    def check_sex(genotype_df):
+        df = genotype_df
+        # Make sex_metrics a tidy categorical (saves memory & speeds comparisons)
+        if "sex_metrics" in df.columns:
+            df["sex_metrics"] = (
+                df["sex_metrics"]
+                .astype("string")
+                .str.strip()
+                .astype(pd.CategoricalDtype(categories=["male", "female"], ordered=False))
+            )
+
+        # Keep only rows with a definite male/female call:
+        if "sex_metrics" in df.columns:
+            df = df[df["sex_metrics"].isin(["male", "female"])].reset_index(drop=True)
+
+        # identify sample columns
+        non_sample = {"probeset_id", "dbSNP_RS_ID", "sex_metrics"}
+        sample_cols = [c for c in df.columns if c not in non_sample]
+
+        # Work with a clean string view of the genotype calls
+        samples = df[sample_cols].astype("string")
+        sex = df["sex_metrics"].astype("string").str.strip().str.lower()
+
+        # row masks by locus type (as you described)
+        male_rows = sex.eq("male")
+        female_rows = sex.eq("female")
+
+        # vectorised pattern maps (per column)
+        # Single-letter call: A or C or G or T (hemizygous style)
+        single_letter = samples.apply(lambda s: s.str.fullmatch(r"[ACGT]"))
+
+        # Diploid call: A/G, A/A, etc.
+        diploid = samples.apply(lambda s: s.str.fullmatch(r"[ACGT]/[ACGT]"))
+
+        # "Not present": anything that doesn't contain a base call (incl. NaN/empty/NoCall-style)
+        contains_base = samples.apply(lambda s: s.str.contains(r"[ACGT]", na=False))
+        not_present = ~contains_base
+
+        n_male = int(male_rows.sum())
+        n_female = int(female_rows.sum())
+
+        # Set alpha for certainty threshold
+        alpha = 0.05
+        percentage = 1 - alpha
+
+        #  per-sample proportions over the relevant rows
+        # For a sample to be male:
+        #   - "male" loci are single-letter
+        #   - AND "female" loci are single-letter (hemizygous-looking on X)
+        male_ok = pd.Series(False, index=samples.columns)
+        male_loci_ok_rate = ((single_letter | not_present).loc[male_rows].sum() / n_male)
+        female_single_rate = (single_letter.loc[female_rows].sum() / n_female)
+        male_ok = (male_loci_ok_rate >= percentage) & (female_single_rate >= percentage)
+
+        # For a sample to be female:
+        #   - "male" loci are NOT present
+        #   - AND "female" loci are diploid
+        female_ok = pd.Series(False, index=samples.columns)
+        male_not_present_rate = (not_present.loc[male_rows].sum() / n_male)
+        female_diploid_rate = (diploid.loc[female_rows].sum() / n_female)
+        female_ok = (male_not_present_rate >= percentage) & (female_diploid_rate >= percentage)
+
+        # Final call
+        call = pd.Series("unknown", index=samples.columns)
+        call.loc[male_ok] = "male"
+        call.loc[female_ok] = "female"
+
+        #  Expose the metrics so borderline cases can be audited
+        sex_check_df = pd.DataFrame({
+            "sample_id": samples.columns,
+        })
+
+        # Build dataframe
+        remove_cel_suffix = lambda x: x.replace('.CEL_call_code', '')
+        sex_check_df['sample_id'] = sex_check_df['sample_id'].apply(remove_cel_suffix)
+
+        sex_check_df["male_loci_present_rate"] = (single_letter.loc[male_rows].sum() / n_male).values
+        sex_check_df["female_single_rate"] = (single_letter.loc[female_rows].sum() / n_female).values
+        sex_check_df["male_not_present_rate"] = (not_present.loc[male_rows].sum() / n_male).values
+        sex_check_df['female_diploid_rate'] = (diploid.loc[female_rows].sum() / n_female).values
+
+        sex_check_df["sex_call"] = call.values
+
+        # Sort by sample for later comparison
+        sex_check_df = sex_check_df.sort_values(['sample_id']).reset_index(drop=True)
+
+        return sex_check_df
+
+    @staticmethod
+    def compare_sex(customer_data_df, sex_check_df):
+        # put your actual column names here
+        id_col_a = "sample_id"  # in sex_check_df
+        gender_col_a = "sex_call"
+
+        id_col_b = "sample_id"  # in customer_data_df
+        gender_col_b = "sex"
+
+        # Normalise genders to the same codes
+        def normalise_gender_a(s: pd.Series) -> pd.Series:
+            return s.astype(str).str.strip().str.lower().map({
+                "male": "M",
+                "female": "F"
+            })
+
+        def normalise_gender_b(s: pd.Series) -> pd.Series:
+            return s.astype(str).str.strip().map({
+                "Hr.": "M",
+                "Mw.": "F"
+            })
+
+        # Merge only on shared IDs
+        merged = sex_check_df.merge(
+            customer_data_df,
+            how="inner",  # keep only IDs present in BOTH
+            left_on=id_col_a,
+            right_on=id_col_b,
+            suffixes=("_df1", "_df2")
+        )
+
+        # Compare
+        merged["gender_norm_df1"] = normalise_gender_a(merged[gender_col_a])
+        merged["gender_norm_df2"] = normalise_gender_b(merged[gender_col_b])
+
+        # Keep only mismatches
+        discrepancies = merged[
+            merged["gender_norm_df1"] != merged["gender_norm_df2"]
+            ][[id_col_a, id_col_b, gender_col_a, gender_col_b]]
+
+        util.printEntire(discrepancies)
+
+        # Note sex discrepancies
+        with open('Output/Diagnostics/diagnostics.txt', 'a') as diag:
+            diag.write("Sex discrepancies:\n")
+            if discrepancies.empty:
+                diag.write("No discrepancies found.\n")
+            else:
+                for sample_id, checked_sex, indicated_sex in zip(discrepancies.iloc[:, 0],
+                                                                 discrepancies['sex_call'],
+                                                                 discrepancies['sex']):
+                    diag.write(
+                        f"{sample_id} indicated as {'male' if indicated_sex == 'Hr.' else 'female'}, "
+                        f"should be {checked_sex}\n"
+                    )
+            diag.write('\n\n')
+            diag.close()
 
 class InlineDiagnostics:
     def __init__(self):

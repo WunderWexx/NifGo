@@ -231,8 +231,6 @@ class Transform:
         def drop_columns_after_last_sample(self):
             cols = self.dataframe.columns
             keep = ['probeset_id'] + [c for c in cols if c.endswith('.CEL_call_code')]
-            # If you also want to keep dbSNP_RS_ID, add:
-            # if 'dbSNP_RS_ID' in cols: keep.append('dbSNP_RS_ID')
             self.dataframe = self.dataframe[keep]
 
         def drop_cel_call_code_suffix(self):
