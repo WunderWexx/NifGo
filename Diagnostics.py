@@ -3,8 +3,6 @@ After the program has run, the output needs to be checked for mistakes both huma
 The ExternalDiagnostics class checks mistakes after the program has finished. This may take a while.
 The InlineDiagnostics class checks things per document as it is being filled with data. This class should perform as fast as possible.
 """
-from asyncio import create_eager_task_factory
-
 import pandas as pd
 import re
 import Utilities as util
