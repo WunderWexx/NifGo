@@ -3,12 +3,14 @@ After the program has run, the output needs to be checked for mistakes both huma
 The ExternalDiagnostics class checks mistakes after the program has finished. This may take a while.
 The InlineDiagnostics class checks things per document as it is being filled with data. This class should perform as fast as possible.
 """
+from asyncio import create_eager_task_factory
 
 import pandas as pd
 import re
 import Utilities as util
 from docx import Document
 from math import ceil
+from statistics import fmean
 import itertools
 import os
 
@@ -358,13 +360,13 @@ class ExternalDiagnostics:
         )
 
         # Compare
-        merged["gender_norm_df1"] = normalise_gender_a(merged[gender_col_a])
-        merged["gender_norm_df2"] = normalise_gender_b(merged[gender_col_b])
+        merged["checked_sex"] = normalise_gender_a(merged[gender_col_a])
+        merged["indicated_sex"] = normalise_gender_b(merged[gender_col_b])
 
         # Keep only mismatches
         discrepancies = merged[
-            merged["gender_norm_df1"] != merged["gender_norm_df2"]
-            ][[id_col_a, id_col_b, gender_col_a, gender_col_b]]
+            merged["checked_sex"] != merged["indicated_sex"]
+            ]
 
         util.printEntire(discrepancies)
 
@@ -374,12 +376,17 @@ class ExternalDiagnostics:
             if discrepancies.empty:
                 diag.write("No discrepancies found.\n")
             else:
-                for sample_id, checked_sex, indicated_sex in zip(discrepancies.iloc[:, 0],
-                                                                 discrepancies['sex_call'],
-                                                                 discrepancies['sex']):
+                for row in discrepancies.to_dict('records'):
+                    if row['checked_sex'] == 'M':
+                        male_present = float(row['male_loci_present_rate'])
+                        female_single = float(row['female_single_rate'])
+                        certainty = fmean([male_present, female_single]) * 100.0
+                    else:
+                        female_diploid = float(row['female_diploid_rate'])
+                        certainty = female_diploid * 100.0
                     diag.write(
-                        f"{sample_id} indicated as {'male' if indicated_sex == 'Hr.' else 'female'}, "
-                        f"should be {checked_sex}\n"
+                        f"{row['sample_id']} indicated as {'male' if row['indicated_sex'] == 'M' else 'female'}, "
+                        f"should be {row['checked_sex']}. {certainty:.2f}% certainty.\n"
                     )
             diag.write('\n\n')
             diag.close()
