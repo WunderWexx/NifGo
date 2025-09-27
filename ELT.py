@@ -1,11 +1,9 @@
 """The Extract Load, and Transform process"""
+
 # Imports
 import pandas as pd
 import math
-import csv
 import numpy as np
-import Utilities as util
-import warnings
 
 # Lists necessary for importing data
 ThermoFisher_determined_genes = [
@@ -97,38 +95,28 @@ class Extract:
     The data is extracted from the source files, and loaded into a pandas DataFrame.
     """
 
-    def __init__(self):
-        """
-        Sets the field_size_limit to the maximum number the
-        """
-        csv.field_size_limit(1000000000)
-
     @staticmethod
-    def extract_user_specified_file(filename):
-        """Prompts the user to select a file, then reads it into a Pandas DataFrame."""
-        filepath = util.popup_get_file(f"Please select the {filename} file")
+    def extract_genotype_txt(filepath):
+        with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+            for rownumber, line in enumerate(f):
+                if line.startswith("probeset_id"):
+                    header_row = rownumber
+                    break
 
-        if not filepath:  # Handle case where user cancels the file selection
-            print("No file selected.")
-            return None
+        if header_row == None:
+            raise ValueError("Couldn't find a header line starting with 'probeset_id'.")
 
-        try:
-            df = pd.read_csv(filepath, sep="@", header=None, engine="python")
-            return df
-        except Exception as e:
-            print(f"Error reading the file: {e}")
-            return None
+        needed_columns  = lambda name: name.endswith(".CEL_call_code") or name in {"probeset_id", "dbSNP_RS_ID", "sex_metrics"}
 
-    @staticmethod
-    def pharmacydata():
-        return pd.read_excel("Input/Dataframes/apotheekinfosysteem.xlsx")
-
-    def phenotype_rpt(self):
-        return self.extract_user_specified_file('phenotype.rpt')
-
-    def genotype_txt(self):
-        return self.extract_user_specified_file('genotype.txt')
-
+        df = pd.read_csv(
+            filepath,
+            sep="\t",
+            header=0,  # first row *after* skiprows is the header
+            skiprows=header_row,  # skip metadata lines so header is the next line
+            usecols=needed_columns,  # keep only needed columns
+            low_memory=False
+        )
+        return df
 
 class Load:
     """
@@ -166,36 +154,14 @@ class Load:
     @staticmethod
     def genotype_txt(dataframe, needed_probeset_ids):
         """
-        Transforms a raw genotype DataFrame into a structured format containing only specified probeset_ids.
-
-        The function first identifies the header row, removes preceding metadata, filters for relevant genes,
-        and parses the data into a well-labeled DataFrame.
-
-        :param dataframe: Raw genotype DataFrame with one-column 'rest' format.
-        :param needed_probeset_ids: A list of probeset_id entries to retain, each wrapped in a list.
-        :return: A structured DataFrame with proper headers and filtered rows.
+        Filters the needed probeset id's from the dataframe, and drops the unneeded columns.
         """
-        # Initial preprocessing
-        dataframe.columns = ['rest']
-
-        # Identify the row where headers reside
-        headers_row = dataframe[dataframe['rest'].str.startswith("probeset_id")].index[0]
-        headers = dataframe.iloc[headers_row]['rest'].split("\t")
-
-        # Remove metadata rows above the actual data
-        start_row = dataframe[dataframe['rest'].str.startswith("AX-")].index[0]
-        dataframe = dataframe.iloc[start_row:]
 
         # Extract probeset_id list from nested list
         needed_ids = [id_list[0] for id_list in needed_probeset_ids]
-        dataframe = dataframe[dataframe['rest'].str.startswith(tuple(needed_ids))]
-
-        # Split and column assignment
-        split_data = dataframe['rest'].str.split("\t", expand=True)
-        split_data.columns = headers  # Assign headers all at once
-
-        split_data.reset_index(drop=True, inplace=True)
-        return split_data
+        dataframe = dataframe[dataframe['probeset_id'].str.startswith(tuple(needed_ids))]
+        dataframe.drop(columns = ["sex_metrics", 'dbSNP_RS_ID'], inplace=True)
+        return dataframe
 
 
 class Transform:

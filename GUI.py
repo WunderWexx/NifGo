@@ -2,7 +2,6 @@ import json
 import os
 import tkinter as tk
 from tkinter import filedialog
-from tkinter import scrolledtext
 import multiprocessing as mp
 
 def launch_gui():

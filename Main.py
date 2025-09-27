@@ -50,7 +50,7 @@ def generation_script(delete_reports: bool,
         util.empty_folder('Output/Reports')
         util.empty_folder('Output/Reports/PDF')
 
-    # Phenotypes.rpt ingestion and transformation
+    # Phenotypes.rpt extraction and transformation
     phenotypes_df = pd.read_csv(phenotype_file, sep="@", header=None, engine="python")
     phenotypes_df = ELT.Load().phenotype_rpt(phenotypes_df)
     print('phenotype import DONE')
@@ -64,9 +64,11 @@ def generation_script(delete_reports: bool,
     util.store_dataframe(phenotypes_df, 'phenotypes')
     print('phenotype transformation DONE')
 
-    # Genotypes.txt ingestion and transformation
+    # Genotypes.txt extraction
     print('genotype import [...]',end='\r')
-    genotypes_df = pd.read_csv(genotype_file, sep="@", header=None, engine="python")
+    genotypes_df = ELT.Extract().extract_genotype_txt(genotype_file)
+
+    # Genotype transformation
     genotypes_df = ELT.Load().genotype_txt(genotypes_df, probeset_id_dict.values())
     print('genotype import DONE')
     genotypes_transformation = ELT.Transform().genotype_txt(genotypes_df, probeset_id_dict)
@@ -91,6 +93,8 @@ def generation_script(delete_reports: bool,
     complete_dataframe = data_preparation.complete_dataframe
     util.store_dataframe(complete_dataframe, 'complete')
     print('complete dataframe creation DONE')
+    del genotypes_df
+    del phenotypes_df
 
     # Implementing Nifgo changes
     general_changes = changes.GeneralChanges(complete_dataframe)
@@ -130,8 +134,10 @@ def generation_script(delete_reports: bool,
     if customer_data_file:
         customerdata_df = pd.read_excel(customer_data_file, header=None)
         customerdata_df = ELT.Transform.customer_data().columns_and_dates(customerdata_df)
+        print('Importing customer data DONE')
     else:
         customerdata_df = None
+        print('No customer data file provided')
 
     # Generate cards.xlsx file
     if customerdata_df is not None:
@@ -208,7 +214,7 @@ def generation_script(delete_reports: bool,
                     print(report)
         print('Exporting to PDF DONE')
     else:
-        print('NO PDF EXPORT')
+        print('No PDF export')
 
     # Run diagnostics
     print('Generating diagnostics [...]')
@@ -221,4 +227,4 @@ def generation_script(delete_reports: bool,
     ext_diag.check_batch_size()
     print('Generating diagnostics DONE')
 
-    print('All tasks successfully executed. You may now close this window.')
+    print('\nAll tasks successfully executed. You may now close this window.')
