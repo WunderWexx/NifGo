@@ -223,15 +223,18 @@ def generation_script(delete_reports: bool,
         print('No PDF export')
 
     # Run diagnostics
-    print('Generating diagnostics [...]')
-    ext_diag = Diagnostics.ExternalDiagnostics()
-    ext_diag.check_phenotype_shape()
-    ext_diag.check_genotype_shape()
-    ext_diag.compare_sex(customerdata_df, sex_check_df)
-    ext_diag.check_deviation_percentage()
-    if customerdata_df is not None:
-        ext_diag.check_customerdata_available_to_reports(customerdata_df)
-    ext_diag.check_batch_size()
-    print('Generating diagnostics DONE')
+    if (corrected_unknowns_file is not None and customerdata_df is not None):
+        print('Generating diagnostics [...]')
+        ext_diag = Diagnostics.ExternalDiagnostics()
+        ext_diag.check_phenotype_shape()
+        ext_diag.check_genotype_shape()
+        ext_diag.compare_sex(customerdata_df, sex_check_df)
+        ext_diag.check_deviation_percentage()
+        if customerdata_df is not None:
+            ext_diag.check_customerdata_available_to_reports(customerdata_df)
+        ext_diag.check_batch_size()
+        print('Generating diagnostics DONE')
+    else:
+        print('Not enough data available for full diagnostics. None generated.')
 
     print('\nAll tasks successfully executed. You may now close this window.')
