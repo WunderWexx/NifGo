@@ -224,16 +224,21 @@ def generation_script(delete_reports: bool,
 
     # Run diagnostics
     if (corrected_unknowns_file is not None and customerdata_df is not None):
-        print('Generating diagnostics [...]')
-        ext_diag = Diagnostics.ExternalDiagnostics()
-        ext_diag.check_phenotype_shape()
-        ext_diag.check_genotype_shape()
-        ext_diag.compare_sex(customerdata_df, sex_check_df)
-        ext_diag.check_deviation_percentage()
-        if customerdata_df is not None:
-            ext_diag.check_customerdata_available_to_reports(customerdata_df)
-        ext_diag.check_batch_size()
-        print('Generating diagnostics DONE')
+        try:
+            print('Generating diagnostics [...]')
+            ext_diag = Diagnostics.ExternalDiagnostics()
+            ext_diag.check_phenotype_shape()
+            ext_diag.check_genotype_shape()
+            ext_diag.compare_sex(customerdata_df, sex_check_df)
+            ext_diag.check_deviation_percentage()
+            if customerdata_df is not None:
+                ext_diag.check_customerdata_available_to_reports(customerdata_df)
+            ext_diag.check_batch_size()
+            print('Generating diagnostics DONE')
+        except Exception as e:
+            print('ERROR ENCOUNTERED:\n'
+                  f'{e}\n'
+                  'Zeer waarschijnlijk missen er genotypes en/of fenotypes uit de unknown file. Hierboven de error voor meer informatie.')
     else:
         print('Not enough data available for full diagnostics. None generated.')
 
