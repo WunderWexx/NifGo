@@ -357,6 +357,8 @@ class ExternalDiagnostics:
             suffixes=("_df1", "_df2")
         )
 
+        # util.store_dataframe(merged, 'merged')
+
         # Compare
         merged["checked_sex"] = normalise_gender_a(merged[gender_col_a])
         merged["indicated_sex"] = normalise_gender_b(merged[gender_col_b])
@@ -365,6 +367,8 @@ class ExternalDiagnostics:
         discrepancies = merged[
             merged["checked_sex"] != merged["indicated_sex"]
             ]
+
+        # util.store_dataframe(discrepancies, 'discrepancies')
 
         # Note sex discrepancies
         with open('Output/Diagnostics/diagnostics.txt', 'a') as diag:
@@ -382,7 +386,7 @@ class ExternalDiagnostics:
                         certainty = female_diploid * 100.0
                     diag.write(
                         f"{row['sample_id']} indicated as {'male' if row['indicated_sex'] == 'M' else 'female'}, "
-                        f"should be {row['checked_sex']}. {certainty:.2f}% certainty.\n"
+                        f"should be {'male' if row['checked_sex'] == 'M' else 'female'}. {certainty:.2f}% certainty.\n"
                     )
             diag.write('\n\n')
             diag.close()
