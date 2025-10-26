@@ -1,6 +1,7 @@
 # Where everything comes together
 
 # imports
+import os
 from timeit import default_timer as timer
 import Diagnostics
 import ELT
@@ -241,5 +242,7 @@ def generation_script(delete_reports: bool,
                   'Zeer waarschijnlijk missen er genotypes en/of fenotypes uit de unknown file. Hierboven de error voor meer informatie.')
     else:
         print('Not enough data available for full diagnostics. None generated.')
+        if os.path.exists('Output/Diagnostics/diagnostics.txt'):
+            os.remove('Output/Diagnostics/diagnostics.txt')
 
     print('\nAll tasks successfully executed. You may now close this window.')
