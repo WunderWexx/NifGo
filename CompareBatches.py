@@ -5,14 +5,14 @@ from docx import Document
 # ==== CONFIGURATION ====
 # Customer-data files:
 CD_FILES = {
-    'batch1': Path(r"C:/Users/Jarno/PycharmProjects/NifGo/Input/NifgoFiles/2025-05-24-B6/klantgegevens.xlsx"),
-    'batch2': Path(r"C:/Users/Jarno/PycharmProjects/NifGo/Input/NifgoFiles/2025-05-07-B5/klantgegevens.xlsx"),
+    'batch1': Path(r"C:/Users/Jarno/PycharmProjects/NifGo/Input/NifgoFiles/2025-12-06/N251118 Jarno.xlsx".replace('\\','/')),
+    'batch2': Path(r"C:/Users/Jarno/PycharmProjects/NifGo/Input/NifgoFiles/2025-12-06/N251118 Jarno.xlsx".replace('\\','/')),
 }
 
 # Report folders:
 REPORT_FOLDERS = {
-    'batch1': Path(r"C:/Users/Jarno/PycharmProjects/NifGo/TEMP/Reports_B6"),
-    'batch2': Path(r"C:/Users/Jarno/PycharmProjects/NifGo/TEMP/Reports_B5"),
+    'batch1': Path(r"C:\Users\Jarno\PycharmProjects\NifGo\Vergelijking\Reports_og".replace('\\','/')),
+    'batch2': Path(r"C:\Users\Jarno\PycharmProjects\NifGo\Vergelijking\reports_qc".replace('\\','/')),
 }
 
 # Report filename templates:
@@ -39,7 +39,7 @@ REPORT_TABLES = {
 # ==== HELPERS ====
 def read_customerdata(path: Path) -> pd.DataFrame:
     cd = pd.read_excel(path, header=None, engine='openpyxl')
-    cd = cd.rename(columns={0: 'sample_id', 1: 'initials', 2: 'lastname', 3: 'birthdate'})
+    cd = cd.rename(columns={0: 'sample_id', 1:'sex', 2: 'initials', 3: 'lastname', 4: 'birthdate'})
     cd['lastname'] = cd['lastname'].astype(str).str.strip().str.lower()
     return cd
 
