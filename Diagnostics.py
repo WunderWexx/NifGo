@@ -203,8 +203,6 @@ class ExternalDiagnostics:
             diag.close()
 
     def check_deviation_percentage(self):
-        import pandas as pd
-
         # Read raw lines and filter only valid ones
         file_path = "Output/Diagnostics/deviations.txt"
         valid_rows = []
@@ -231,7 +229,6 @@ class ExternalDiagnostics:
                 deviations_number = gene_counts.iloc[deviant_counts_index]
                 diag.write(f'{gene}\t{deviations_number}\t{percentage_deviant:.2f}%\n')
             diag.write('\n\n')
-            diag.close()
 
         # Remove file
         if os.path.exists(file_path):
