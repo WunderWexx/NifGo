@@ -3,13 +3,14 @@
 import pandas as pd
 from docx import Document
 import Utilities as util
+import re
 
 
 class HandlingUnknowns:
     def __init__(self, dataframe):
         self.dataframe = dataframe
         self.unknown_signs = ['ERROR', 'MISSING', 'Not_PM', 'Not_NM', 'Not_IM', 'Not_RM', 'Not_Determined',
-                              'Not_UM', 'EM', 'unknown', '---', '',',']
+                              'Not_UM', 'EM', 'unknown', '---',',', '_or_']
         # Get list of all genes to be reported
         self.farmacogenetic_genes = []
         most_recent_farmacogenetisch = util.get_most_recent_template('Farmacogenetisch')
@@ -35,9 +36,10 @@ class HandlingUnknowns:
 
     def detect_unknowns(self):
         # Detect unknown phenotypes and genotypes
+        pattern = '|'.join(re.escape(s) for s in self.unknown_signs) # Gives str.contains a regular expression of OR's
         unknowns_df = self.dataframe[
-            self.dataframe['phenotype'].isin(self.unknown_signs) |
-            self.dataframe['genotype'].isin(self.unknown_signs)
+            self.dataframe['phenotype'].str.contains(pattern, na=True) |
+            self.dataframe['genotype'].str.contains(pattern, na=True)
             ].copy()
 
         # Detect missing genes
@@ -68,9 +70,7 @@ class HandlingUnknowns:
                 non_phenotype_genes.append(gene)
 
         to_remove_mask = (
-                unknowns_df['gene'].isin(non_phenotype_genes) &
-                unknowns_df['phenotype'].isin(self.unknown_signs) &
-                ~unknowns_df['genotype'].isin(self.unknown_signs)
+                unknowns_df['gene'].isin(non_phenotype_genes)
         )
         unknowns_df = unknowns_df[~to_remove_mask]
 

@@ -104,9 +104,11 @@ def generation_script(delete_reports: bool,
     del phenotypes_df
 
     # Implementing Nifgo changes
+    """ # Code removed on 2025-12-19. Choices in phenotype will now be determined via unknowns.
     general_changes = changes.GeneralChanges(complete_dataframe)
     util.execute_all_methods(general_changes)
     complete_dataframe = general_changes.dataframe
+    """
 
     gene_name_changes = changes.GeneNameChanges(complete_dataframe)
     util.execute_all_methods(gene_name_changes)
