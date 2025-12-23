@@ -70,7 +70,9 @@ class HandlingUnknowns:
                 non_phenotype_genes.append(gene)
 
         to_remove_mask = (
-                unknowns_df['gene'].isin(non_phenotype_genes)
+            unknowns_df['gene'].isin(non_phenotype_genes) &
+            unknowns_df['phenotype'].isin(self.unknown_signs) &
+            ~unknowns_df['genotype'].isin(self.unknown_signs)
         )
         unknowns_df = unknowns_df[~to_remove_mask]
 
