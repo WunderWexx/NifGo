@@ -1,5 +1,5 @@
 # This is where unknown handling is done, including both unknown detection and replacement.
-
+import numpy as np
 import pandas as pd
 from docx import Document
 import Utilities as util
@@ -36,10 +36,10 @@ class HandlingUnknowns:
 
     def detect_unknowns(self):
         # Detect unknown phenotypes and genotypes
-        pattern = '|'.join(re.escape(s) for s in self.unknown_signs) # Gives str.contains a regular expression of OR's
+        pattern = '|'.join(re.escape(s) for s in self.unknown_signs)# Gives str.contains a regular expression of OR's
         unknowns_df = self.dataframe[
-            self.dataframe['phenotype'].str.contains(pattern, na=True) |
-            self.dataframe['genotype'].str.contains(pattern, na=True)
+            self.dataframe['phenotype'].replace('',np.nan).str.contains(pattern, na=True) |
+            self.dataframe['genotype'].replace('',np.nan).str.contains(pattern, na=True)
             ].copy()
 
         # Detect missing genes
@@ -71,8 +71,8 @@ class HandlingUnknowns:
 
         to_remove_mask = (
             unknowns_df['gene'].isin(non_phenotype_genes) &
-            unknowns_df['phenotype'].isin(self.unknown_signs) &
-            ~unknowns_df['genotype'].isin(self.unknown_signs)
+            unknowns_df['phenotype'].replace('',np.nan).str.contains(pattern, na=True) &
+            ~unknowns_df['genotype'].replace('',np.nan).str.contains(pattern, na=True)
         )
         unknowns_df = unknowns_df[~to_remove_mask]
 
