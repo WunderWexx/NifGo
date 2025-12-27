@@ -541,7 +541,7 @@ class InlineDiagnostics:
 
     def is_customer_data_present(self,document_table_row):
         for cell_number in [1,3,5]:
-            customer_data = document_table_row.cells[cell_number]
-            if customer_data == '':
+            customer_data = document_table_row.cells[cell_number].text
+            if not re.search(r'\w', customer_data):
                 return False
         return True

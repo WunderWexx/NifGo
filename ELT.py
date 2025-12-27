@@ -174,6 +174,7 @@ class Transform:
             customerdata_df = customerdata_df.rename(
                 columns={0: 'sample_id', 1: 'sex', 2: 'initials', 3: 'lastname', 4: 'birthdate'})
             customerdata_df = customerdata_df.fillna('')
+            customerdata_df['sample_id'] = customerdata_df['sample_id'].astype(str)
             customerdata_df = customerdata_df.apply(
                 lambda col: col.map(lambda x: x.strip() if isinstance(x, str) else x))
             customerdata_df['birthdate'] = customerdata_df['birthdate'].dt.strftime('%Y-%m-%d')
