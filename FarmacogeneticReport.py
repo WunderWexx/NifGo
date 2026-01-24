@@ -62,7 +62,7 @@ class farmacogenetic_report:
                     f.write(f"{self.sample_id}\t{gene}\t{phenotype}\n")
 
         #Save the document
-        document_name = 'FarmacogeneticReport' + "_" + self.sample_id + ".docx"
+        document_name = 'FarmacogeneticReport' + "_" + str(self.sample_id) + ".docx"
         path = Path("Output/Reports/")
         path.mkdir(parents=True, exist_ok=True)
         doc.save(f"Output\\Reports\\{document_name}")

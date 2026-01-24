@@ -71,7 +71,7 @@ class nutrigenomics_report:
                     f.write(f"{self.sample_id}\t{gene}\t{result}\n")
 
         #Save the document
-        document_name = 'NutrigenomicsReport' + "_" + self.sample_id + ".docx"
+        document_name = 'NutrigenomicsReport' + "_" + str(self.sample_id) + ".docx"
         path = Path("Output/Reports/")
         path.mkdir(parents=True, exist_ok=True)
         doc.save(f"Output\\Reports\\{document_name}")

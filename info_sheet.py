@@ -61,7 +61,7 @@ class InfoSheet():
                 util.change_table_row(row, font_color='FF0000')
 
         #Save the document
-        document_name = 'InfoSheet' + "_" + self.sample_id + ".docx"
+        document_name = 'InfoSheet' + "_" + str(self.sample_id) + ".docx"
         path = Path("Output/Reports/")
         path.mkdir(parents=True, exist_ok=True)
         doc.save(f"Output\\Reports\\{document_name}")
