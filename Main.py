@@ -61,6 +61,7 @@ def generation_script(delete_reports: bool,
     phenotype_transformation.drop_gene_function()
     phenotype_transformation.filter_thermofisher_genes(ThermoFisher_determined_genes)
     phenotype_transformation.rename_known_call()
+    phenotype_transformation.replace_null_with_missing()
 
     print('Transforming phenotype data [...]')
     phenotypes_df = phenotype_transformation.dataframe
@@ -109,7 +110,6 @@ def generation_script(delete_reports: bool,
     util.execute_all_methods(general_changes)
     complete_dataframe = general_changes.dataframe
     """
-
     gene_name_changes = changes.GeneNameChanges(complete_dataframe)
     util.execute_all_methods(gene_name_changes)
     complete_dataframe = gene_name_changes.dataframe

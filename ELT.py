@@ -221,6 +221,16 @@ class Transform:
         def rename_known_call(self):
             self.dataframe.rename(columns={'known_call':'genotype'}, inplace=True)
 
+        def replace_null_with_missing(self):
+            """ Het komt soms voor dat de genotype rij van phenotype.rpt missende waardes heeft. Deze functie lost dat op """
+            g = self.dataframe["genotype"].astype("string").str.strip()
+
+            g = g.replace(
+                {"": pd.NA, "null": pd.NA, "none": pd.NA, "na": pd.NA, "nan": pd.NA}
+            )
+
+            self.dataframe["genotype"] = g.fillna("MISSING/MISSING")
+
     class genotype_txt:
         """
         Transforms the genotype_txt dataframe
