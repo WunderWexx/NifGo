@@ -2,6 +2,7 @@
 
 # imports
 import os
+import zipfile
 from timeit import default_timer as timer
 import Diagnostics
 import ELT
@@ -201,6 +202,7 @@ def generation_script(delete_reports: bool,
 
     # Export to PDF
     ask_pdf_generation = generate_pdf
+    all_reports_generated = False
     if ask_pdf_generation:
         print('Exporting to PDF [...]'
               '\nThis may take up to 15 minutes.'
@@ -211,6 +213,7 @@ def generation_script(delete_reports: bool,
         except:
             pdf_reports = util.get_reports('Output\\Reports\\PDF')
             if len(pdf_reports) == len(reports):
+                all_reports_generated = True
                 pass
             else:
                 missed_conversions = []
@@ -224,6 +227,18 @@ def generation_script(delete_reports: bool,
         print('Exporting to PDF DONE')
     else:
         print('No PDF export')
+
+    if all_reports_generated:
+        source_folder = r"Output\Reports"
+        zip_path = r"Output\Reports.zip"
+        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            for root, dirs, files in os.walk(source_folder):
+                for file in files:
+                    full_path = os.path.join(root, file)
+                    relative_path = os.path.relpath(full_path, source_folder)
+                    zipf.write(full_path, relative_path)
+
+        print("Compression complete.")
 
     # Run diagnostics
     if (corrected_unknowns_file is not None and customerdata_df is not None):
